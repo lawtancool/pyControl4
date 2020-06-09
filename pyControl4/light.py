@@ -14,5 +14,7 @@ class C4Light:
 
     async def setLevel(self, level):
         await self.director.sendPostRequest(
-            "{}/api/v1/items/{}/commands".format(self.director.base_url, self.item_id),
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "SET_LEVEL",
+            {"LEVEL": level},
         )

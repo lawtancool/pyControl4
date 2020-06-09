@@ -14,4 +14,5 @@ ip = "192.168.1.25"
 director = C4Director(ip, bearer_token)
 # print(asyncio.run(director.getAllItemInfo()))
 light = C4Light(director, 253)
+asyncio.run(light.setLevel(2))
 print(asyncio.run(light.getLevel()))
