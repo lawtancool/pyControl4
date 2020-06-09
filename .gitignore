@@ -1,4 +1,4 @@
 .venv/
 .vscode/
 __pycache__/
-bearer_token.py
+login_info.py
