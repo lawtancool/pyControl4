@@ -44,6 +44,12 @@ class C4Director:
         data = await self.sendGetRequest(
             "/api/v1/items/{}/variables?varnames={}".format(item_id, var_name)
         )
+        if data == "[]":
+            raise ValueError(
+                "Empty response recieved from Director! The variable {} doesn't seem to exist for item {}.".format(
+                    var_name, item_id
+                )
+            )
         jsonDictionary = json.loads(data)
         return jsonDictionary[0]["value"]
 
