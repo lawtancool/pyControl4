@@ -11,3 +11,8 @@ class C4Light:
 
     async def getLevel(self):
         return await self.director.getItemVariableValue(self.item_id, "LIGHT_LEVEL")
+
+    async def setLevel(self, level):
+        await self.director.sendPostRequest(
+            "{}/api/v1/items/{}/commands".format(self.director.base_url, self.item_id),
+        )

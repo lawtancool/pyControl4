@@ -8,13 +8,26 @@ class C4Director:
     def __init__(self, ip, bearer_token):
         self.base_url = "https://{}".format(ip)
         self.headers = {"Authorization": "Bearer {}".format(bearer_token)}
-
+        
+    # TODO: make it so that uri doesn't have to include base_url when passed in
     async def sendGetRequest(self, uri):
         async with aiohttp.ClientSession(
             connector=aiohttp.TCPConnector(verify_ssl=False)
         ) as session:
             with async_timeout.timeout(10):
                 async with session.get(uri, headers=self.headers) as resp:
+                    return await resp.text()
+
+    # params should be a dictionary with the params
+    async def sendPostRequest(self, uri, command, params):
+        dataDictionary = {"async": True, "command": command, "tParams": params}
+        async with aiohttp.ClientSession(
+            connector=aiohttp.TCPConnector(verify_ssl=False)
+        ) as session:
+            with async_timeout.timeout(10):
+                async with session.post(
+                    uri, headers=self.headers, json=dataDictionary)
+                ) as resp:
                     return await resp.text()
 
     async def getAllItemInfo(self):
