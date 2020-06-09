@@ -1,0 +1,4 @@
+.venv/
+.vscode/
+__pycache__/
+bearer_token.py
