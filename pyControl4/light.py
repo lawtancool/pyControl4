@@ -18,3 +18,10 @@ class C4Light:
             "SET_LEVEL",
             {"LEVEL": level},
         )
+
+    async def rampToLevel(self, level, time):
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "RAMP_TO_LEVEL",
+            {"LEVEL": level, "TIME": time},
+        )
