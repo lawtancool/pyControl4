@@ -1,6 +1,7 @@
 import aiohttp
 import asyncio
 import async_timeout
+import json
 
 
 class C4Director:
@@ -28,6 +29,15 @@ class C4Director:
         return await self.sendGetRequest(
             "{}/api/v1/items/{}/variables".format(self.base_url, item_id)
         )
+
+    async def getItemVariableValue(self, item_id, var_name):
+        data = await self.sendGetRequest(
+            "{}/api/v1/items/{}/variables?varnames={}".format(
+                self.base_url, item_id, var_name
+            )
+        )
+        jsonDictionary = json.loads(data)
+        return jsonDictionary[0]["value"]
 
     async def getItemCommands(self, item_id):
         return await self.sendGetRequest(
