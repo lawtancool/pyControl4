@@ -31,15 +31,16 @@ jobs:
 
     # Runs a set of commands using the runners shell
     - name: Run pdoc
-      run: pdoc --html pyControl4/ --output-dir docs/ --force
+      run: pdoc --html pyControl4/ --output-dir docs-temp/ --force
     
     - name: Copy HTML files to root of docs/ folder
-      run: cp -r docs/pyControl4/. docs/ && rm -r docs/pyControl4/
+      run: cp -r docs-temp/pyControl4/. docs/ && rm -r docs-temp/pyControl4/ 
       
     - name: Commit files
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
+        git add --all
         git commit -m "Update documentation" -a
 
     - name: Push changes
