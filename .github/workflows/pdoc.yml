@@ -34,7 +34,7 @@ jobs:
       run: pdoc --html pyControl4/ --output-dir docs/ --force
     
     - name: Copy HTML files to root of docs/ folder
-      run: cp -r docs/pyControl4/* docs/ && rm -r docs/pyControl4/
+      run: cp -r docs/pyControl4/. docs/ && rm -r docs/pyControl4/
       
     - name: Commit files
       run: |
