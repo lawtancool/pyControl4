@@ -1,4 +1,4 @@
-"""Control Control4 Light devices.
+"""Controls Control4 Light devices.
 """
 import aiohttp
 import asyncio
