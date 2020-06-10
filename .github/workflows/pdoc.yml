@@ -33,5 +33,13 @@ jobs:
     - name: Run pdoc
       run: pdoc --html pyControl4/ --output-dir docs/ --force
       
+    - name: Commit files
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git commit -m "Update documentation" -a
+
     - name: Push changes
-      uses: ludeeus/action-push@0.0.1
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
