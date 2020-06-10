@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>pyControl4.auth API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,11 +20,14 @@
 <h1 class="title">Module <code>pyControl4.auth</code></h1>
 </header>
 <section id="section-intro">
+<p>Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import aiohttp
+<pre><code class="python">&#34;&#34;&#34;Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director.
+&#34;&#34;&#34;
+import aiohttp
 import asyncio
 import async_timeout
 import json
@@ -34,12 +37,26 @@ application_key = &#34;78f6791373d61bea49fdb9fb8897f1f3af193f11&#34;
 
 
 async def getBearerToken(username, password):
+    &#34;&#34;&#34;Returns a bearer token for connecting to a Control4 Director.
+
+    Parameters:
+        `username` - Control4 account username/email.
+
+        `password` - Control4 account password.
+    &#34;&#34;&#34;
     data = await sendAuthRequest(username, password)
     jsonDictionary = json.loads(data)
     return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
 
 
 async def sendAuthRequest(username, password):
+    &#34;&#34;&#34;Returns the entire JSON response from the Control4 auth API.
+
+    Parameters:
+        `username` - Control4 account username/email.
+
+        `password` - Control4 account password.
+    &#34;&#34;&#34;
     dataDictionary = {
         &#34;clientInfo&#34;: {
             &#34;device&#34;: {
@@ -76,12 +93,22 @@ async def sendAuthRequest(username, password):
 <span>async def <span class="ident">getBearerToken</span></span>(<span>username, password)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns a bearer token for connecting to a Control4 Director.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>username</code> - Control4 account username/email.</p>
+<p><code>password</code> - Control4 account password.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getBearerToken(username, password):
+    &#34;&#34;&#34;Returns a bearer token for connecting to a Control4 Director.
+
+    Parameters:
+        `username` - Control4 account username/email.
+
+        `password` - Control4 account password.
+    &#34;&#34;&#34;
     data = await sendAuthRequest(username, password)
     jsonDictionary = json.loads(data)
     return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
@@ -91,12 +118,22 @@ async def sendAuthRequest(username, password):
 <span>async def <span class="ident">sendAuthRequest</span></span>(<span>username, password)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns the entire JSON response from the Control4 auth API.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>username</code> - Control4 account username/email.</p>
+<p><code>password</code> - Control4 account password.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def sendAuthRequest(username, password):
+    &#34;&#34;&#34;Returns the entire JSON response from the Control4 auth API.
+
+    Parameters:
+        `username` - Control4 account username/email.
+
+        `password` - Control4 account password.
+    &#34;&#34;&#34;
     dataDictionary = {
         &#34;clientInfo&#34;: {
             &#34;device&#34;: {

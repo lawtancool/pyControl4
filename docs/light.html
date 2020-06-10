@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>pyControl4.light API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Controls Control4 Light devices." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,11 +20,14 @@
 <h1 class="title">Module <code>pyControl4.light</code></h1>
 </header>
 <section id="section-intro">
+<p>Controls Control4 Light devices.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import aiohttp
+<pre><code class="python">&#34;&#34;&#34;Controls Control4 Light devices.
+&#34;&#34;&#34;
+import aiohttp
 import asyncio
 import async_timeout
 from .director import C4Director
@@ -32,12 +35,19 @@ from .director import C4Director
 
 class C4Light:
     def __init__(self, C4Director, item_id):
+        &#34;&#34;&#34;Creates a Control4 Light object.
+
+        Parameters:
+            `C4Director` - A `C4Director` object that corresponds to the Control4 Director that the light is connected to. See `director.py` for details.
+
+            `item_id` - The Control4 item ID of the light.
+        &#34;&#34;&#34;
         self.director = C4Director
         self.item_id = item_id
 
     async def getLevel(self):
         &#34;&#34;&#34;Returns the level of a dimming-capable light as an int 0-100.
-        Will cause an error if called on a non-dimmer switch. Use getState() instead.
+        Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
         return int(value)
@@ -50,10 +60,10 @@ class C4Light:
 
     async def setLevel(self, level):
         &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch. 
-        Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.
+        Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
-            level - (int) 0-100
+            `level` - (int) 0-100
         &#34;&#34;&#34;
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
@@ -63,11 +73,12 @@ class C4Light:
 
     async def rampToLevel(self, level, time):
         &#34;&#34;&#34;Ramps the light level of a dimmer over time. 
-        Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.
+        Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
-            level - (int) 0-100
-            time - (int) Duration in milliseconds
+            `level` - (int) 0-100
+
+            `time` - (int) Duration in milliseconds
         &#34;&#34;&#34;
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
@@ -90,19 +101,29 @@ class C4Light:
 <span>(</span><span>C4Director, item_id)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Creates a Control4 Light object.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>C4Director</code> - A <code>C4Director</code> object that corresponds to the Control4 Director that the light is connected to. See <code>director.py</code> for details.</p>
+<p><code>item_id</code> - The Control4 item ID of the light.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4Light:
     def __init__(self, C4Director, item_id):
+        &#34;&#34;&#34;Creates a Control4 Light object.
+
+        Parameters:
+            `C4Director` - A `C4Director` object that corresponds to the Control4 Director that the light is connected to. See `director.py` for details.
+
+            `item_id` - The Control4 item ID of the light.
+        &#34;&#34;&#34;
         self.director = C4Director
         self.item_id = item_id
 
     async def getLevel(self):
         &#34;&#34;&#34;Returns the level of a dimming-capable light as an int 0-100.
-        Will cause an error if called on a non-dimmer switch. Use getState() instead.
+        Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
         return int(value)
@@ -115,10 +136,10 @@ class C4Light:
 
     async def setLevel(self, level):
         &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch. 
-        Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.
+        Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
-            level - (int) 0-100
+            `level` - (int) 0-100
         &#34;&#34;&#34;
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
@@ -128,11 +149,12 @@ class C4Light:
 
     async def rampToLevel(self, level, time):
         &#34;&#34;&#34;Ramps the light level of a dimmer over time. 
-        Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.
+        Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
-            level - (int) 0-100
-            time - (int) Duration in milliseconds
+            `level` - (int) 0-100
+
+            `time` - (int) Duration in milliseconds
         &#34;&#34;&#34;
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
@@ -147,14 +169,14 @@ class C4Light:
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the level of a dimming-capable light as an int 0-100.
-Will cause an error if called on a non-dimmer switch. Use getState() instead.</p></div>
+Will cause an error if called on a non-dimmer switch. Use <code>getState()</code> instead.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getLevel(self):
     &#34;&#34;&#34;Returns the level of a dimming-capable light as an int 0-100.
-    Will cause an error if called on a non-dimmer switch. Use getState() instead.
+    Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
     &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
     return int(value)</code></pre>
@@ -181,21 +203,22 @@ Will cause an error if called on a non-dimmer switch. Use getState() instead.</p
 </code></dt>
 <dd>
 <div class="desc"><p>Ramps the light level of a dimmer over time.
-Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.</p>
+Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> will turn off a switch.</p>
 <h2 id="parameters">Parameters</h2>
-<p>level - (int) 0-100
-time - (int) Duration in milliseconds</p></div>
+<p><code>level</code> - (int) 0-100</p>
+<p><code>time</code> - (int) Duration in milliseconds</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def rampToLevel(self, level, time):
     &#34;&#34;&#34;Ramps the light level of a dimmer over time. 
-    Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.
+    Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
     Parameters:
-        level - (int) 0-100
-        time - (int) Duration in milliseconds
+        `level` - (int) 0-100
+
+        `time` - (int) Duration in milliseconds
     &#34;&#34;&#34;
     await self.director.sendPostRequest(
         &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
@@ -209,19 +232,19 @@ time - (int) Duration in milliseconds</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Sets the light level of a dimmer or turns on/off a switch.
-Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.</p>
+Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> will turn off a switch.</p>
 <h2 id="parameters">Parameters</h2>
-<p>level - (int) 0-100</p></div>
+<p><code>level</code> - (int) 0-100</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def setLevel(self, level):
     &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch. 
-    Any level &gt; 0 will turn on a switch, and level = 0 will turn off a switch.
+    Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
     Parameters:
-        level - (int) 0-100
+        `level` - (int) 0-100
     &#34;&#34;&#34;
     await self.director.sendPostRequest(
         &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
