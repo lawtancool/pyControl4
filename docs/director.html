@@ -47,7 +47,8 @@ class C4Director:
 
     async def sendGetRequest(self, uri):
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
-
+        Returns the Director&#39;s JSON response as a string.
+        
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         &#34;&#34;&#34;
@@ -62,10 +63,13 @@ class C4Director:
 
     async def sendPostRequest(self, uri, command, params):
         &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands to the Director.
+        Returns the Director&#39;s JSON response as a string.
 
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+
             `command` - The Control4 command to send.
+
             `params` - The parameters of the command, provided as a dictionary.
         &#34;&#34;&#34;
         dataDictionary = {&#34;async&#34;: True, &#34;command&#34;: command, &#34;tParams&#34;: params}
@@ -179,7 +183,8 @@ class C4Director:
 
     async def sendGetRequest(self, uri):
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
-
+        Returns the Director&#39;s JSON response as a string.
+        
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         &#34;&#34;&#34;
@@ -194,10 +199,13 @@ class C4Director:
 
     async def sendPostRequest(self, uri, command, params):
         &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands to the Director.
+        Returns the Director&#39;s JSON response as a string.
 
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+
             `command` - The Control4 command to send.
+
             `params` - The parameters of the command, provided as a dictionary.
         &#34;&#34;&#34;
         dataDictionary = {&#34;async&#34;: True, &#34;command&#34;: command, &#34;tParams&#34;: params}
@@ -427,7 +435,8 @@ class C4Director:
 <span>async def <span class="ident">sendGetRequest</span></span>(<span>self, uri)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sends a GET request to the specified API URI.</p>
+<div class="desc"><p>Sends a GET request to the specified API URI.
+Returns the Director's JSON response as a string.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>uri</code> - The API URI to send the request to. Do not include the IP address of the Director.</p></div>
 <details class="source">
@@ -436,7 +445,8 @@ class C4Director:
 </summary>
 <pre><code class="python">async def sendGetRequest(self, uri):
     &#34;&#34;&#34;Sends a GET request to the specified API URI.
-
+    Returns the Director&#39;s JSON response as a string.
+    
     Parameters:
         `uri` - The API URI to send the request to. Do not include the IP address of the Director.
     &#34;&#34;&#34;
@@ -454,21 +464,25 @@ class C4Director:
 <span>async def <span class="ident">sendPostRequest</span></span>(<span>self, uri, command, params)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sends a POST request to the specified API URI. Used to send commands to the Director.</p>
+<div class="desc"><p>Sends a POST request to the specified API URI. Used to send commands to the Director.
+Returns the Director's JSON response as a string.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>uri</code> - The API URI to send the request to. Do not include the IP address of the Director.
-<code>command</code> - The Control4 command to send.
-<code>params</code> - The parameters of the command, provided as a dictionary.</p></div>
+<p><code>uri</code> - The API URI to send the request to. Do not include the IP address of the Director.</p>
+<p><code>command</code> - The Control4 command to send.</p>
+<p><code>params</code> - The parameters of the command, provided as a dictionary.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def sendPostRequest(self, uri, command, params):
     &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands to the Director.
+    Returns the Director&#39;s JSON response as a string.
 
     Parameters:
         `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+
         `command` - The Control4 command to send.
+
         `params` - The parameters of the command, provided as a dictionary.
     &#34;&#34;&#34;
     dataDictionary = {&#34;async&#34;: True, &#34;command&#34;: command, &#34;tParams&#34;: params}
