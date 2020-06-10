@@ -20,7 +20,8 @@ class C4Director:
 
     async def sendGetRequest(self, uri):
         """Sends a GET request to the specified API URI.
-
+        Returns the Director's JSON response as a string.
+        
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         """
@@ -35,10 +36,13 @@ class C4Director:
 
     async def sendPostRequest(self, uri, command, params):
         """Sends a POST request to the specified API URI. Used to send commands to the Director.
+        Returns the Director's JSON response as a string.
 
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+
             `command` - The Control4 command to send.
+
             `params` - The parameters of the command, provided as a dictionary.
         """
         dataDictionary = {"async": True, "command": command, "tParams": params}
