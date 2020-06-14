@@ -76,13 +76,13 @@ async def getAccountControllers(account_bearer_token):
         `account_bearer_token` - Control4 account bearer token.
 
     Returns:
-    ```
-    {    
-        "controllerCommonName": "control4_MODEL_MACADDRESS",
-        "href": "https:\/\/apis.control4.com\/account\/v3\/rest\/accounts\/000000",
-        "name": "Name"
-    }
-    ```
+        ```
+        {    
+            "controllerCommonName": "control4_MODEL_MACADDRESS",
+            "href": "https:\/\/apis.control4.com\/account\/v3\/rest\/accounts\/000000",
+            "name": "Name"
+        }
+        ```
     """
     data = await __sendAccountGetRequest(account_bearer_token, get_controllers_endpoint)
     jsonDictionary = json.loads(data)
@@ -98,13 +98,13 @@ async def getControllerInfo(account_bearer_token, controller_href):
         `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
 
     Returns:
-    ```
-    {
-        "commonName": "control4_MODEL_MACADDRESS",
-        "osVersion": "3.0.0.562835-res",
-        "registrationStatus": "REGISTERED"
-    }
-    ```
+        ```
+        {
+            "commonName": "control4_MODEL_MACADDRESS",
+            "osVersion": "3.0.0.562835-res",
+            "registrationStatus": "REGISTERED"
+        }
+        ```
     """
     data = await __sendAccountGetRequest(account_bearer_token, controller_href)
     jsonDictionary = json.loads(data)
