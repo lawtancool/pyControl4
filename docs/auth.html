@@ -127,9 +127,35 @@ async def getControllerInfo(account_bearer_token, controller_href):
     Returns:
         ```
         {
-            &#34;commonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
-            &#34;osVersion&#34;: &#34;3.0.0.562835-res&#34;,
-            &#34;registrationStatus&#34;: &#34;REGISTERED&#34;
+            &#39;allowsPatching&#39;: True,
+            &#39;allowsSupport&#39;: False,
+            &#39;blockNotifications&#39;: False,
+            &#39;controllerCommonName&#39;: &#39;control4_MODEL_MACADDRESS&#39;,
+            &#39;controller&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/controller&#39;
+            },
+            &#39;created&#39;: &#39;2017-08-26T18:33:31Z&#39;,
+            &#39;dealer&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/dealers/12345&#39;
+            },
+            &#39;enabled&#39;: True,
+            &#39;hasLoggedIn&#39;: True,
+            &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000&#39;,
+            &#39;id&#39;: 000000,
+            &#39;lastCheckIn&#39;: &#39;2020-06-13T21:52:34Z&#39;,
+            &#39;licenses&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/licenses&#39;
+            },
+            &#39;modified&#39;: &#39;2020-06-13T21:52:34Z&#39;,
+            &#39;name&#39;: &#39;Name&#39;,
+            &#39;provisionDate&#39;: &#39;2017-08-26T18:35:11Z&#39;,
+            &#39;storage&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/storage/v1/rest/accounts/000000&#39;
+            },
+            &#39;type&#39;: &#39;Consumer&#39;,
+            &#39;users&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/users&#39;
+            }
         }
         ```
     &#34;&#34;&#34;
@@ -218,9 +244,35 @@ async def getControllerInfo(account_bearer_token, controller_href):
 <p><code>controller_href</code> - The API <code>href</code> of the controller (get this from the output of <code><a title="pyControl4.auth.getAccountControllers" href="#pyControl4.auth.getAccountControllers">getAccountControllers()</a></code>)</p>
 <h2 id="returns">Returns</h2>
 <pre><code>{
-    &quot;commonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
-    &quot;osVersion&quot;: &quot;3.0.0.562835-res&quot;,
-    &quot;registrationStatus&quot;: &quot;REGISTERED&quot;
+    'allowsPatching': True,
+    'allowsSupport': False,
+    'blockNotifications': False,
+    'controllerCommonName': 'control4_MODEL_MACADDRESS',
+    'controller': {
+        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/controller'
+    },
+    'created': '2017-08-26T18:33:31Z',
+    'dealer': {
+        'href': 'https://apis.control4.com/account/v3/rest/dealers/12345'
+    },
+    'enabled': True,
+    'hasLoggedIn': True,
+    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000',
+    'id': 000000,
+    'lastCheckIn': '2020-06-13T21:52:34Z',
+    'licenses': {
+        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/licenses'
+    },
+    'modified': '2020-06-13T21:52:34Z',
+    'name': 'Name',
+    'provisionDate': '2017-08-26T18:35:11Z',
+    'storage': {
+        'href': 'https://apis.control4.com/storage/v1/rest/accounts/000000'
+    },
+    'type': 'Consumer',
+    'users': {
+        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/users'
+    }
 }
 </code></pre></div>
 <details class="source">
@@ -238,9 +290,35 @@ async def getControllerInfo(account_bearer_token, controller_href):
     Returns:
         ```
         {
-            &#34;commonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
-            &#34;osVersion&#34;: &#34;3.0.0.562835-res&#34;,
-            &#34;registrationStatus&#34;: &#34;REGISTERED&#34;
+            &#39;allowsPatching&#39;: True,
+            &#39;allowsSupport&#39;: False,
+            &#39;blockNotifications&#39;: False,
+            &#39;controllerCommonName&#39;: &#39;control4_MODEL_MACADDRESS&#39;,
+            &#39;controller&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/controller&#39;
+            },
+            &#39;created&#39;: &#39;2017-08-26T18:33:31Z&#39;,
+            &#39;dealer&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/dealers/12345&#39;
+            },
+            &#39;enabled&#39;: True,
+            &#39;hasLoggedIn&#39;: True,
+            &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000&#39;,
+            &#39;id&#39;: 000000,
+            &#39;lastCheckIn&#39;: &#39;2020-06-13T21:52:34Z&#39;,
+            &#39;licenses&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/licenses&#39;
+            },
+            &#39;modified&#39;: &#39;2020-06-13T21:52:34Z&#39;,
+            &#39;name&#39;: &#39;Name&#39;,
+            &#39;provisionDate&#39;: &#39;2017-08-26T18:35:11Z&#39;,
+            &#39;storage&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/storage/v1/rest/accounts/000000&#39;
+            },
+            &#39;type&#39;: &#39;Consumer&#39;,
+            &#39;users&#39;: {
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/users&#39;
+            }
         }
         ```
     &#34;&#34;&#34;
