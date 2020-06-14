@@ -6,6 +6,9 @@ import async_timeout
 import json
 
 authentication_endpoint = "https://apis.control4.com/authentication/v1/rest"
+controller_authorization_endpoint = (
+    "https://apis.control4.com/authentication/v1/rest/authorization"
+)
 get_controllers_endpoint = "https://apis.control4.com/account/v3/rest/accounts"
 application_key = "78f6791373d61bea49fdb9fb8897f1f3af193f11"
 
@@ -73,7 +76,7 @@ async def __sendControllerAuthRequest(account_bearer_token, controller_common_na
     async with aiohttp.ClientSession() as session:
         with async_timeout.timeout(10):
             async with session.post(
-                authentication_endpoint, headers=headers, json=dataDictionary
+                controller_authorization_endpoint, headers=headers, json=dataDictionary
             ) as resp:
                 return await resp.text()
 
