@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>pyControl4.auth API documentation</title>
-<meta name="description" content="Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director." />
+<meta name="description" content="Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,12 +20,12 @@
 <h1 class="title">Module <code>pyControl4.auth</code></h1>
 </header>
 <section id="section-intro">
-<p>Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director.</p>
+<p>Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 Director.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director.
+<pre><code class="python">&#34;&#34;&#34;Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 Director.
 &#34;&#34;&#34;
 import aiohttp
 import asyncio
@@ -82,6 +82,26 @@ async def __sendAccountGetRequest(account_bearer_token, uri):
     async with aiohttp.ClientSession() as session:
         with async_timeout.timeout(10):
             async with session.get(uri, headers=headers) as resp:
+                return await resp.text()
+
+
+async def __sendControllerAuthRequest(account_bearer_token, controller_common_name):
+    &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+    &#34;&#34;&#34;
+    headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(account_bearer_token)}
+    dataDictionary = {
+        &#34;serviceInfo&#34;: {&#34;commonName&#34;: controller_common_name, &#34;services&#34;: &#34;director&#34;}
+    }
+    async with aiohttp.ClientSession() as session:
+        with async_timeout.timeout(10):
+            async with session.post(
+                authentication_endpoint, headers=headers, json=dataDictionary
+            ) as resp:
                 return await resp.text()
 
 
@@ -163,7 +183,22 @@ async def getControllerInfo(account_bearer_token, controller_href):
     &#34;&#34;&#34;
     data = await __sendAccountGetRequest(account_bearer_token, controller_href)
     jsonDictionary = json.loads(data)
-    return jsonDictionary</code></pre>
+    return jsonDictionary
+
+
+async def getDirectorBearerToken(account_bearer_token, controller_common_name):
+    &#34;&#34;&#34;Returns a director bearer token for making Control4 Director API requests.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+    &#34;&#34;&#34;
+    data = await __sendControllerAuthRequest(
+        account_bearer_token, controller_common_name
+    )
+    jsonDictionary = json.loads(data)
+    return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
 </details>
 </section>
 <section>
@@ -329,6 +364,33 @@ async def getControllerInfo(account_bearer_token, controller_href):
     return jsonDictionary</code></pre>
 </details>
 </dd>
+<dt id="pyControl4.auth.getDirectorBearerToken"><code class="name flex">
+<span>async def <span class="ident">getDirectorBearerToken</span></span>(<span>account_bearer_token, controller_common_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a director bearer token for making Control4 Director API requests.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>account_bearer_token</code> - Control4 account bearer token.</p>
+<p><code>controller_common_name</code>: Common name of the controller. See <code><a title="pyControl4.auth.getAccountControllers" href="#pyControl4.auth.getAccountControllers">getAccountControllers()</a></code> for details.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getDirectorBearerToken(account_bearer_token, controller_common_name):
+    &#34;&#34;&#34;Returns a director bearer token for making Control4 Director API requests.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+    &#34;&#34;&#34;
+    data = await __sendControllerAuthRequest(
+        account_bearer_token, controller_common_name
+    )
+    jsonDictionary = json.loads(data)
+    return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
+</details>
+</dd>
 </dl>
 </section>
 <section>
@@ -350,6 +412,7 @@ async def getControllerInfo(account_bearer_token, controller_href):
 <li><code><a title="pyControl4.auth.getAccountBearerToken" href="#pyControl4.auth.getAccountBearerToken">getAccountBearerToken</a></code></li>
 <li><code><a title="pyControl4.auth.getAccountControllers" href="#pyControl4.auth.getAccountControllers">getAccountControllers</a></code></li>
 <li><code><a title="pyControl4.auth.getControllerInfo" href="#pyControl4.auth.getControllerInfo">getControllerInfo</a></code></li>
+<li><code><a title="pyControl4.auth.getDirectorBearerToken" href="#pyControl4.auth.getDirectorBearerToken">getDirectorBearerToken</a></code></li>
 </ul>
 </li>
 </ul>
