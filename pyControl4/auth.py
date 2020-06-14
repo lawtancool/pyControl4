@@ -1,4 +1,4 @@
-"""Authenticates with the Control4 API and retrieves a bearer token for connecting to a Control4 Director.
+"""Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 Director.
 """
 import aiohttp
 import asyncio
@@ -55,6 +55,26 @@ async def __sendAccountGetRequest(account_bearer_token, uri):
     async with aiohttp.ClientSession() as session:
         with async_timeout.timeout(10):
             async with session.get(uri, headers=headers) as resp:
+                return await resp.text()
+
+
+async def __sendControllerAuthRequest(account_bearer_token, controller_common_name):
+    """Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+    """
+    headers = {"Authorization": "Bearer {}".format(account_bearer_token)}
+    dataDictionary = {
+        "serviceInfo": {"commonName": controller_common_name, "services": "director"}
+    }
+    async with aiohttp.ClientSession() as session:
+        with async_timeout.timeout(10):
+            async with session.post(
+                authentication_endpoint, headers=headers, json=dataDictionary
+            ) as resp:
                 return await resp.text()
 
 
@@ -137,3 +157,18 @@ async def getControllerInfo(account_bearer_token, controller_href):
     data = await __sendAccountGetRequest(account_bearer_token, controller_href)
     jsonDictionary = json.loads(data)
     return jsonDictionary
+
+
+async def getDirectorBearerToken(account_bearer_token, controller_common_name):
+    """Returns a director bearer token for making Control4 Director API requests.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+    """
+    data = await __sendControllerAuthRequest(
+        account_bearer_token, controller_common_name
+    )
+    jsonDictionary = json.loads(data)
+    return jsonDictionary["authToken"]["token"]
