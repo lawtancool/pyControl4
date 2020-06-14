@@ -33,24 +33,12 @@ import async_timeout
 import json
 
 authentication_endpoint = &#34;https://apis.control4.com/authentication/v1/rest&#34;
+get_controllers_endpoint = &#34;https://apis.control4.com/account/v3/rest/accounts&#34;
 application_key = &#34;78f6791373d61bea49fdb9fb8897f1f3af193f11&#34;
 
 
-async def getBearerToken(username, password):
-    &#34;&#34;&#34;Returns a bearer token for connecting to a Control4 Director.
-
-    Parameters:
-        `username` - Control4 account username/email.
-
-        `password` - Control4 account password.
-    &#34;&#34;&#34;
-    data = await sendAuthRequest(username, password)
-    jsonDictionary = json.loads(data)
-    return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
-
-
-async def sendAuthRequest(username, password):
-    &#34;&#34;&#34;Returns the entire JSON response from the Control4 auth API.
+async def __sendAccountAuthRequest(username, password):
+    &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
 
     Parameters:
         `username` - Control4 account username/email.
@@ -79,7 +67,75 @@ async def sendAuthRequest(username, password):
             async with session.post(
                 authentication_endpoint, json=dataDictionary
             ) as resp:
-                return await resp.text()</code></pre>
+                return await resp.text()
+
+
+async def __sendAccountGetRequest(account_bearer_token, uri):
+    &#34;&#34;&#34;Used internally to send GET requests to the Control4 API, authenticated with the account bearer token. Returns the entire JSON response from the Control4 auth API.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+    &#34;&#34;&#34;
+    headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(account_bearer_token)}
+    async with aiohttp.ClientSession() as session:
+        with async_timeout.timeout(10):
+            async with session.get(uri, headers=headers) as resp:
+                return await resp.text()
+
+
+async def getAccountBearerToken(username, password):
+    &#34;&#34;&#34;Returns an account bearer token for making Control4 online API requests.
+
+    Parameters:
+        `username` - Control4 account username/email.
+
+        `password` - Control4 account password.
+    &#34;&#34;&#34;
+    data = await __sendAccountAuthRequest(username, password)
+    jsonDictionary = json.loads(data)
+    return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
+
+
+async def getAccountControllers(account_bearer_token):
+    &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+    Returns:
+    ```
+    {    
+        &#34;controllerCommonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
+        &#34;href&#34;: &#34;https:\/\/apis.control4.com\/account\/v3\/rest\/accounts\/000000&#34;,
+        &#34;name&#34;: &#34;Name&#34;
+    }
+    ```
+    &#34;&#34;&#34;
+    data = await __sendAccountGetRequest(account_bearer_token, get_controllers_endpoint)
+    jsonDictionary = json.loads(data)
+    return jsonDictionary[&#34;account&#34;]
+
+
+async def getControllerInfo(account_bearer_token, controller_href):
+    &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+
+    Returns:
+    ```
+    {
+        &#34;commonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
+        &#34;osVersion&#34;: &#34;3.0.0.562835-res&#34;,
+        &#34;registrationStatus&#34;: &#34;REGISTERED&#34;
+    }
+    ```
+    &#34;&#34;&#34;
+    data = await __sendAccountGetRequest(account_bearer_token, controller_href)
+    jsonDictionary = json.loads(data)
+    return jsonDictionary</code></pre>
 </details>
 </section>
 <section>
@@ -89,11 +145,11 @@ async def sendAuthRequest(username, password):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt id="pyControl4.auth.getBearerToken"><code class="name flex">
-<span>async def <span class="ident">getBearerToken</span></span>(<span>username, password)</span>
+<dt id="pyControl4.auth.getAccountBearerToken"><code class="name flex">
+<span>async def <span class="ident">getAccountBearerToken</span></span>(<span>username, password)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a bearer token for connecting to a Control4 Director.</p>
+<div class="desc"><p>Returns an account bearer token for making Control4 online API requests.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>username</code> - Control4 account username/email.</p>
 <p><code>password</code> - Control4 account password.</p></div>
@@ -101,62 +157,96 @@ async def sendAuthRequest(username, password):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getBearerToken(username, password):
-    &#34;&#34;&#34;Returns a bearer token for connecting to a Control4 Director.
+<pre><code class="python">async def getAccountBearerToken(username, password):
+    &#34;&#34;&#34;Returns an account bearer token for making Control4 online API requests.
 
     Parameters:
         `username` - Control4 account username/email.
 
         `password` - Control4 account password.
     &#34;&#34;&#34;
-    data = await sendAuthRequest(username, password)
+    data = await __sendAccountAuthRequest(username, password)
     jsonDictionary = json.loads(data)
     return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
 </details>
 </dd>
-<dt id="pyControl4.auth.sendAuthRequest"><code class="name flex">
-<span>async def <span class="ident">sendAuthRequest</span></span>(<span>username, password)</span>
+<dt id="pyControl4.auth.getAccountControllers"><code class="name flex">
+<span>async def <span class="ident">getAccountControllers</span></span>(<span>account_bearer_token)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the entire JSON response from the Control4 auth API.</p>
+<div class="desc"><p>Returns a dictionary of the information for all controllers registered to an account.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>username</code> - Control4 account username/email.</p>
-<p><code>password</code> - Control4 account password.</p></div>
+<p><code>account_bearer_token</code> - Control4 account bearer token.</p>
+<p>Returns:</p>
+<pre><code>{    
+    &quot;controllerCommonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
+    &quot;href&quot;: &quot;https:\/\/apis.control4.com\/account\/v3\/rest\/accounts\/000000&quot;,
+    &quot;name&quot;: &quot;Name&quot;
+}
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sendAuthRequest(username, password):
-    &#34;&#34;&#34;Returns the entire JSON response from the Control4 auth API.
+<pre><code class="python">async def getAccountControllers(account_bearer_token):
+    &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
 
     Parameters:
-        `username` - Control4 account username/email.
+        `account_bearer_token` - Control4 account bearer token.
 
-        `password` - Control4 account password.
-    &#34;&#34;&#34;
-    dataDictionary = {
-        &#34;clientInfo&#34;: {
-            &#34;device&#34;: {
-                &#34;deviceName&#34;: &#34;pyControl4&#34;,
-                &#34;deviceUUID&#34;: &#34;0000000000000000&#34;,
-                &#34;make&#34;: &#34;pyControl4&#34;,
-                &#34;model&#34;: &#34;pyControl4&#34;,
-                &#34;os&#34;: &#34;Android&#34;,
-                &#34;osVersion&#34;: &#34;10&#34;,
-            },
-            &#34;userInfo&#34;: {
-                &#34;applicationKey&#34;: application_key,
-                &#34;password&#34;: password,
-                &#34;userName&#34;: username,
-            },
-        }
+    Returns:
+    ```
+    {    
+        &#34;controllerCommonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
+        &#34;href&#34;: &#34;https:\/\/apis.control4.com\/account\/v3\/rest\/accounts\/000000&#34;,
+        &#34;name&#34;: &#34;Name&#34;
     }
-    async with aiohttp.ClientSession() as session:
-        with async_timeout.timeout(10):
-            async with session.post(
-                authentication_endpoint, json=dataDictionary
-            ) as resp:
-                return await resp.text()</code></pre>
+    ```
+    &#34;&#34;&#34;
+    data = await __sendAccountGetRequest(account_bearer_token, get_controllers_endpoint)
+    jsonDictionary = json.loads(data)
+    return jsonDictionary[&#34;account&#34;]</code></pre>
+</details>
+</dd>
+<dt id="pyControl4.auth.getControllerInfo"><code class="name flex">
+<span>async def <span class="ident">getControllerInfo</span></span>(<span>account_bearer_token, controller_href)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a dictionary of the information of a specific controller.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>account_bearer_token</code> - Control4 account bearer token.</p>
+<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from the output of <code><a title="pyControl4.auth.getAccountControllers" href="#pyControl4.auth.getAccountControllers">getAccountControllers()</a></code>)</p>
+<p>Returns:</p>
+<pre><code>{
+    &quot;commonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
+    &quot;osVersion&quot;: &quot;3.0.0.562835-res&quot;,
+    &quot;registrationStatus&quot;: &quot;REGISTERED&quot;
+}
+</code></pre></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getControllerInfo(account_bearer_token, controller_href):
+    &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
+
+    Parameters:
+        `account_bearer_token` - Control4 account bearer token.
+
+        `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+
+    Returns:
+    ```
+    {
+        &#34;commonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
+        &#34;osVersion&#34;: &#34;3.0.0.562835-res&#34;,
+        &#34;registrationStatus&#34;: &#34;REGISTERED&#34;
+    }
+    ```
+    &#34;&#34;&#34;
+    data = await __sendAccountGetRequest(account_bearer_token, controller_href)
+    jsonDictionary = json.loads(data)
+    return jsonDictionary</code></pre>
 </details>
 </dd>
 </dl>
@@ -177,8 +267,9 @@ async def sendAuthRequest(username, password):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
-<li><code><a title="pyControl4.auth.getBearerToken" href="#pyControl4.auth.getBearerToken">getBearerToken</a></code></li>
-<li><code><a title="pyControl4.auth.sendAuthRequest" href="#pyControl4.auth.sendAuthRequest">sendAuthRequest</a></code></li>
+<li><code><a title="pyControl4.auth.getAccountBearerToken" href="#pyControl4.auth.getAccountBearerToken">getAccountBearerToken</a></code></li>
+<li><code><a title="pyControl4.auth.getAccountControllers" href="#pyControl4.auth.getAccountControllers">getAccountControllers</a></code></li>
+<li><code><a title="pyControl4.auth.getControllerInfo" href="#pyControl4.auth.getControllerInfo">getControllerInfo</a></code></li>
 </ul>
 </li>
 </ul>
