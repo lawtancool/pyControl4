@@ -75,6 +75,8 @@ async def __sendAccountGetRequest(account_bearer_token, uri):
 
     Parameters:
         `account_bearer_token` - Control4 account bearer token.
+
+        `uri` - Full URI to send GET request to.
     &#34;&#34;&#34;
     headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(account_bearer_token)}
     async with aiohttp.ClientSession() as session:
