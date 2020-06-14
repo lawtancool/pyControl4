@@ -7,16 +7,16 @@ import json
 
 
 class C4Director:
-    def __init__(self, ip, bearer_token):
+    def __init__(self, ip, director_bearer_token):
         """Creates a Control4 Director object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
         """
         self.base_url = "https://{}".format(ip)
-        self.headers = {"Authorization": "Bearer {}".format(bearer_token)}
+        self.headers = {"Authorization": "Bearer {}".format(director_bearer_token)}
 
     async def sendGetRequest(self, uri):
         """Sends a GET request to the specified API URI.
