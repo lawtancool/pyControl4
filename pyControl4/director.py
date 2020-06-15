@@ -81,6 +81,7 @@ class C4Director:
 
         Parameters:
             `item_id` - The Control4 item ID.
+            
             `var_name` - The Control4 variable name.
         """
         data = await self.sendGetRequest(
