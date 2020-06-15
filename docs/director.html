@@ -108,6 +108,7 @@ class C4Director:
 
         Parameters:
             `item_id` - The Control4 item ID.
+            
             `var_name` - The Control4 variable name.
         &#34;&#34;&#34;
         data = await self.sendGetRequest(
@@ -244,6 +245,7 @@ class C4Director:
 
         Parameters:
             `item_id` - The Control4 item ID.
+            
             `var_name` - The Control4 variable name.
         &#34;&#34;&#34;
         data = await self.sendGetRequest(
@@ -385,8 +387,8 @@ class C4Director:
 <dd>
 <div class="desc"><p>Returns the value of the specified variable for the specified item as a string.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.
-<code>var_name</code> - The Control4 variable name.</p></div>
+<p><code>item_id</code> - The Control4 item ID.</p>
+<p><code>var_name</code> - The Control4 variable name.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -396,6 +398,7 @@ class C4Director:
 
     Parameters:
         `item_id` - The Control4 item ID.
+        
         `var_name` - The Control4 variable name.
     &#34;&#34;&#34;
     data = await self.sendGetRequest(
