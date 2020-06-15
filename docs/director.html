@@ -34,16 +34,16 @@ import json
 
 
 class C4Director:
-    def __init__(self, ip, bearer_token):
+    def __init__(self, ip, director_bearer_token):
         &#34;&#34;&#34;Creates a Control4 Director object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
-        self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(bearer_token)}
+        self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
 
     async def sendGetRequest(self, uri):
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
@@ -158,28 +158,28 @@ class C4Director:
 <dl>
 <dt id="pyControl4.director.C4Director"><code class="flex name class">
 <span>class <span class="ident">C4Director</span></span>
-<span>(</span><span>ip, bearer_token)</span>
+<span>(</span><span>ip, director_bearer_token)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Control4 Director object.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
-<p><code>bearer_token</code> - The bearer token used to authenticate with the Director. See <code>auth.py</code> for how to get this.</p></div>
+<p><code>director_bearer_token</code> - The bearer token used to authenticate with the Director. See <code>auth.py</code> for how to get this.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4Director:
-    def __init__(self, ip, bearer_token):
+    def __init__(self, ip, director_bearer_token):
         &#34;&#34;&#34;Creates a Control4 Director object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
-        self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(bearer_token)}
+        self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
 
     async def sendGetRequest(self, uri):
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
