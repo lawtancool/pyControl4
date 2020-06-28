@@ -16,7 +16,7 @@ APPLICATION_KEY = "78f6791373d61bea49fdb9fb8897f1f3af193f11"
 _LOGGER = logging.getLogger(__name__)
 
 
-class C4Auth:
+class C4Account:
     def __init__(self, username, password):
         self.username = username
         self.password = password

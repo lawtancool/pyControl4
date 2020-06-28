@@ -1,4 +1,4 @@
-from pyControl4.auth import C4Auth
+from pyControl4.account import C4Account
 from pyControl4.director import C4Director
 from pyControl4.light import C4Light
 from login_info import *
@@ -7,7 +7,7 @@ import json
 
 ip = "192.168.1.25"
 
-account = C4Auth(username, password)
+account = C4Account(username, password)
 data = asyncio.run(account.getAccountControllers())
 print(data["controllerCommonName"])
 # director_bearer_token = asyncio.run(
