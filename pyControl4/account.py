@@ -5,6 +5,7 @@ import asyncio
 import async_timeout
 import json
 import logging
+import datetime
 
 AUTHENTICATION_ENDPOINT = "https://apis.control4.com/authentication/v1/rest"
 CONTROLLER_AUTHORIZATION_ENDPOINT = (
@@ -186,7 +187,7 @@ class C4Account:
         return jsonDictionary
 
     async def getDirectorBearerToken(self, controller_common_name):
-        """Returns a director bearer token for making Control4 Director API requests.
+        """Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
         Parameters:
             `account_bearer_token` - Control4 account bearer token.
@@ -195,4 +196,11 @@ class C4Account:
         """
         data = await self.__sendControllerAuthRequest(controller_common_name)
         jsonDictionary = json.loads(data)
-        return jsonDictionary["authToken"]["token"]
+        token_expiration = datetime.datetime.now() + datetime.timedelta(
+            seconds=jsonDictionary["authToken"]["validSeconds"]
+        )
+        return {
+            "token": jsonDictionary["authToken"]["token"],
+            "token_expiration": token_expiration,
+        }
+
