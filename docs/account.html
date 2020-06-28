@@ -32,6 +32,7 @@ import asyncio
 import async_timeout
 import json
 import logging
+import datetime
 
 AUTHENTICATION_ENDPOINT = &#34;https://apis.control4.com/authentication/v1/rest&#34;
 CONTROLLER_AUTHORIZATION_ENDPOINT = (
@@ -213,7 +214,7 @@ class C4Account:
         return jsonDictionary
 
     async def getDirectorBearerToken(self, controller_common_name):
-        &#34;&#34;&#34;Returns a director bearer token for making Control4 Director API requests.
+        &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
         Parameters:
             `account_bearer_token` - Control4 account bearer token.
@@ -222,7 +223,13 @@ class C4Account:
         &#34;&#34;&#34;
         data = await self.__sendControllerAuthRequest(controller_common_name)
         jsonDictionary = json.loads(data)
-        return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
+        token_expiration = datetime.datetime.now() + datetime.timedelta(
+            seconds=jsonDictionary[&#34;authToken&#34;][&#34;validSeconds&#34;]
+        )
+        return {
+            &#34;token&#34;: jsonDictionary[&#34;authToken&#34;][&#34;token&#34;],
+            &#34;token_expiration&#34;: token_expiration,
+        }</code></pre>
 </details>
 </section>
 <section>
@@ -414,7 +421,7 @@ class C4Account:
         return jsonDictionary
 
     async def getDirectorBearerToken(self, controller_common_name):
-        &#34;&#34;&#34;Returns a director bearer token for making Control4 Director API requests.
+        &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
         Parameters:
             `account_bearer_token` - Control4 account bearer token.
@@ -423,7 +430,13 @@ class C4Account:
         &#34;&#34;&#34;
         data = await self.__sendControllerAuthRequest(controller_common_name)
         jsonDictionary = json.loads(data)
-        return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
+        token_expiration = datetime.datetime.now() + datetime.timedelta(
+            seconds=jsonDictionary[&#34;authToken&#34;][&#34;validSeconds&#34;]
+        )
+        return {
+            &#34;token&#34;: jsonDictionary[&#34;authToken&#34;][&#34;token&#34;],
+            &#34;token_expiration&#34;: token_expiration,
+        }</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -592,7 +605,7 @@ class C4Account:
 <span>async def <span class="ident">getDirectorBearerToken</span></span>(<span>self, controller_common_name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a director bearer token for making Control4 Director API requests.</p>
+<div class="desc"><p>Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>account_bearer_token</code> - Control4 account bearer token.</p>
 <p><code>controller_common_name</code>: Common name of the controller. See <code>getAccountControllers()</code> for details.</p></div>
@@ -601,7 +614,7 @@ class C4Account:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getDirectorBearerToken(self, controller_common_name):
-    &#34;&#34;&#34;Returns a director bearer token for making Control4 Director API requests.
+    &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
     Parameters:
         `account_bearer_token` - Control4 account bearer token.
@@ -610,7 +623,13 @@ class C4Account:
     &#34;&#34;&#34;
     data = await self.__sendControllerAuthRequest(controller_common_name)
     jsonDictionary = json.loads(data)
-    return jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]</code></pre>
+    token_expiration = datetime.datetime.now() + datetime.timedelta(
+        seconds=jsonDictionary[&#34;authToken&#34;][&#34;validSeconds&#34;]
+    )
+    return {
+        &#34;token&#34;: jsonDictionary[&#34;authToken&#34;][&#34;token&#34;],
+        &#34;token_expiration&#34;: token_expiration,
+    }</code></pre>
 </details>
 </dd>
 </dl>
