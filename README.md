@@ -1,5 +1,5 @@
 # pyControl4
-![pdoc](https://github.com/lawtancool/pyControl4/workflows/pdoc/badge.svg)![PyPI Release](https://github.com/lawtancool/pyControl4/workflows/PyPI%20Release/badge.svg)
+![pdoc](https://github.com/lawtancool/pyControl4/workflows/pdoc/badge.svg)![PyPI Release](https://github.com/lawtancool/pyControl4/workflows/PyPI%20Release/badge.svg)[![PyPI version](https://badge.fury.io/py/pyControl4.svg)](https://badge.fury.io/py/pyControl4)
 
 An asynchronous library to interact with Control4 systems through their built-in REST API. This is only known to work on controllers with OS 3.0 or newer. 
 
