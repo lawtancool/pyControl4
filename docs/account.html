@@ -48,7 +48,6 @@ class C4Account:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        asyncio.run(self.getAccountBearerToken())
 
     async def __sendAccountAuthRequest(self):
         &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
@@ -142,6 +141,7 @@ class C4Account:
         jsonDictionary = json.loads(data)
         try:
             self.account_bearer_token = jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
+            return self.account_bearer_token
         except KeyError:
             msg = &#34;Did not recieve an account bearer token. Is your username/password correct? &#34;
             _LOGGER.error(msg + data)
@@ -255,7 +255,6 @@ class C4Account:
     def __init__(self, username, password):
         self.username = username
         self.password = password
-        asyncio.run(self.getAccountBearerToken())
 
     async def __sendAccountAuthRequest(self):
         &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
@@ -349,6 +348,7 @@ class C4Account:
         jsonDictionary = json.loads(data)
         try:
             self.account_bearer_token = jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
+            return self.account_bearer_token
         except KeyError:
             msg = &#34;Did not recieve an account bearer token. Is your username/password correct? &#34;
             _LOGGER.error(msg + data)
@@ -464,6 +464,7 @@ class C4Account:
     jsonDictionary = json.loads(data)
     try:
         self.account_bearer_token = jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
+        return self.account_bearer_token
     except KeyError:
         msg = &#34;Did not recieve an account bearer token. Is your username/password correct? &#34;
         _LOGGER.error(msg + data)
