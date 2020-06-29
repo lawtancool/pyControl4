@@ -9,6 +9,7 @@ import json
 ip = "192.168.1.25"
 
 account = C4Account(username, password)
+asyncio.run(account.getAccountBearerToken())
 data = asyncio.run(account.getAccountControllers())
 print(data["controllerCommonName"])
 director_bearer_token = asyncio.run(
