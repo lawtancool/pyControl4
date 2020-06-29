@@ -34,6 +34,8 @@ import json
 import logging
 import datetime
 
+from .error_handling import *
+
 AUTHENTICATION_ENDPOINT = &#34;https://apis.control4.com/authentication/v1/rest&#34;
 CONTROLLER_AUTHORIZATION_ENDPOINT = (
     &#34;https://apis.control4.com/authentication/v1/rest/authorization&#34;
@@ -51,11 +53,6 @@ class C4Account:
 
     async def __sendAccountAuthRequest(self):
         &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
-
-        Parameters:
-            `username` - Control4 account username/email.
-
-            `password` - Control4 account password.
         &#34;&#34;&#34;
         dataDictionary = {
             &#34;clientInfo&#34;: {
@@ -79,14 +76,13 @@ class C4Account:
                 async with session.post(
                     AUTHENTICATION_ENDPOINT, json=dataDictionary
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
         &#34;&#34;&#34;Used internally to send GET requests to the Control4 API, authenticated with the account bearer token. Returns the entire JSON response from the Control4 auth API.
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `uri` - Full URI to send GET request to.
         &#34;&#34;&#34;
         try:
@@ -98,14 +94,13 @@ class C4Account:
         async with aiohttp.ClientSession() as session:
             with async_timeout.timeout(10):
                 async with session.get(uri, headers=headers) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
         &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
         &#34;&#34;&#34;
         try:
@@ -127,15 +122,11 @@ class C4Account:
                     headers=headers,
                     json=dataDictionary,
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def getAccountBearerToken(self):
-        &#34;&#34;&#34;Returns an account bearer token for making Control4 online API requests.
-
-        Parameters:
-            `username` - Control4 account username/email.
-
-            `password` - Control4 account password.
+        &#34;&#34;&#34;Gets an account bearer token for making Control4 online API requests.
         &#34;&#34;&#34;
         data = await self.__sendAccountAuthRequest()
         jsonDictionary = json.loads(data)
@@ -149,9 +140,6 @@ class C4Account:
 
     async def getAccountControllers(self):
         &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
-
-        Parameters:
-            `account_bearer_token` - Control4 account bearer token.
 
         Returns:
             ```
@@ -170,8 +158,6 @@ class C4Account:
         &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
 
         Returns:
@@ -213,12 +199,20 @@ class C4Account:
         jsonDictionary = json.loads(data)
         return jsonDictionary
 
+    async def getControllerOSVersion(self, controller_href):
+        &#34;&#34;&#34;Returns the OS version of a controller as a string.
+
+        Parameters:
+            `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+        &#34;&#34;&#34;
+        data = await self.__sendAccountGetRequest(controller_href + &#34;/controller&#34;)
+        jsonDictionary = json.loads(data)
+        return jsonDictionary[&#34;osVersion&#34;]
+
     async def getDirectorBearerToken(self, controller_common_name):
         &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
         &#34;&#34;&#34;
         data = await self.__sendControllerAuthRequest(controller_common_name)
@@ -258,11 +252,6 @@ class C4Account:
 
     async def __sendAccountAuthRequest(self):
         &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
-
-        Parameters:
-            `username` - Control4 account username/email.
-
-            `password` - Control4 account password.
         &#34;&#34;&#34;
         dataDictionary = {
             &#34;clientInfo&#34;: {
@@ -286,14 +275,13 @@ class C4Account:
                 async with session.post(
                     AUTHENTICATION_ENDPOINT, json=dataDictionary
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
         &#34;&#34;&#34;Used internally to send GET requests to the Control4 API, authenticated with the account bearer token. Returns the entire JSON response from the Control4 auth API.
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `uri` - Full URI to send GET request to.
         &#34;&#34;&#34;
         try:
@@ -305,14 +293,13 @@ class C4Account:
         async with aiohttp.ClientSession() as session:
             with async_timeout.timeout(10):
                 async with session.get(uri, headers=headers) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
         &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
         &#34;&#34;&#34;
         try:
@@ -334,15 +321,11 @@ class C4Account:
                     headers=headers,
                     json=dataDictionary,
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def getAccountBearerToken(self):
-        &#34;&#34;&#34;Returns an account bearer token for making Control4 online API requests.
-
-        Parameters:
-            `username` - Control4 account username/email.
-
-            `password` - Control4 account password.
+        &#34;&#34;&#34;Gets an account bearer token for making Control4 online API requests.
         &#34;&#34;&#34;
         data = await self.__sendAccountAuthRequest()
         jsonDictionary = json.loads(data)
@@ -356,9 +339,6 @@ class C4Account:
 
     async def getAccountControllers(self):
         &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
-
-        Parameters:
-            `account_bearer_token` - Control4 account bearer token.
 
         Returns:
             ```
@@ -377,8 +357,6 @@ class C4Account:
         &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
 
         Returns:
@@ -420,12 +398,20 @@ class C4Account:
         jsonDictionary = json.loads(data)
         return jsonDictionary
 
+    async def getControllerOSVersion(self, controller_href):
+        &#34;&#34;&#34;Returns the OS version of a controller as a string.
+
+        Parameters:
+            `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+        &#34;&#34;&#34;
+        data = await self.__sendAccountGetRequest(controller_href + &#34;/controller&#34;)
+        jsonDictionary = json.loads(data)
+        return jsonDictionary[&#34;osVersion&#34;]
+
     async def getDirectorBearerToken(self, controller_common_name):
         &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
         Parameters:
-            `account_bearer_token` - Control4 account bearer token.
-
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
         &#34;&#34;&#34;
         data = await self.__sendControllerAuthRequest(controller_common_name)
@@ -444,21 +430,13 @@ class C4Account:
 <span>async def <span class="ident">getAccountBearerToken</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns an account bearer token for making Control4 online API requests.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>username</code> - Control4 account username/email.</p>
-<p><code>password</code> - Control4 account password.</p></div>
+<div class="desc"><p>Gets an account bearer token for making Control4 online API requests.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getAccountBearerToken(self):
-    &#34;&#34;&#34;Returns an account bearer token for making Control4 online API requests.
-
-    Parameters:
-        `username` - Control4 account username/email.
-
-        `password` - Control4 account password.
+    &#34;&#34;&#34;Gets an account bearer token for making Control4 online API requests.
     &#34;&#34;&#34;
     data = await self.__sendAccountAuthRequest()
     jsonDictionary = json.loads(data)
@@ -476,8 +454,6 @@ class C4Account:
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a dictionary of the information for all controllers registered to an account.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>account_bearer_token</code> - Control4 account bearer token.</p>
 <h2 id="returns">Returns</h2>
 <pre><code>{    
     &quot;controllerCommonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
@@ -491,9 +467,6 @@ class C4Account:
 </summary>
 <pre><code class="python">async def getAccountControllers(self):
     &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
-
-    Parameters:
-        `account_bearer_token` - Control4 account bearer token.
 
     Returns:
         ```
@@ -515,7 +488,6 @@ class C4Account:
 <dd>
 <div class="desc"><p>Returns a dictionary of the information of a specific controller.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>account_bearer_token</code> - Control4 account bearer token.</p>
 <p><code>controller_href</code> - The API <code>href</code> of the controller (get this from the output of <code>getAccountControllers()</code>)</p>
 <h2 id="returns">Returns</h2>
 <pre><code>{
@@ -558,8 +530,6 @@ class C4Account:
     &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
     Parameters:
-        `account_bearer_token` - Control4 account bearer token.
-
         `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
 
     Returns:
@@ -602,13 +572,34 @@ class C4Account:
     return jsonDictionary</code></pre>
 </details>
 </dd>
+<dt id="pyControl4.account.C4Account.getControllerOSVersion"><code class="name flex">
+<span>async def <span class="ident">getControllerOSVersion</span></span>(<span>self, controller_href)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the OS version of a controller as a string.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from the output of <code>getAccountControllers()</code>)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getControllerOSVersion(self, controller_href):
+    &#34;&#34;&#34;Returns the OS version of a controller as a string.
+
+    Parameters:
+        `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+    &#34;&#34;&#34;
+    data = await self.__sendAccountGetRequest(controller_href + &#34;/controller&#34;)
+    jsonDictionary = json.loads(data)
+    return jsonDictionary[&#34;osVersion&#34;]</code></pre>
+</details>
+</dd>
 <dt id="pyControl4.account.C4Account.getDirectorBearerToken"><code class="name flex">
 <span>async def <span class="ident">getDirectorBearerToken</span></span>(<span>self, controller_common_name)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>account_bearer_token</code> - Control4 account bearer token.</p>
 <p><code>controller_common_name</code>: Common name of the controller. See <code>getAccountControllers()</code> for details.</p></div>
 <details class="source">
 <summary>
@@ -618,8 +609,6 @@ class C4Account:
     &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
 
     Parameters:
-        `account_bearer_token` - Control4 account bearer token.
-
         `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
     &#34;&#34;&#34;
     data = await self.__sendControllerAuthRequest(controller_common_name)
@@ -657,6 +646,7 @@ class C4Account:
 <li><code><a title="pyControl4.account.C4Account.getAccountBearerToken" href="#pyControl4.account.C4Account.getAccountBearerToken">getAccountBearerToken</a></code></li>
 <li><code><a title="pyControl4.account.C4Account.getAccountControllers" href="#pyControl4.account.C4Account.getAccountControllers">getAccountControllers</a></code></li>
 <li><code><a title="pyControl4.account.C4Account.getControllerInfo" href="#pyControl4.account.C4Account.getControllerInfo">getControllerInfo</a></code></li>
+<li><code><a title="pyControl4.account.C4Account.getControllerOSVersion" href="#pyControl4.account.C4Account.getControllerOSVersion">getControllerOSVersion</a></code></li>
 <li><code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="#pyControl4.account.C4Account.getDirectorBearerToken">getDirectorBearerToken</a></code></li>
 </ul>
 </li>

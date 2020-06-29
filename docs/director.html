@@ -32,6 +32,8 @@ import asyncio
 import async_timeout
 import json
 
+from .error_handling import *
+
 
 class C4Director:
     def __init__(self, ip, director_bearer_token):
@@ -59,6 +61,7 @@ class C4Director:
                 async with session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params):
@@ -80,6 +83,7 @@ class C4Director:
                 async with session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def getAllItemInfo(self):
@@ -122,6 +126,24 @@ class C4Director:
             )
         jsonDictionary = json.loads(data)
         return jsonDictionary[0][&#34;value&#34;]
+
+    async def getAllItemVariableValue(self, var_name):
+        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable for all items that have it.
+
+        Parameters:
+            `var_name` - The Control4 variable name.
+        &#34;&#34;&#34;
+        data = await self.sendGetRequest(
+            &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
+        )
+        if data == &#34;[]&#34;:
+            raise ValueError(
+                &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for any items.&#34;.format(
+                    var_name
+                )
+            )
+        jsonDictionary = json.loads(data)
+        return jsonDictionary
 
     async def getItemCommands(self, item_id):
         &#34;&#34;&#34;Returns a JSON list of the commands available for the specified item.
@@ -196,6 +218,7 @@ class C4Director:
                 async with session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params):
@@ -217,6 +240,7 @@ class C4Director:
                 async with session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def getAllItemInfo(self):
@@ -260,6 +284,24 @@ class C4Director:
         jsonDictionary = json.loads(data)
         return jsonDictionary[0][&#34;value&#34;]
 
+    async def getAllItemVariableValue(self, var_name):
+        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable for all items that have it.
+
+        Parameters:
+            `var_name` - The Control4 variable name.
+        &#34;&#34;&#34;
+        data = await self.sendGetRequest(
+            &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
+        )
+        if data == &#34;[]&#34;:
+            raise ValueError(
+                &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for any items.&#34;.format(
+                    var_name
+                )
+            )
+        jsonDictionary = json.loads(data)
+        return jsonDictionary
+
     async def getItemCommands(self, item_id):
         &#34;&#34;&#34;Returns a JSON list of the commands available for the specified item.
 
@@ -299,6 +341,36 @@ class C4Director:
     &#34;&#34;&#34;Returns a JSON list of all the items on the Director.
     &#34;&#34;&#34;
     return await self.sendGetRequest(&#34;/api/v1/items&#34;)</code></pre>
+</details>
+</dd>
+<dt id="pyControl4.director.C4Director.getAllItemVariableValue"><code class="name flex">
+<span>async def <span class="ident">getAllItemVariableValue</span></span>(<span>self, var_name)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a dictionary with the values of the specified variable for all items that have it.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>var_name</code> - The Control4 variable name.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getAllItemVariableValue(self, var_name):
+    &#34;&#34;&#34;Returns a dictionary with the values of the specified variable for all items that have it.
+
+    Parameters:
+        `var_name` - The Control4 variable name.
+    &#34;&#34;&#34;
+    data = await self.sendGetRequest(
+        &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
+    )
+    if data == &#34;[]&#34;:
+        raise ValueError(
+            &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for any items.&#34;.format(
+                var_name
+            )
+        )
+    jsonDictionary = json.loads(data)
+    return jsonDictionary</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemBindings"><code class="name flex">
@@ -460,6 +532,7 @@ Returns the Director's JSON response as a string.</p>
             async with session.get(
                 self.base_url + uri, headers=self.headers
             ) as resp:
+                await checkResponseForError(await resp.text())
                 return await resp.text()</code></pre>
 </details>
 </dd>
@@ -496,6 +569,7 @@ Returns the Director's JSON response as a string.</p>
             async with session.post(
                 self.base_url + uri, headers=self.headers, json=dataDictionary
             ) as resp:
+                await checkResponseForError(await resp.text())
                 return await resp.text()</code></pre>
 </details>
 </dd>
@@ -521,6 +595,7 @@ Returns the Director's JSON response as a string.</p>
 <h4><code><a title="pyControl4.director.C4Director" href="#pyControl4.director.C4Director">C4Director</a></code></h4>
 <ul class="">
 <li><code><a title="pyControl4.director.C4Director.getAllItemInfo" href="#pyControl4.director.C4Director.getAllItemInfo">getAllItemInfo</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.getAllItemVariableValue" href="#pyControl4.director.C4Director.getAllItemVariableValue">getAllItemVariableValue</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemBindings" href="#pyControl4.director.C4Director.getItemBindings">getItemBindings</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemCommands" href="#pyControl4.director.C4Director.getItemCommands">getItemCommands</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemInfo" href="#pyControl4.director.C4Director.getItemInfo">getItemInfo</a></code></li>
