@@ -20,6 +20,7 @@ ip = "192.168.1.25"
 
 """Authenticate with Control4 account"""
 account = C4Account(username, password)
+asyncio.run(account.getAccountBearerToken())
 
 """Get and print controller name"""
 accountControllers = asyncio.run(account.getAccountControllers())
