@@ -29,7 +29,7 @@ print(accountControllers["controllerCommonName"])
 """Get bearer token to communicate with controller locally"""
 director_bearer_token = asyncio.run(
     account.getDirectorBearerToken(accountControllers["controllerCommonName"])
-)
+)["token"]
 
 """Create new C4Director instance"""
 director = C4Director(ip, director_bearer_token)
