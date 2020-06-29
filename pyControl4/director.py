@@ -100,6 +100,24 @@ class C4Director:
         jsonDictionary = json.loads(data)
         return jsonDictionary[0]["value"]
 
+    async def getAllItemVariableValue(self, var_name):
+        """Returns a dictionary with the values of the specified variable for all items that have it.
+
+        Parameters:
+            `var_name` - The Control4 variable name.
+        """
+        data = await self.sendGetRequest(
+            "/api/v1/items/variables?varnames={}".format(var_name)
+        )
+        if data == "[]":
+            raise ValueError(
+                "Empty response recieved from Director! The variable {} doesn't seem to exist for any items.".format(
+                    var_name
+                )
+            )
+        jsonDictionary = json.loads(data)
+        return jsonDictionary
+
     async def getItemCommands(self, item_id):
         """Returns a JSON list of the commands available for the specified item.
 

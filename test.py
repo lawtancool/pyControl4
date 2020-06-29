@@ -23,12 +23,13 @@ print(data["controllerCommonName"])
 print(data["href"])
 print(asyncio.run(account.getControllerOSVersion(data["href"])))
 
-# director_bearer_token = asyncio.run(
-#     account.getDirectorBearerToken(data["controllerCommonName"])
-# )["token"]
-# print(director_bearer_token)
-# director = C4Director(ip, director_bearer_token)
-# # print(asyncio.run(director.getAllItemInfo()))
+director_bearer_token = asyncio.run(
+    account.getDirectorBearerToken(data["controllerCommonName"])
+)["token"]
+print(director_bearer_token)
+director = C4Director(ip, director_bearer_token)
+
+print(asyncio.run(director.getAllItemVariableValue("LIGHT_LEVEL")))
 
 # light = C4Light(director, 253)
 # # asyncio.run(light.rampToLevel(10, 10000))
