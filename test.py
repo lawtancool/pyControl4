@@ -1,6 +1,7 @@
 from pyControl4.account import C4Account
 from pyControl4.director import C4Director
 from pyControl4.light import C4Light
+from pyControl4.error_handling import checkResponseForError
 
 from login_info import *
 import asyncio
@@ -8,17 +9,27 @@ import json
 
 ip = "192.168.1.25"
 
+# asyncio.run(
+#     checkResponseForError(
+#         '{"code":404,"details":"Account with id:527154 not found in DB","message":"Account not found","subCode":0}'
+#     )
+# )
+
+
 account = C4Account(username, password)
 asyncio.run(account.getAccountBearerToken())
 data = asyncio.run(account.getAccountControllers())
 print(data["controllerCommonName"])
-director_bearer_token = asyncio.run(
-    account.getDirectorBearerToken(data["controllerCommonName"])
-)["token"]
-print(director_bearer_token)
-director = C4Director(ip, director_bearer_token)
-# print(asyncio.run(director.getAllItemInfo()))
+print(data["href"])
+print(asyncio.run(account.getControllerOSVersion(data["href"])))
 
-light = C4Light(director, 253)
-# asyncio.run(light.rampToLevel(10, 10000))
-print(asyncio.run(light.getState()))
+# director_bearer_token = asyncio.run(
+#     account.getDirectorBearerToken(data["controllerCommonName"])
+# )["token"]
+# print(director_bearer_token)
+# director = C4Director(ip, director_bearer_token)
+# # print(asyncio.run(director.getAllItemInfo()))
+
+# light = C4Light(director, 253)
+# # asyncio.run(light.rampToLevel(10, 10000))
+# print(asyncio.run(light.getState()))

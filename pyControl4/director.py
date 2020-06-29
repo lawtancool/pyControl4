@@ -5,6 +5,8 @@ import asyncio
 import async_timeout
 import json
 
+from .error_handling import *
+
 
 class C4Director:
     def __init__(self, ip, director_bearer_token):
@@ -32,6 +34,7 @@ class C4Director:
                 async with session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params):
@@ -53,6 +56,7 @@ class C4Director:
                 async with session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def getAllItemInfo(self):
