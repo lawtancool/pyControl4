@@ -3,7 +3,7 @@
 
 An asynchronous library to interact with Control4 systems through their built-in REST API. This is only known to work on controllers with OS 3.0 or newer. 
 
-Auto-generated function documentation can be found at <https://lawtancool.github.io/pycontrol4>
+Auto-generated function documentation can be found at <https://lawtancool.github.io/pyControl4>
 
 ## Usage example
 ```python
