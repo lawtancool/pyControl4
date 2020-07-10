@@ -52,15 +52,25 @@ class BadCredentials(C4Exception):
     &#34;&#34;&#34;Raised when provided credentials are incorrect.&#34;&#34;&#34;
 
 
+class BadToken(C4Exception):
+    &#34;&#34;&#34;Raised when director bearer token is invalid.&#34;&#34;&#34;
+
+
 ERROR_CODES = {&#34;401&#34;: Unauthorized, &#34;404&#34;: NotFound}
 
 ERROR_DETAILS = {
     &#34;Permission denied Bad credentials&#34;: BadCredentials,
 }
 
+DIRECTOR_ERRORS = {
+    &#34;Unauthorized&#34;: Unauthorized,
+}
+
+DIRECTOR_ERROR_DETAILS = {&#34;Expired or invalid token&#34;: BadToken}
+
 
 async def __checkResponseFormat(response_text: str):
-    &#34;&#34;&#34;Known Control4 API error message formats:
+    &#34;&#34;&#34;Known Control4 authentication API error message formats:
     ```json
     {
         &#34;C4ErrorResponse&#34;: {
@@ -86,6 +96,13 @@ async def __checkResponseFormat(response_text: str):
         &lt;message&gt;Permission denied&lt;/message&gt;
         &lt;subCode&gt;0&lt;/subCode&gt;
     &lt;/C4ErrorResponse&gt;
+    ```
+    Known Control4 director error message formats:
+    ```json
+    {
+        &#34;error&#34;: &#34;Unauthorized&#34;,
+        &#34;details&#34;: &#34;Expired or invalid token&#34;
+    }
     ```
     &#34;&#34;&#34;
     if response_text.startswith(&#34;&lt;&#34;):
@@ -118,6 +135,13 @@ async def checkResponseForError(response_text: str):
             raise exception(response_text)
         else:
             exception = ERROR_CODES.get(str(dictionary[&#34;code&#34;]), C4Exception)
+            raise exception(response_text)
+    elif &#34;error&#34; in dictionary:
+        if dictionary[&#34;details&#34;] in DIRECTOR_ERROR_DETAILS:
+            exception = DIRECTOR_ERROR_DETAILS.get(dictionary[&#34;details&#34;])
+            raise exception(response_text)
+        else:
+            exception = DIRECTOR_ERRORS.get(str(dictionary[&#34;error&#34;]), C4Exception)
             raise exception(response_text)</code></pre>
 </details>
 </section>
@@ -164,6 +188,13 @@ async def checkResponseForError(response_text: str):
             raise exception(response_text)
         else:
             exception = ERROR_CODES.get(str(dictionary[&#34;code&#34;]), C4Exception)
+            raise exception(response_text)
+    elif &#34;error&#34; in dictionary:
+        if dictionary[&#34;details&#34;] in DIRECTOR_ERROR_DETAILS:
+            exception = DIRECTOR_ERROR_DETAILS.get(dictionary[&#34;details&#34;])
+            raise exception(response_text)
+        else:
+            exception = DIRECTOR_ERRORS.get(str(dictionary[&#34;error&#34;]), C4Exception)
             raise exception(response_text)</code></pre>
 </details>
 </dd>
@@ -184,6 +215,26 @@ async def checkResponseForError(response_text: str):
 </summary>
 <pre><code class="python">class BadCredentials(C4Exception):
     &#34;&#34;&#34;Raised when provided credentials are incorrect.&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+</dd>
+<dt id="pyControl4.error_handling.BadToken"><code class="flex name class">
+<span>class <span class="ident">BadToken</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when director bearer token is invalid.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BadToken(C4Exception):
+    &#34;&#34;&#34;Raised when director bearer token is invalid.&#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -216,6 +267,7 @@ async def checkResponseForError(response_text: str):
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="pyControl4.error_handling.BadCredentials" href="#pyControl4.error_handling.BadCredentials">BadCredentials</a></li>
+<li><a title="pyControl4.error_handling.BadToken" href="#pyControl4.error_handling.BadToken">BadToken</a></li>
 <li><a title="pyControl4.error_handling.NotFound" href="#pyControl4.error_handling.NotFound">NotFound</a></li>
 <li><a title="pyControl4.error_handling.Unauthorized" href="#pyControl4.error_handling.Unauthorized">Unauthorized</a></li>
 </ul>
@@ -287,6 +339,9 @@ Occurs when token is invalid.</p></div>
 <ul>
 <li>
 <h4><code><a title="pyControl4.error_handling.BadCredentials" href="#pyControl4.error_handling.BadCredentials">BadCredentials</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pyControl4.error_handling.BadToken" href="#pyControl4.error_handling.BadToken">BadToken</a></code></h4>
 </li>
 <li>
 <h4><code><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></code></h4>
