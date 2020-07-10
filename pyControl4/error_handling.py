@@ -25,15 +25,25 @@ class BadCredentials(C4Exception):
     """Raised when provided credentials are incorrect."""
 
 
+class BadToken(C4Exception):
+    """Raised when director bearer token is invalid."""
+
+
 ERROR_CODES = {"401": Unauthorized, "404": NotFound}
 
 ERROR_DETAILS = {
     "Permission denied Bad credentials": BadCredentials,
 }
 
+DIRECTOR_ERRORS = {
+    "Unauthorized": Unauthorized,
+}
+
+DIRECTOR_ERROR_DETAILS = {"Expired or invalid token": BadToken}
+
 
 async def __checkResponseFormat(response_text: str):
-    """Known Control4 API error message formats:
+    """Known Control4 authentication API error message formats:
     ```json
     {
         "C4ErrorResponse": {
@@ -59,6 +69,13 @@ async def __checkResponseFormat(response_text: str):
         <message>Permission denied</message>
         <subCode>0</subCode>
     </C4ErrorResponse>
+    ```
+    Known Control4 director error message formats:
+    ```json
+    {
+        "error": "Unauthorized",
+        "details": "Expired or invalid token"
+    }
     ```
     """
     if response_text.startswith("<"):
@@ -91,4 +108,11 @@ async def checkResponseForError(response_text: str):
             raise exception(response_text)
         else:
             exception = ERROR_CODES.get(str(dictionary["code"]), C4Exception)
+            raise exception(response_text)
+    elif "error" in dictionary:
+        if dictionary["details"] in DIRECTOR_ERROR_DETAILS:
+            exception = DIRECTOR_ERROR_DETAILS.get(dictionary["details"])
+            raise exception(response_text)
+        else:
+            exception = DIRECTOR_ERRORS.get(str(dictionary["error"]), C4Exception)
             raise exception(response_text)
