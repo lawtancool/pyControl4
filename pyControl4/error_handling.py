@@ -1,6 +1,5 @@
 """Handles errors recieved from the Control4 API."""
 import json
-import asyncio
 import xmltodict
 
 
@@ -85,7 +84,7 @@ async def __checkResponseFormat(response_text: str):
 
 async def checkResponseForError(response_text: str):
     """Checks a string response from the Control4 API for error codes.
-        
+
     Parameters:
         `response_text` - JSON or XML response from Control4, as a string.
     """

@@ -1,11 +1,10 @@
 """Handles communication with a Control4 Director, and provides functions for getting details about items on the Director.
 """
 import aiohttp
-import asyncio
 import async_timeout
 import json
 
-from .error_handling import *
+from .error_handling import checkResponseForError
 
 
 class C4Director:
@@ -23,7 +22,7 @@ class C4Director:
     async def sendGetRequest(self, uri):
         """Sends a GET request to the specified API URI.
         Returns the Director's JSON response as a string.
-        
+
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         """
@@ -85,7 +84,7 @@ class C4Director:
 
         Parameters:
             `item_id` - The Control4 item ID.
-            
+
             `var_name` - The Control4 variable name.
         """
         data = await self.sendGetRequest(

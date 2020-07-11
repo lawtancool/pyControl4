@@ -1,13 +1,13 @@
-"""Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 Director.
+"""Authenticates with the Control4 API, retrieves account and registered
+controller info, and retrieves a bearer token for connecting to a Control4 Director.
 """
 import aiohttp
-import asyncio
 import async_timeout
 import json
 import logging
 import datetime
 
-from .error_handling import *
+from .error_handling import checkResponseForError
 
 AUTHENTICATION_ENDPOINT = "https://apis.control4.com/authentication/v1/rest"
 CONTROLLER_AUTHORIZATION_ENDPOINT = (
@@ -25,7 +25,8 @@ class C4Account:
         self.password = password
 
     async def __sendAccountAuthRequest(self):
-        """Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
+        """Used internally to retrieve an account bearer token. Returns the entire
+        JSON response from the Control4 auth API.
         """
         dataDictionary = {
             "clientInfo": {
@@ -53,7 +54,9 @@ class C4Account:
                     return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
-        """Used internally to send GET requests to the Control4 API, authenticated with the account bearer token. Returns the entire JSON response from the Control4 auth API.
+        """Used internally to send GET requests to the Control4 API,
+        authenticated with the account bearer token. Returns the entire JSON
+        response from the Control4 auth API.
 
         Parameters:
             `uri` - Full URI to send GET request to.
@@ -71,7 +74,8 @@ class C4Account:
                     return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
-        """Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
+        """Used internally to retrieve an director bearer token. Returns the
+        entire JSON response from the Control4 auth API.
 
         Parameters:
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
@@ -116,7 +120,7 @@ class C4Account:
 
         Returns:
             ```
-            {    
+            {
                 "controllerCommonName": "control4_MODEL_MACADDRESS",
                 "href": "https://apis.control4.com/account/v3/rest/accounts/000000",
                 "name": "Name"
@@ -197,4 +201,3 @@ class C4Account:
             "token": jsonDictionary["authToken"]["token"],
             "token_expiration": token_expiration,
         }
-

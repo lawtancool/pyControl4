@@ -1,9 +1,5 @@
 """Controls Control4 Light devices.
 """
-import aiohttp
-import asyncio
-import async_timeout
-from .director import C4Director
 
 
 class C4Light:
@@ -32,7 +28,7 @@ class C4Light:
         return bool(value)
 
     async def setLevel(self, level):
-        """Sets the light level of a dimmer or turns on/off a switch. 
+        """Sets the light level of a dimmer or turns on/off a switch.
         Any `level > 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
@@ -45,7 +41,7 @@ class C4Light:
         )
 
     async def rampToLevel(self, level, time):
-        """Ramps the light level of a dimmer over time. 
+        """Ramps the light level of a dimmer over time.
         Any `level > 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:

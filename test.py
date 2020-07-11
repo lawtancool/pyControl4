@@ -29,8 +29,13 @@ director_bearer_token = asyncio.run(
 print(director_bearer_token)
 director = C4Director(ip, director_bearer_token)
 
-print(asyncio.run(director.getAllItemVariableValue("LIGHT_LEVEL")))
+f = open("allitems.txt", "x")
+
+f.write(asyncio.run(director.getAllItemInfo()))
+f.close()
+
+# print(asyncio.run(director.getAllItemVariableValue("LIGHT_LEVEL")))
 
 # light = C4Light(director, 253)
-# # asyncio.run(light.rampToLevel(10, 10000))
+# asyncio.run(light.rampToLevel(10, 10000))
 # print(asyncio.run(light.getState()))
