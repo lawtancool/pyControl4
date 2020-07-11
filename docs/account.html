@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.1" />
 <title>pyControl4.account API documentation</title>
-<meta name="description" content="Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 …" />
+<meta name="description" content="Authenticates with the Control4 API, retrieves account and registered
+controller info, and retrieves a bearer token for connecting to a Control4 …" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -20,21 +21,22 @@
 <h1 class="title">Module <code>pyControl4.account</code></h1>
 </header>
 <section id="section-intro">
-<p>Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 Director.</p>
+<p>Authenticates with the Control4 API, retrieves account and registered
+controller info, and retrieves a bearer token for connecting to a Control4 Director.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;Authenticates with the Control4 API, retrieves account and registered controller info, and retrieves a bearer token for connecting to a Control4 Director.
+<pre><code class="python">&#34;&#34;&#34;Authenticates with the Control4 API, retrieves account and registered
+controller info, and retrieves a bearer token for connecting to a Control4 Director.
 &#34;&#34;&#34;
 import aiohttp
-import asyncio
 import async_timeout
 import json
 import logging
 import datetime
 
-from .error_handling import *
+from .error_handling import checkResponseForError
 
 AUTHENTICATION_ENDPOINT = &#34;https://apis.control4.com/authentication/v1/rest&#34;
 CONTROLLER_AUTHORIZATION_ENDPOINT = (
@@ -52,7 +54,8 @@ class C4Account:
         self.password = password
 
     async def __sendAccountAuthRequest(self):
-        &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
+        &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire
+        JSON response from the Control4 auth API.
         &#34;&#34;&#34;
         dataDictionary = {
             &#34;clientInfo&#34;: {
@@ -80,7 +83,9 @@ class C4Account:
                     return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
-        &#34;&#34;&#34;Used internally to send GET requests to the Control4 API, authenticated with the account bearer token. Returns the entire JSON response from the Control4 auth API.
+        &#34;&#34;&#34;Used internally to send GET requests to the Control4 API,
+        authenticated with the account bearer token. Returns the entire JSON
+        response from the Control4 auth API.
 
         Parameters:
             `uri` - Full URI to send GET request to.
@@ -98,7 +103,8 @@ class C4Account:
                     return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
-        &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
+        &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the
+        entire JSON response from the Control4 auth API.
 
         Parameters:
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
@@ -143,7 +149,7 @@ class C4Account:
 
         Returns:
             ```
-            {    
+            {
                 &#34;controllerCommonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
                 &#34;href&#34;: &#34;https://apis.control4.com/account/v3/rest/accounts/000000&#34;,
                 &#34;name&#34;: &#34;Name&#34;
@@ -251,7 +257,8 @@ class C4Account:
         self.password = password
 
     async def __sendAccountAuthRequest(self):
-        &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire JSON response from the Control4 auth API.
+        &#34;&#34;&#34;Used internally to retrieve an account bearer token. Returns the entire
+        JSON response from the Control4 auth API.
         &#34;&#34;&#34;
         dataDictionary = {
             &#34;clientInfo&#34;: {
@@ -279,7 +286,9 @@ class C4Account:
                     return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
-        &#34;&#34;&#34;Used internally to send GET requests to the Control4 API, authenticated with the account bearer token. Returns the entire JSON response from the Control4 auth API.
+        &#34;&#34;&#34;Used internally to send GET requests to the Control4 API,
+        authenticated with the account bearer token. Returns the entire JSON
+        response from the Control4 auth API.
 
         Parameters:
             `uri` - Full URI to send GET request to.
@@ -297,7 +306,8 @@ class C4Account:
                     return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
-        &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the entire JSON response from the Control4 auth API.
+        &#34;&#34;&#34;Used internally to retrieve an director bearer token. Returns the
+        entire JSON response from the Control4 auth API.
 
         Parameters:
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
@@ -342,7 +352,7 @@ class C4Account:
 
         Returns:
             ```
-            {    
+            {
                 &#34;controllerCommonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
                 &#34;href&#34;: &#34;https://apis.control4.com/account/v3/rest/accounts/000000&#34;,
                 &#34;name&#34;: &#34;Name&#34;
@@ -455,7 +465,7 @@ class C4Account:
 <dd>
 <div class="desc"><p>Returns a dictionary of the information for all controllers registered to an account.</p>
 <h2 id="returns">Returns</h2>
-<pre><code>{    
+<pre><code>{
     &quot;controllerCommonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
     &quot;href&quot;: &quot;https://apis.control4.com/account/v3/rest/accounts/000000&quot;,
     &quot;name&quot;: &quot;Name&quot;
@@ -470,7 +480,7 @@ class C4Account:
 
     Returns:
         ```
-        {    
+        {
             &#34;controllerCommonName&#34;: &#34;control4_MODEL_MACADDRESS&#34;,
             &#34;href&#34;: &#34;https://apis.control4.com/account/v3/rest/accounts/000000&#34;,
             &#34;name&#34;: &#34;Name&#34;

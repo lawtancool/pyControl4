@@ -27,10 +27,6 @@
 </summary>
 <pre><code class="python">&#34;&#34;&#34;Controls Control4 Light devices.
 &#34;&#34;&#34;
-import aiohttp
-import asyncio
-import async_timeout
-from .director import C4Director
 
 
 class C4Light:
@@ -59,7 +55,7 @@ class C4Light:
         return bool(value)
 
     async def setLevel(self, level):
-        &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch. 
+        &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch.
         Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
@@ -72,7 +68,7 @@ class C4Light:
         )
 
     async def rampToLevel(self, level, time):
-        &#34;&#34;&#34;Ramps the light level of a dimmer over time. 
+        &#34;&#34;&#34;Ramps the light level of a dimmer over time.
         Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
@@ -135,7 +131,7 @@ class C4Light:
         return bool(value)
 
     async def setLevel(self, level):
-        &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch. 
+        &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch.
         Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
@@ -148,7 +144,7 @@ class C4Light:
         )
 
     async def rampToLevel(self, level, time):
-        &#34;&#34;&#34;Ramps the light level of a dimmer over time. 
+        &#34;&#34;&#34;Ramps the light level of a dimmer over time.
         Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
@@ -212,7 +208,7 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def rampToLevel(self, level, time):
-    &#34;&#34;&#34;Ramps the light level of a dimmer over time. 
+    &#34;&#34;&#34;Ramps the light level of a dimmer over time.
     Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
     Parameters:
@@ -240,7 +236,7 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def setLevel(self, level):
-    &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch. 
+    &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch.
     Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
     Parameters:
