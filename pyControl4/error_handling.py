@@ -10,21 +10,21 @@ class C4Exception(Exception):
         self.message = message
 
 
-class Unauthorized(C4Exception):
-    """Raised when unauthorized, but no other recognized details are provided.
-    Occurs when token is invalid."""
-
-
 class NotFound(C4Exception):
     """Raised when a 404 response is recieved from the Control4 API.
     Occurs when the requested controller, etc. could not be found."""
 
 
-class BadCredentials(C4Exception):
+class Unauthorized(C4Exception):
+    """Raised when unauthorized, but no other recognized details are provided.
+    Occurs when token is invalid."""
+
+
+class BadCredentials(Unauthorized):
     """Raised when provided credentials are incorrect."""
 
 
-class BadToken(C4Exception):
+class BadToken(Unauthorized):
     """Raised when director bearer token is invalid."""
 
 
