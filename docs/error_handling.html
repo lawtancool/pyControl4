@@ -37,21 +37,21 @@ class C4Exception(Exception):
         self.message = message
 
 
-class Unauthorized(C4Exception):
-    &#34;&#34;&#34;Raised when unauthorized, but no other recognized details are provided.
-    Occurs when token is invalid.&#34;&#34;&#34;
-
-
 class NotFound(C4Exception):
     &#34;&#34;&#34;Raised when a 404 response is recieved from the Control4 API.
     Occurs when the requested controller, etc. could not be found.&#34;&#34;&#34;
 
 
-class BadCredentials(C4Exception):
+class Unauthorized(C4Exception):
+    &#34;&#34;&#34;Raised when unauthorized, but no other recognized details are provided.
+    Occurs when token is invalid.&#34;&#34;&#34;
+
+
+class BadCredentials(Unauthorized):
     &#34;&#34;&#34;Raised when provided credentials are incorrect.&#34;&#34;&#34;
 
 
-class BadToken(C4Exception):
+class BadToken(Unauthorized):
     &#34;&#34;&#34;Raised when director bearer token is invalid.&#34;&#34;&#34;
 
 
@@ -212,11 +212,12 @@ async def checkResponseForError(response_text: str):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class BadCredentials(C4Exception):
+<pre><code class="python">class BadCredentials(Unauthorized):
     &#34;&#34;&#34;Raised when provided credentials are incorrect.&#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="pyControl4.error_handling.Unauthorized" href="#pyControl4.error_handling.Unauthorized">Unauthorized</a></li>
 <li><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></li>
 <li>builtins.Exception</li>
 <li>builtins.BaseException</li>
@@ -232,11 +233,12 @@ async def checkResponseForError(response_text: str):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class BadToken(C4Exception):
+<pre><code class="python">class BadToken(Unauthorized):
     &#34;&#34;&#34;Raised when director bearer token is invalid.&#34;&#34;&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="pyControl4.error_handling.Unauthorized" href="#pyControl4.error_handling.Unauthorized">Unauthorized</a></li>
 <li><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></li>
 <li>builtins.Exception</li>
 <li>builtins.BaseException</li>
@@ -265,8 +267,6 @@ async def checkResponseForError(response_text: str):
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="pyControl4.error_handling.BadCredentials" href="#pyControl4.error_handling.BadCredentials">BadCredentials</a></li>
-<li><a title="pyControl4.error_handling.BadToken" href="#pyControl4.error_handling.BadToken">BadToken</a></li>
 <li><a title="pyControl4.error_handling.NotFound" href="#pyControl4.error_handling.NotFound">NotFound</a></li>
 <li><a title="pyControl4.error_handling.Unauthorized" href="#pyControl4.error_handling.Unauthorized">Unauthorized</a></li>
 </ul>
@@ -313,6 +313,11 @@ Occurs when token is invalid.</p></div>
 <li><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></li>
 <li>builtins.Exception</li>
 <li>builtins.BaseException</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pyControl4.error_handling.BadCredentials" href="#pyControl4.error_handling.BadCredentials">BadCredentials</a></li>
+<li><a title="pyControl4.error_handling.BadToken" href="#pyControl4.error_handling.BadToken">BadToken</a></li>
 </ul>
 </dd>
 </dl>
