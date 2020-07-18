@@ -19,7 +19,7 @@ class C4Director:
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.getDirectorBearerToken` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
 
             `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
             If not provided, the library will open and close its own `ClientSession`s as needed.
