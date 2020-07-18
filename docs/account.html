@@ -52,6 +52,16 @@ class C4Account:
     def __init__(
         self, username, password, session: aiohttp.ClientSession = None,
     ):
+        &#34;&#34;&#34;Creates a Control4 account object.
+
+        Parameters:
+            `username` - Control4 account username/email.
+
+            `password` - Control4 account password.
+
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
+            If not provided, the library will open and close its own `ClientSession`s as needed.
+        &#34;&#34;&#34;
         self.username = username
         self.password = password
         self.session = session
@@ -273,7 +283,12 @@ class C4Account:
 <span>(</span><span>username, password, session: aiohttp.client.ClientSession = None)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Creates a Control4 account object.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>username</code> - Control4 account username/email.</p>
+<p><code>password</code> - Control4 account password.</p>
+<p><code>session</code> - (Optional) Allows the use of an <code>aiohttp.ClientSession</code> object for all network requests. This session will not be closed by the library.
+If not provided, the library will open and close its own <code>ClientSession</code>s as needed.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -282,6 +297,16 @@ class C4Account:
     def __init__(
         self, username, password, session: aiohttp.ClientSession = None,
     ):
+        &#34;&#34;&#34;Creates a Control4 account object.
+
+        Parameters:
+            `username` - Control4 account username/email.
+
+            `password` - Control4 account password.
+
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
+            If not provided, the library will open and close its own `ClientSession`s as needed.
+        &#34;&#34;&#34;
         self.username = username
         self.password = password
         self.session = session
