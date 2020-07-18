@@ -6,8 +6,9 @@ from pyControl4.error_handling import checkResponseForError
 from login_info import *
 import asyncio
 import json
+import aiohttp
 
-ip = "192.168.1.25"
+ip = "192.168.1.18"
 
 # asyncio.run(
 #     checkResponseForError(
@@ -16,23 +17,31 @@ ip = "192.168.1.25"
 # )
 
 
-account = C4Account(username, password)
+async def returnClientSession():
+    session = aiohttp.ClientSession()
+    return session
+
+
+session = asyncio.run(returnClientSession())
+
+account = C4Account(username, password, session)
 asyncio.run(account.getAccountBearerToken())
-data = asyncio.run(account.getAccountControllers())
-print(data["controllerCommonName"])
-print(data["href"])
-print(asyncio.run(account.getControllerOSVersion(data["href"])))
+# data = asyncio.run(account.getAccountControllers())
+# print(asyncio.run(account.getAccountControllers()))
+# print(data["controllerCommonName"])
+# print(data["href"])
+# print(asyncio.run(account.getControllerOSVersion(data["href"])))
 
-director_bearer_token = asyncio.run(
-    account.getDirectorBearerToken(data["controllerCommonName"])
-)["token"]
-print(director_bearer_token)
-director = C4Director(ip, director_bearer_token)
+# director_bearer_token = asyncio.run(
+#     account.getDirectorBearerToken(data["controllerCommonName"])
+# )
+# print(director_bearer_token)
+# director = C4Director(ip, director_bearer_token)
 
-f = open("allitems.txt", "x")
+# f = open("allitems.txt", "x")
 
-f.write(asyncio.run(director.getAllItemInfo()))
-f.close()
+# f.write(asyncio.run(director.getAllItemInfo()))
+# f.close()
 
 # print(asyncio.run(director.getAllItemVariableValue("LIGHT_LEVEL")))
 

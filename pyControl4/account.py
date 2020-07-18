@@ -20,9 +20,12 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class C4Account:
-    def __init__(self, username, password):
+    def __init__(
+        self, username, password, session: aiohttp.ClientSession = None,
+    ):
         self.username = username
         self.password = password
+        self.session = session
 
     async def __sendAccountAuthRequest(self):
         """Used internally to retrieve an account bearer token. Returns the entire
@@ -45,13 +48,22 @@ class C4Account:
                 },
             }
         }
-        async with aiohttp.ClientSession() as session:
-            with async_timeout.timeout(10):
-                async with session.post(
-                    AUTHENTICATION_ENDPOINT, json=dataDictionary
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
+        if self.session is None:
+            async with aiohttp.ClientSession() as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        AUTHENTICATION_ENDPOINT, json=dataDictionary
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
+            async with self.session as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        AUTHENTICATION_ENDPOINT, json=dataDictionary
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
         """Used internally to send GET requests to the Control4 API,
@@ -67,11 +79,18 @@ class C4Account:
             msg = "The account bearer token is missing - was your username/password correct? "
             _LOGGER.error(msg)
             raise
-        async with aiohttp.ClientSession() as session:
-            with async_timeout.timeout(10):
-                async with session.get(uri, headers=headers) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
+        if self.session is None:
+            async with aiohttp.ClientSession() as session:
+                with async_timeout.timeout(10):
+                    async with session.get(uri, headers=headers) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
+            async with self.session as session:
+                with async_timeout.timeout(10):
+                    async with session.get(uri, headers=headers) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
         """Used internally to retrieve an director bearer token. Returns the
@@ -92,15 +111,26 @@ class C4Account:
                 "services": "director",
             }
         }
-        async with aiohttp.ClientSession() as session:
-            with async_timeout.timeout(10):
-                async with session.post(
-                    CONTROLLER_AUTHORIZATION_ENDPOINT,
-                    headers=headers,
-                    json=dataDictionary,
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
+        if self.session is None:
+            async with aiohttp.ClientSession() as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        CONTROLLER_AUTHORIZATION_ENDPOINT,
+                        headers=headers,
+                        json=dataDictionary,
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
+            async with self.session as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        CONTROLLER_AUTHORIZATION_ENDPOINT,
+                        headers=headers,
+                        json=dataDictionary,
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
 
     async def getAccountBearerToken(self):
         """Gets an account bearer token for making Control4 online API requests.
