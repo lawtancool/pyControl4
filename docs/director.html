@@ -35,7 +35,12 @@ from .error_handling import checkResponseForError
 
 
 class C4Director:
-    def __init__(self, ip, director_bearer_token):
+    def __init__(
+        self,
+        ip,
+        director_bearer_token,
+        session_no_verify_ssl: aiohttp.ClientSession = None,
+    ):
         &#34;&#34;&#34;Creates a Control4 Director object.
 
         Parameters:
@@ -45,6 +50,7 @@ class C4Director:
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
+        self.session = session_no_verify_ssl
 
     async def sendGetRequest(self, uri):
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
@@ -53,11 +59,19 @@ class C4Director:
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         &#34;&#34;&#34;
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
+        if self.session is None:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                with async_timeout.timeout(10):
+                    async with session.get(
+                        self.base_url + uri, headers=self.headers
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
             with async_timeout.timeout(10):
-                async with session.get(
+                async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
                     await checkResponseForError(await resp.text())
@@ -75,11 +89,19 @@ class C4Director:
             `params` - The parameters of the command, provided as a dictionary.
         &#34;&#34;&#34;
         dataDictionary = {&#34;async&#34;: True, &#34;command&#34;: command, &#34;tParams&#34;: params}
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
+        if self.session is None:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        self.base_url + uri, headers=self.headers, json=dataDictionary
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
             with async_timeout.timeout(10):
-                async with session.post(
+                async with self.session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
                     await checkResponseForError(await resp.text())
@@ -180,7 +202,7 @@ class C4Director:
 <dl>
 <dt id="pyControl4.director.C4Director"><code class="flex name class">
 <span>class <span class="ident">C4Director</span></span>
-<span>(</span><span>ip, director_bearer_token)</span>
+<span>(</span><span>ip, director_bearer_token, session_no_verify_ssl: aiohttp.client.ClientSession = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Control4 Director object.</p>
@@ -192,7 +214,12 @@ class C4Director:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4Director:
-    def __init__(self, ip, director_bearer_token):
+    def __init__(
+        self,
+        ip,
+        director_bearer_token,
+        session_no_verify_ssl: aiohttp.ClientSession = None,
+    ):
         &#34;&#34;&#34;Creates a Control4 Director object.
 
         Parameters:
@@ -202,6 +229,7 @@ class C4Director:
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
+        self.session = session_no_verify_ssl
 
     async def sendGetRequest(self, uri):
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
@@ -210,11 +238,19 @@ class C4Director:
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         &#34;&#34;&#34;
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
+        if self.session is None:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                with async_timeout.timeout(10):
+                    async with session.get(
+                        self.base_url + uri, headers=self.headers
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
             with async_timeout.timeout(10):
-                async with session.get(
+                async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
                     await checkResponseForError(await resp.text())
@@ -232,11 +268,19 @@ class C4Director:
             `params` - The parameters of the command, provided as a dictionary.
         &#34;&#34;&#34;
         dataDictionary = {&#34;async&#34;: True, &#34;command&#34;: command, &#34;tParams&#34;: params}
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
+        if self.session is None:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        self.base_url + uri, headers=self.headers, json=dataDictionary
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
             with async_timeout.timeout(10):
-                async with session.post(
+                async with self.session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
                     await checkResponseForError(await resp.text())
@@ -524,11 +568,19 @@ Returns the Director's JSON response as a string.</p>
     Parameters:
         `uri` - The API URI to send the request to. Do not include the IP address of the Director.
     &#34;&#34;&#34;
-    async with aiohttp.ClientSession(
-        connector=aiohttp.TCPConnector(verify_ssl=False)
-    ) as session:
+    if self.session is None:
+        async with aiohttp.ClientSession(
+            connector=aiohttp.TCPConnector(verify_ssl=False)
+        ) as session:
+            with async_timeout.timeout(10):
+                async with session.get(
+                    self.base_url + uri, headers=self.headers
+                ) as resp:
+                    await checkResponseForError(await resp.text())
+                    return await resp.text()
+    else:
         with async_timeout.timeout(10):
-            async with session.get(
+            async with self.session.get(
                 self.base_url + uri, headers=self.headers
             ) as resp:
                 await checkResponseForError(await resp.text())
@@ -561,11 +613,19 @@ Returns the Director's JSON response as a string.</p>
         `params` - The parameters of the command, provided as a dictionary.
     &#34;&#34;&#34;
     dataDictionary = {&#34;async&#34;: True, &#34;command&#34;: command, &#34;tParams&#34;: params}
-    async with aiohttp.ClientSession(
-        connector=aiohttp.TCPConnector(verify_ssl=False)
-    ) as session:
+    if self.session is None:
+        async with aiohttp.ClientSession(
+            connector=aiohttp.TCPConnector(verify_ssl=False)
+        ) as session:
+            with async_timeout.timeout(10):
+                async with session.post(
+                    self.base_url + uri, headers=self.headers, json=dataDictionary
+                ) as resp:
+                    await checkResponseForError(await resp.text())
+                    return await resp.text()
+    else:
         with async_timeout.timeout(10):
-            async with session.post(
+            async with self.session.post(
                 self.base_url + uri, headers=self.headers, json=dataDictionary
             ) as resp:
                 await checkResponseForError(await resp.text())
