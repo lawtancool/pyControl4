@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyControl4",  # Replace with your own username
-    version="0.0.6a3",
+    version="0.0.6",
     author="lawtancool",
     author_email="26829131+lawtancool@users.noreply.github.com",
     description="Python 3 asyncio package for interacting with Control4 systems",
