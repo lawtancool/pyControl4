@@ -46,7 +46,10 @@ class C4Director:
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl.account.getDirectorBearerToken` for how to get this.
+
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
+            If not provided, the library will open and close its own `ClientSession`s as needed.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
@@ -208,7 +211,9 @@ class C4Director:
 <div class="desc"><p>Creates a Control4 Director object.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
-<p><code>director_bearer_token</code> - The bearer token used to authenticate with the Director. See <code>auth.py</code> for how to get this.</p></div>
+<p><code>director_bearer_token</code> - The bearer token used to authenticate with the Director. See <code>pyControl.account.getDirectorBearerToken</code> for how to get this.</p>
+<p><code>session</code> - (Optional) Allows the use of an <code>aiohttp.ClientSession</code> object for all network requests. This session will not be closed by the library.
+If not provided, the library will open and close its own <code>ClientSession</code>s as needed.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -225,7 +230,10 @@ class C4Director:
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `auth.py` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl.account.getDirectorBearerToken` for how to get this.
+
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
+            If not provided, the library will open and close its own `ClientSession`s as needed.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
