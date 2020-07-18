@@ -7,7 +7,7 @@ class C4Light:
         """Creates a Control4 Light object.
 
         Parameters:
-            `C4Director` - A `C4Director` object that corresponds to the Control4 Director that the light is connected to. See `director.py` for details.
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the light is connected to.
 
             `item_id` - The Control4 item ID of the light.
         """

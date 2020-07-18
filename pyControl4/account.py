@@ -23,6 +23,16 @@ class C4Account:
     def __init__(
         self, username, password, session: aiohttp.ClientSession = None,
     ):
+        """Creates a Control4 account object.
+
+        Parameters:
+            `username` - Control4 account username/email.
+
+            `password` - Control4 account password.
+
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
+            If not provided, the library will open and close its own `ClientSession`s as needed.
+        """
         self.username = username
         self.password = password
         self.session = session
