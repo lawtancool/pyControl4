@@ -57,13 +57,12 @@ class C4Account:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            async with self.session as session:
-                with async_timeout.timeout(10):
-                    async with session.post(
-                        AUTHENTICATION_ENDPOINT, json=dataDictionary
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
+            with async_timeout.timeout(10):
+                async with self.session.post(
+                    AUTHENTICATION_ENDPOINT, json=dataDictionary
+                ) as resp:
+                    await checkResponseForError(await resp.text())
+                    return await resp.text()
 
     async def __sendAccountGetRequest(self, uri):
         """Used internally to send GET requests to the Control4 API,
@@ -86,11 +85,10 @@ class C4Account:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            async with self.session as session:
-                with async_timeout.timeout(10):
-                    async with session.get(uri, headers=headers) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
+            with async_timeout.timeout(10):
+                async with self.session.get(uri, headers=headers) as resp:
+                    await checkResponseForError(await resp.text())
+                    return await resp.text()
 
     async def __sendControllerAuthRequest(self, controller_common_name):
         """Used internally to retrieve an director bearer token. Returns the
@@ -122,15 +120,14 @@ class C4Account:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            async with self.session as session:
-                with async_timeout.timeout(10):
-                    async with session.post(
-                        CONTROLLER_AUTHORIZATION_ENDPOINT,
-                        headers=headers,
-                        json=dataDictionary,
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
+            with async_timeout.timeout(10):
+                async with self.session.post(
+                    CONTROLLER_AUTHORIZATION_ENDPOINT,
+                    headers=headers,
+                    json=dataDictionary,
+                ) as resp:
+                    await checkResponseForError(await resp.text())
+                    return await resp.text()
 
     async def getAccountBearerToken(self):
         """Gets an account bearer token for making Control4 online API requests.
