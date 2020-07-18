@@ -8,7 +8,12 @@ from .error_handling import checkResponseForError
 
 
 class C4Director:
-    def __init__(self, ip, director_bearer_token):
+    def __init__(
+        self,
+        ip,
+        director_bearer_token,
+        session_no_verify_ssl: aiohttp.ClientSession = None,
+    ):
         """Creates a Control4 Director object.
 
         Parameters:
@@ -18,6 +23,7 @@ class C4Director:
         """
         self.base_url = "https://{}".format(ip)
         self.headers = {"Authorization": "Bearer {}".format(director_bearer_token)}
+        self.session = session_no_verify_ssl
 
     async def sendGetRequest(self, uri):
         """Sends a GET request to the specified API URI.
@@ -26,11 +32,19 @@ class C4Director:
         Parameters:
             `uri` - The API URI to send the request to. Do not include the IP address of the Director.
         """
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
+        if self.session is None:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                with async_timeout.timeout(10):
+                    async with session.get(
+                        self.base_url + uri, headers=self.headers
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
             with async_timeout.timeout(10):
-                async with session.get(
+                async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
                     await checkResponseForError(await resp.text())
@@ -48,11 +62,19 @@ class C4Director:
             `params` - The parameters of the command, provided as a dictionary.
         """
         dataDictionary = {"async": True, "command": command, "tParams": params}
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
+        if self.session is None:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                with async_timeout.timeout(10):
+                    async with session.post(
+                        self.base_url + uri, headers=self.headers, json=dataDictionary
+                    ) as resp:
+                        await checkResponseForError(await resp.text())
+                        return await resp.text()
+        else:
             with async_timeout.timeout(10):
-                async with session.post(
+                async with self.session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
                     await checkResponseForError(await resp.text())
