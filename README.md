@@ -49,3 +49,9 @@ asyncio.run(light.rampToLevel(10, 10000))
 """Print state of light"""
 print(asyncio.run(light.getState()))
 ```
+
+## Contributing
+Pull requests are welcome! Please lint your Python code with `flake8` and format it with [Black](https://pypi.org/project/black/).
+
+## Disclaimer
+This library is not affiliated with or endorsed by Control4. 
