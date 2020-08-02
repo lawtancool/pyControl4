@@ -1,0 +1,184 @@
+"""Controls Control4 security panel and contact sensor (door, window, motion) devices.
+"""
+
+
+class C4SecurityPanel:
+    def __init__(self, C4Director, item_id):
+        """Creates a Control4 Security Panel object.
+
+        Parameters:
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
+
+            `item_id` - The Control4 item ID of the security panel.
+        """
+        self.director = C4Director
+        self.item_id = item_id
+
+    async def getArmState(self):
+        """Returns the arm state of the security panel as "DISARMED", "ARMED_HOME", or "ARMED_AWAY".
+        """
+        disarmed = await self.director.getItemVariableValue(
+            self.item_id, "DISARMED_STATE"
+        )
+        armed_home = await self.director.getItemVariableValue(
+            self.item_id, "HOME_STATE"
+        )
+        armed_away = await self.director.getItemVariableValue(
+            self.item_id, "AWAY_STATE"
+        )
+        if disarmed == 1:
+            return "DISARMED"
+        elif armed_home == 1:
+            return "ARMED_HOME"
+        elif armed_away == 1:
+            return "ARMED_AWAY"
+
+    async def getAlarmState(self):
+        """Returns `True` if alarm is triggered, otherwise returns `False`.
+        """
+        alarm_state = await self.director.getItemVariableValue(
+            self.item_id, "ALARM_STATE"
+        )
+        return bool(alarm_state)
+
+    async def getDisplayText(self):
+        """Returns the display text of the security panel.
+        """
+        display_text = await self.director.getItemVariableValue(
+            self.item_id, "DISPLAY_TEXT"
+        )
+        return display_text
+
+    async def getTroubleText(self):
+        """Returns the trouble display text of the security panel.
+        """
+        trouble_text = await self.director.getItemVariableValue(
+            self.item_id, "TROUBLE_TEXT"
+        )
+        return trouble_text
+
+    async def getPartitionState(self):
+        """Returns the partition state of the security panel.
+
+        Possible values include "DISARMED_NOT_READY", "DISARMED_READY"
+        """
+        partition_state = await self.director.getItemVariableValue(
+            self.item_id, "PARTITION_STATE"
+        )
+        return partition_state
+
+    async def getDelayTimeTotal(self):
+        """Returns the total exit delay time. Returns 0 if an exit delay is not currently running.
+        """
+        delay_time_total = await self.director.getItemVariableValue(
+            self.item_id, "DELAY_TIME_TOTAL"
+        )
+        return delay_time_total
+
+    async def getDelayTimeRemaining(self):
+        """Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.
+        """
+        delay_time_remaining = await self.director.getItemVariableValue(
+            self.item_id, "DELAY_TIME_REMAINING"
+        )
+        return delay_time_remaining
+
+    async def getOpenZoneCount(self):
+        """Returns the number of open/unsecured zones.
+        """
+        open_zone_count = await self.director.getItemVariableValue(
+            self.item_id, "OPEN_ZONE_COUNT"
+        )
+        return open_zone_count
+
+    async def getAlarmType(self):
+        """Returns details about the current alarm type.
+        """
+        alarm_type = await self.director.getItemVariableValue(
+            self.item_id, "ALARM_TYPE"
+        )
+        return alarm_type
+
+    async def getArmedType(self):
+        """Returns details about the current arm type.
+        """
+        armed_type = await self.director.getItemVariableValue(
+            self.item_id, "ARMED_TYPE"
+        )
+        return armed_type
+
+    async def getLastEmergency(self):
+        """Returns details about the last emergency trigger.
+        """
+        last_emergency = await self.director.getItemVariableValue(
+            self.item_id, "LAST_EMERGENCY"
+        )
+        return last_emergency
+
+    async def getLastArmFailure(self):
+        """Returns details about the last arm failure.
+        """
+        last_arm_failed = await self.director.getItemVariableValue(
+            self.item_id, "LAST_ARM_FAILED"
+        )
+        return last_arm_failed
+
+    async def setArmAway(self, usercode):
+        """Sets the security panel mode to armed (away).
+
+        Parameters:
+            `usercode` - PIN/code for arming the system.
+        """
+        usercode = str(usercode)
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PARTITION_ARM",
+            {"ArmType": "Away", "UserCode": usercode},
+        )
+
+    async def setArmHome(self, usercode):
+        """Sets the security panel mode to armed (home).
+
+        Parameters:
+            `usercode` - PIN/code for arming the system.
+        """
+        usercode = str(usercode)
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PARTITION_ARM",
+            {"ArmType": "Stay", "UserCode": usercode},
+        )
+
+    async def setDisarm(self, usercode):
+        """Disarms the security panel.
+
+        Parameters:
+            `usercode` - PIN/code for disarming the system.
+        """
+        usercode = str(usercode)
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PARTITION_DISARM",
+            {"UserCode": usercode},
+        )
+
+
+class C4ContactSensor:
+    def __init__(self, C4Director, item_id):
+        """Creates a Control4 Contact Sensor object.
+
+        Parameters:
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
+
+            `item_id` - The Control4 item ID of the contact sensor.
+        """
+        self.director = C4Director
+        self.item_id = item_id
+
+    async def getContactState(self):
+        """Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.
+        """
+        contact_state = await self.director.getItemVariableValue(
+            self.item_id, "ContactState"
+        )
+        return bool(contact_state)
