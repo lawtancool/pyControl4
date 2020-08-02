@@ -1,5 +1,6 @@
 """Controls Control4 security panel and contact sensor (door, window, motion) devices.
 """
+import json
 
 
 class C4SecurityPanel:
@@ -9,7 +10,7 @@ class C4SecurityPanel:
         Parameters:
             `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
 
-            `item_id` - The Control4 item ID of the security panel.
+            `item_id` - The Control4 item ID of the security panel partition.
         """
         self.director = C4Director
         self.item_id = item_id
@@ -154,6 +155,42 @@ class C4SecurityPanel:
 
         Parameters:
             `usercode` - PIN/code for disarming the system.
+        """
+        usercode = str(usercode)
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PARTITION_DISARM",
+            {"UserCode": usercode},
+        )
+
+    async def getEmergencyTypes(self):
+        """Returns the available emergency types as a list.
+
+        Possible types are "Fire", "Medical", "Panic", and "Police".
+        """
+        types_list = []
+
+        data = await self.director.getItemInfo(self.item_id)
+        jsonDictionary = json.loads(data)
+
+        if jsonDictionary[0]["capabilities"]["has_fire"]:
+            types_list.append("Fire")
+        if jsonDictionary[0]["capabilities"]["has_medical"]:
+            types_list.append("Medical")
+        if jsonDictionary[0]["capabilities"]["has_panic"]:
+            types_list.append("Panic")
+        if jsonDictionary[0]["capabilities"]["has_police"]:
+            types_list.append("Police")
+
+        return types_list
+
+    async def triggerEmergency(self, usercode, type):
+        """Triggers an emergency of the specified type.
+
+        Parameters:
+            `usercode` - PIN/code for disarming the system.
+
+            `type` - Type of emergency: "Fire", "Medical", "Panic", or "Police"
         """
         usercode = str(usercode)
         await self.director.sendPostRequest(
