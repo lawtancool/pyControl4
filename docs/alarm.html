@@ -27,6 +27,7 @@
 </summary>
 <pre><code class="python">&#34;&#34;&#34;Controls Control4 security panel and contact sensor (door, window, motion) devices.
 &#34;&#34;&#34;
+import json
 
 
 class C4SecurityPanel:
@@ -36,7 +37,7 @@ class C4SecurityPanel:
         Parameters:
             `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
 
-            `item_id` - The Control4 item ID of the security panel.
+            `item_id` - The Control4 item ID of the security panel partition.
         &#34;&#34;&#34;
         self.director = C4Director
         self.item_id = item_id
@@ -189,6 +190,42 @@ class C4SecurityPanel:
             {&#34;UserCode&#34;: usercode},
         )
 
+    async def getEmergencyTypes(self):
+        &#34;&#34;&#34;Returns the available emergency types as a list.
+
+        Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
+        &#34;&#34;&#34;
+        types_list = []
+
+        data = await self.director.getItemInfo(self.item_id)
+        jsonDictionary = json.loads(data)
+
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
+            types_list.append(&#34;Fire&#34;)
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
+            types_list.append(&#34;Medical&#34;)
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
+            types_list.append(&#34;Panic&#34;)
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
+            types_list.append(&#34;Police&#34;)
+
+        return types_list
+
+    async def triggerEmergency(self, usercode, type):
+        &#34;&#34;&#34;Triggers an emergency of the specified type.
+
+        Parameters:
+            `usercode` - PIN/code for disarming the system.
+
+            `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
+        &#34;&#34;&#34;
+        usercode = str(usercode)
+        await self.director.sendPostRequest(
+            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+            &#34;PARTITION_DISARM&#34;,
+            {&#34;UserCode&#34;: usercode},
+        )
+
 
 class C4ContactSensor:
     def __init__(self, C4Director, item_id):
@@ -283,7 +320,7 @@ class C4ContactSensor:
 <div class="desc"><p>Creates a Control4 Security Panel object.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the security panel is connected to.</p>
-<p><code>item_id</code> - The Control4 item ID of the security panel.</p></div>
+<p><code>item_id</code> - The Control4 item ID of the security panel partition.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -295,7 +332,7 @@ class C4ContactSensor:
         Parameters:
             `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
 
-            `item_id` - The Control4 item ID of the security panel.
+            `item_id` - The Control4 item ID of the security panel partition.
         &#34;&#34;&#34;
         self.director = C4Director
         self.item_id = item_id
@@ -440,6 +477,42 @@ class C4ContactSensor:
 
         Parameters:
             `usercode` - PIN/code for disarming the system.
+        &#34;&#34;&#34;
+        usercode = str(usercode)
+        await self.director.sendPostRequest(
+            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+            &#34;PARTITION_DISARM&#34;,
+            {&#34;UserCode&#34;: usercode},
+        )
+
+    async def getEmergencyTypes(self):
+        &#34;&#34;&#34;Returns the available emergency types as a list.
+
+        Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
+        &#34;&#34;&#34;
+        types_list = []
+
+        data = await self.director.getItemInfo(self.item_id)
+        jsonDictionary = json.loads(data)
+
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
+            types_list.append(&#34;Fire&#34;)
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
+            types_list.append(&#34;Medical&#34;)
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
+            types_list.append(&#34;Panic&#34;)
+        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
+            types_list.append(&#34;Police&#34;)
+
+        return types_list
+
+    async def triggerEmergency(self, usercode, type):
+        &#34;&#34;&#34;Triggers an emergency of the specified type.
+
+        Parameters:
+            `usercode` - PIN/code for disarming the system.
+
+            `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
         &#34;&#34;&#34;
         usercode = str(usercode)
         await self.director.sendPostRequest(
@@ -585,6 +658,38 @@ class C4ContactSensor:
         self.item_id, &#34;DISPLAY_TEXT&#34;
     )
     return display_text</code></pre>
+</details>
+</dd>
+<dt id="pyControl4.alarm.C4SecurityPanel.getEmergencyTypes"><code class="name flex">
+<span>async def <span class="ident">getEmergencyTypes</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns the available emergency types as a list.</p>
+<p>Possible types are "Fire", "Medical", "Panic", and "Police".</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getEmergencyTypes(self):
+    &#34;&#34;&#34;Returns the available emergency types as a list.
+
+    Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
+    &#34;&#34;&#34;
+    types_list = []
+
+    data = await self.director.getItemInfo(self.item_id)
+    jsonDictionary = json.loads(data)
+
+    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
+        types_list.append(&#34;Fire&#34;)
+    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
+        types_list.append(&#34;Medical&#34;)
+    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
+        types_list.append(&#34;Panic&#34;)
+    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
+        types_list.append(&#34;Police&#34;)
+
+    return types_list</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getLastArmFailure"><code class="name flex">
@@ -755,6 +860,34 @@ class C4ContactSensor:
     )</code></pre>
 </details>
 </dd>
+<dt id="pyControl4.alarm.C4SecurityPanel.triggerEmergency"><code class="name flex">
+<span>async def <span class="ident">triggerEmergency</span></span>(<span>self, usercode, type)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Triggers an emergency of the specified type.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>usercode</code> - PIN/code for disarming the system.</p>
+<p><code>type</code> - Type of emergency: "Fire", "Medical", "Panic", or "Police"</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def triggerEmergency(self, usercode, type):
+    &#34;&#34;&#34;Triggers an emergency of the specified type.
+
+    Parameters:
+        `usercode` - PIN/code for disarming the system.
+
+        `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
+    &#34;&#34;&#34;
+    usercode = str(usercode)
+    await self.director.sendPostRequest(
+        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        &#34;PARTITION_DISARM&#34;,
+        {&#34;UserCode&#34;: usercode},
+    )</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -789,6 +922,7 @@ class C4ContactSensor:
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getDelayTimeRemaining" href="#pyControl4.alarm.C4SecurityPanel.getDelayTimeRemaining">getDelayTimeRemaining</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getDelayTimeTotal" href="#pyControl4.alarm.C4SecurityPanel.getDelayTimeTotal">getDelayTimeTotal</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getDisplayText" href="#pyControl4.alarm.C4SecurityPanel.getDisplayText">getDisplayText</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.getEmergencyTypes" href="#pyControl4.alarm.C4SecurityPanel.getEmergencyTypes">getEmergencyTypes</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getLastArmFailure" href="#pyControl4.alarm.C4SecurityPanel.getLastArmFailure">getLastArmFailure</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getLastEmergency" href="#pyControl4.alarm.C4SecurityPanel.getLastEmergency">getLastEmergency</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getOpenZoneCount" href="#pyControl4.alarm.C4SecurityPanel.getOpenZoneCount">getOpenZoneCount</a></code></li>
@@ -797,6 +931,7 @@ class C4ContactSensor:
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setArmAway" href="#pyControl4.alarm.C4SecurityPanel.setArmAway">setArmAway</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setArmHome" href="#pyControl4.alarm.C4SecurityPanel.setArmHome">setArmHome</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setDisarm" href="#pyControl4.alarm.C4SecurityPanel.setDisarm">setDisarm</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.triggerEmergency" href="#pyControl4.alarm.C4SecurityPanel.triggerEmergency">triggerEmergency</a></code></li>
 </ul>
 </li>
 </ul>
