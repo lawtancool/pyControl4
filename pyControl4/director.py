@@ -53,7 +53,7 @@ class C4Director:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
 
-    async def sendPostRequest(self, uri, command, params):
+    async def sendPostRequest(self, uri, command, params, async_variable=True):
         """Sends a POST request to the specified API URI. Used to send commands to the Director.
         Returns the Director's JSON response as a string.
 
@@ -64,7 +64,11 @@ class C4Director:
 
             `params` - The parameters of the command, provided as a dictionary.
         """
-        dataDictionary = {"async": True, "command": command, "tParams": params}
+        dataDictionary = {
+            "async": async_variable,
+            "command": command,
+            "tParams": params,
+        }
         if self.session is None:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
@@ -95,6 +99,16 @@ class C4Director:
             `item_id` - The Control4 item ID.
         """
         return await self.sendGetRequest("/api/v1/items/{}".format(item_id))
+
+    async def getItemSetup(self, item_id):
+        """Returns a JSON list of the setup info of the specified item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+        """
+        return await self.sendPostRequest(
+            "/api/v1/items/{}/commands".format(item_id), "GET_SETUP", "{}", False
+        )
 
     async def getItemVariables(self, item_id):
         """Returns a JSON list of the variables available for the specified item.

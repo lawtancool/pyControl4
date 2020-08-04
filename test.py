@@ -42,6 +42,8 @@ director = C4Director(ip, director_bearer_token["token"])
 alarm = C4SecurityPanel(director, 460)
 print(asyncio.run(alarm.getEmergencyTypes()))
 
+print(asyncio.run(director.getItemSetup(471)))
+
 # sensor = C4ContactSensor(director, 471)
 # print(asyncio.run(sensor.getContactState()))
 
