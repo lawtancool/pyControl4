@@ -200,10 +200,10 @@ class C4SecurityPanel:
         )
 
     async def sendKeyPress(self, key):
-        """Sends a keypress to the security panel's virtual keypad (if supported).
+        """Sends a single keypress to the security panel's virtual keypad (if supported).
 
         Parameters:
-            `key` - Keypress to send.
+            `key` - Keypress to send. Only one key at a time.
         """
         key = str(key)
         await self.director.sendPostRequest(
