@@ -151,30 +151,19 @@ class C4SecurityPanel:
         )
         return last_arm_failed
 
-    async def setArmAway(self, usercode):
-        &#34;&#34;&#34;Sets the security panel mode to armed (away).
+    async def setArm(self, usercode, mode: str):
+        &#34;&#34;&#34;Arms the security panel with the specified mode.
 
         Parameters:
             `usercode` - PIN/code for arming the system.
+
+            `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
         &#34;&#34;&#34;
         usercode = str(usercode)
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
             &#34;PARTITION_ARM&#34;,
-            {&#34;ArmType&#34;: &#34;Away&#34;, &#34;UserCode&#34;: usercode},
-        )
-
-    async def setArmHome(self, usercode):
-        &#34;&#34;&#34;Sets the security panel mode to armed (home).
-
-        Parameters:
-            `usercode` - PIN/code for arming the system.
-        &#34;&#34;&#34;
-        usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;PARTITION_ARM&#34;,
-            {&#34;ArmType&#34;: &#34;Stay&#34;, &#34;UserCode&#34;: usercode},
+            {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
         )
 
     async def setDisarm(self, usercode):
@@ -459,30 +448,19 @@ class C4ContactSensor:
         )
         return last_arm_failed
 
-    async def setArmAway(self, usercode):
-        &#34;&#34;&#34;Sets the security panel mode to armed (away).
+    async def setArm(self, usercode, mode: str):
+        &#34;&#34;&#34;Arms the security panel with the specified mode.
 
         Parameters:
             `usercode` - PIN/code for arming the system.
+
+            `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
         &#34;&#34;&#34;
         usercode = str(usercode)
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
             &#34;PARTITION_ARM&#34;,
-            {&#34;ArmType&#34;: &#34;Away&#34;, &#34;UserCode&#34;: usercode},
-        )
-
-    async def setArmHome(self, usercode):
-        &#34;&#34;&#34;Sets the security panel mode to armed (home).
-
-        Parameters:
-            `usercode` - PIN/code for arming the system.
-        &#34;&#34;&#34;
-        usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;PARTITION_ARM&#34;,
-            {&#34;ArmType&#34;: &#34;Stay&#34;, &#34;UserCode&#34;: usercode},
+            {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
         )
 
     async def setDisarm(self, usercode):
@@ -836,53 +814,31 @@ class C4ContactSensor:
     )</code></pre>
 </details>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.setArmAway"><code class="name flex">
-<span>async def <span class="ident">setArmAway</span></span>(<span>self, usercode)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.setArm"><code class="name flex">
+<span>async def <span class="ident">setArm</span></span>(<span>self, usercode, mode: str)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sets the security panel mode to armed (away).</p>
+<div class="desc"><p>Arms the security panel with the specified mode.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>usercode</code> - PIN/code for arming the system.</p></div>
+<p><code>usercode</code> - PIN/code for arming the system.</p>
+<p><code>mode</code> - Arm mode to use. This depends on what is supported by the security panel itself.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setArmAway(self, usercode):
-    &#34;&#34;&#34;Sets the security panel mode to armed (away).
+<pre><code class="python">async def setArm(self, usercode, mode: str):
+    &#34;&#34;&#34;Arms the security panel with the specified mode.
 
     Parameters:
         `usercode` - PIN/code for arming the system.
+
+        `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
     &#34;&#34;&#34;
     usercode = str(usercode)
     await self.director.sendPostRequest(
         &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
         &#34;PARTITION_ARM&#34;,
-        {&#34;ArmType&#34;: &#34;Away&#34;, &#34;UserCode&#34;: usercode},
-    )</code></pre>
-</details>
-</dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.setArmHome"><code class="name flex">
-<span>async def <span class="ident">setArmHome</span></span>(<span>self, usercode)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Sets the security panel mode to armed (home).</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>usercode</code> - PIN/code for arming the system.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def setArmHome(self, usercode):
-    &#34;&#34;&#34;Sets the security panel mode to armed (home).
-
-    Parameters:
-        `usercode` - PIN/code for arming the system.
-    &#34;&#34;&#34;
-    usercode = str(usercode)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;PARTITION_ARM&#34;,
-        {&#34;ArmType&#34;: &#34;Stay&#34;, &#34;UserCode&#34;: usercode},
+        {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
     )</code></pre>
 </details>
 </dd>
@@ -980,8 +936,7 @@ class C4ContactSensor:
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getPartitionState" href="#pyControl4.alarm.C4SecurityPanel.getPartitionState">getPartitionState</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getTroubleText" href="#pyControl4.alarm.C4SecurityPanel.getTroubleText">getTroubleText</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.sendKeyPress" href="#pyControl4.alarm.C4SecurityPanel.sendKeyPress">sendKeyPress</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.setArmAway" href="#pyControl4.alarm.C4SecurityPanel.setArmAway">setArmAway</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.setArmHome" href="#pyControl4.alarm.C4SecurityPanel.setArmHome">setArmHome</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.setArm" href="#pyControl4.alarm.C4SecurityPanel.setArm">setArm</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setDisarm" href="#pyControl4.alarm.C4SecurityPanel.setDisarm">setDisarm</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.triggerEmergency" href="#pyControl4.alarm.C4SecurityPanel.triggerEmergency">triggerEmergency</a></code></li>
 </ul>
