@@ -124,30 +124,19 @@ class C4SecurityPanel:
         )
         return last_arm_failed
 
-    async def setArmAway(self, usercode):
-        """Sets the security panel mode to armed (away).
+    async def setArm(self, usercode, mode: str):
+        """Arms the security panel with the specified mode.
 
         Parameters:
             `usercode` - PIN/code for arming the system.
+
+            `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
         """
         usercode = str(usercode)
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
             "PARTITION_ARM",
-            {"ArmType": "Away", "UserCode": usercode},
-        )
-
-    async def setArmHome(self, usercode):
-        """Sets the security panel mode to armed (home).
-
-        Parameters:
-            `usercode` - PIN/code for arming the system.
-        """
-        usercode = str(usercode)
-        await self.director.sendPostRequest(
-            "/api/v1/items/{}/commands".format(self.item_id),
-            "PARTITION_ARM",
-            {"ArmType": "Stay", "UserCode": usercode},
+            {"ArmType": mode, "UserCode": usercode},
         )
 
     async def setDisarm(self, usercode):
