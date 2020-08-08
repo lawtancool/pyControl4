@@ -226,6 +226,19 @@ class C4SecurityPanel:
             {&#34;UserCode&#34;: usercode},
         )
 
+    async def sendKeyPress(self, key):
+        &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if supported).
+
+        Parameters:
+            `key` - Keypress to send. Only one key at a time.
+        &#34;&#34;&#34;
+        key = str(key)
+        await self.director.sendPostRequest(
+            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+            &#34;KEY_PRESS&#34;,
+            {&#34;KeyName&#34;: key},
+        )
+
 
 class C4ContactSensor:
     def __init__(self, C4Director, item_id):
@@ -519,6 +532,19 @@ class C4ContactSensor:
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
             &#34;PARTITION_DISARM&#34;,
             {&#34;UserCode&#34;: usercode},
+        )
+
+    async def sendKeyPress(self, key):
+        &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if supported).
+
+        Parameters:
+            `key` - Keypress to send. Only one key at a time.
+        &#34;&#34;&#34;
+        key = str(key)
+        await self.director.sendPostRequest(
+            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+            &#34;KEY_PRESS&#34;,
+            {&#34;KeyName&#34;: key},
         )</code></pre>
 </details>
 <h3>Methods</h3>
@@ -785,6 +811,31 @@ class C4ContactSensor:
     return trouble_text</code></pre>
 </details>
 </dd>
+<dt id="pyControl4.alarm.C4SecurityPanel.sendKeyPress"><code class="name flex">
+<span>async def <span class="ident">sendKeyPress</span></span>(<span>self, key)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Sends a single keypress to the security panel's virtual keypad (if supported).</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>key</code> - Keypress to send. Only one key at a time.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def sendKeyPress(self, key):
+    &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if supported).
+
+    Parameters:
+        `key` - Keypress to send. Only one key at a time.
+    &#34;&#34;&#34;
+    key = str(key)
+    await self.director.sendPostRequest(
+        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        &#34;KEY_PRESS&#34;,
+        {&#34;KeyName&#34;: key},
+    )</code></pre>
+</details>
+</dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.setArmAway"><code class="name flex">
 <span>async def <span class="ident">setArmAway</span></span>(<span>self, usercode)</span>
 </code></dt>
@@ -928,6 +979,7 @@ class C4ContactSensor:
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getOpenZoneCount" href="#pyControl4.alarm.C4SecurityPanel.getOpenZoneCount">getOpenZoneCount</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getPartitionState" href="#pyControl4.alarm.C4SecurityPanel.getPartitionState">getPartitionState</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.getTroubleText" href="#pyControl4.alarm.C4SecurityPanel.getTroubleText">getTroubleText</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.sendKeyPress" href="#pyControl4.alarm.C4SecurityPanel.sendKeyPress">sendKeyPress</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setArmAway" href="#pyControl4.alarm.C4SecurityPanel.setArmAway">setArmAway</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setArmHome" href="#pyControl4.alarm.C4SecurityPanel.setArmHome">setArmHome</a></code></li>
 <li><code><a title="pyControl4.alarm.C4SecurityPanel.setDisarm" href="#pyControl4.alarm.C4SecurityPanel.setDisarm">setDisarm</a></code></li>
