@@ -199,6 +199,19 @@ class C4SecurityPanel:
             {"UserCode": usercode},
         )
 
+    async def sendKeyPress(self, key):
+        """Sends a keypress to the security panel's virtual keypad (if supported).
+
+        Parameters:
+            `key` - Keypress to send.
+        """
+        key = str(key)
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "KEY_PRESS",
+            {"KeyName": key},
+        )
+
 
 class C4ContactSensor:
     def __init__(self, C4Director, item_id):
