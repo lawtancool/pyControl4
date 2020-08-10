@@ -88,7 +88,7 @@ class C4SecurityPanel:
     async def getPartitionState(self):
         &#34;&#34;&#34;Returns the partition state of the security panel.
 
-        Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;
+        Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;, &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
         &#34;&#34;&#34;
         partition_state = await self.director.getItemVariableValue(
             self.item_id, &#34;PARTITION_STATE&#34;
@@ -385,7 +385,7 @@ class C4ContactSensor:
     async def getPartitionState(self):
         &#34;&#34;&#34;Returns the partition state of the security panel.
 
-        Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;
+        Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;, &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
         &#34;&#34;&#34;
         partition_state = await self.director.getItemVariableValue(
             self.item_id, &#34;PARTITION_STATE&#34;
@@ -755,7 +755,7 @@ class C4ContactSensor:
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the partition state of the security panel.</p>
-<p>Possible values include "DISARMED_NOT_READY", "DISARMED_READY"</p></div>
+<p>Possible values include "DISARMED_NOT_READY", "DISARMED_READY", "ARMED_HOME", "ARMED_AWAY", "EXIT_DELAY", "ENTRY_DELAY"</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -763,7 +763,7 @@ class C4ContactSensor:
 <pre><code class="python">async def getPartitionState(self):
     &#34;&#34;&#34;Returns the partition state of the security panel.
 
-    Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;
+    Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;, &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
     &#34;&#34;&#34;
     partition_state = await self.director.getItemVariableValue(
         self.item_id, &#34;PARTITION_STATE&#34;
