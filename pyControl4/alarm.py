@@ -61,7 +61,7 @@ class C4SecurityPanel:
     async def getPartitionState(self):
         """Returns the partition state of the security panel.
 
-        Possible values include "DISARMED_NOT_READY", "DISARMED_READY"
+        Possible values include "DISARMED_NOT_READY", "DISARMED_READY", "ARMED_HOME", "ARMED_AWAY", "EXIT_DELAY", "ENTRY_DELAY"
         """
         partition_state = await self.director.getItemVariableValue(
             self.item_id, "PARTITION_STATE"
