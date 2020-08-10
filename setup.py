@@ -7,7 +7,7 @@ setuptools.setup(
     name="pyControl4",  # Replace with your own username
     version="0.1.0",
     author="lawtancool",
-    author_email="26829131+lawtancool@users.noreply.github.com",
+    author_email="contact@lawrencetan.ml",
     description="Python 3 asyncio package for interacting with Control4 systems",
     long_description=long_description,
     long_description_content_type="text/markdown",
