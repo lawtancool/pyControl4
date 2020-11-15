@@ -49,8 +49,7 @@ class C4Light:
         return int(value)
 
     async def getState(self):
-        &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
         return bool(value)
 
@@ -125,8 +124,7 @@ class C4Light:
         return int(value)
 
     async def getState(self):
-        &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
         return bool(value)
 
@@ -188,8 +186,7 @@ Will cause an error if called on a non-dimmer switch. Use <code>getState()</code
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getState(self):
-    &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
     return bool(value)</code></pre>
 </details>

@@ -43,8 +43,7 @@ class C4SecurityPanel:
         self.item_id = item_id
 
     async def getArmState(self):
-        &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
         disarmed = await self.director.getItemVariableValue(
             self.item_id, &#34;DISARMED_STATE&#34;
         )
@@ -62,24 +61,21 @@ class C4SecurityPanel:
             return &#34;ARMED_AWAY&#34;
 
     async def getAlarmState(self):
-        &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
         alarm_state = await self.director.getItemVariableValue(
             self.item_id, &#34;ALARM_STATE&#34;
         )
         return bool(alarm_state)
 
     async def getDisplayText(self):
-        &#34;&#34;&#34;Returns the display text of the security panel.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
         display_text = await self.director.getItemVariableValue(
             self.item_id, &#34;DISPLAY_TEXT&#34;
         )
         return display_text
 
     async def getTroubleText(self):
-        &#34;&#34;&#34;Returns the trouble display text of the security panel.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
         trouble_text = await self.director.getItemVariableValue(
             self.item_id, &#34;TROUBLE_TEXT&#34;
         )
@@ -96,56 +92,49 @@ class C4SecurityPanel:
         return partition_state
 
     async def getDelayTimeTotal(self):
-        &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
         delay_time_total = await self.director.getItemVariableValue(
             self.item_id, &#34;DELAY_TIME_TOTAL&#34;
         )
         return delay_time_total
 
     async def getDelayTimeRemaining(self):
-        &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
         delay_time_remaining = await self.director.getItemVariableValue(
             self.item_id, &#34;DELAY_TIME_REMAINING&#34;
         )
         return delay_time_remaining
 
     async def getOpenZoneCount(self):
-        &#34;&#34;&#34;Returns the number of open/unsecured zones.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
         open_zone_count = await self.director.getItemVariableValue(
             self.item_id, &#34;OPEN_ZONE_COUNT&#34;
         )
         return open_zone_count
 
     async def getAlarmType(self):
-        &#34;&#34;&#34;Returns details about the current alarm type.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
         alarm_type = await self.director.getItemVariableValue(
             self.item_id, &#34;ALARM_TYPE&#34;
         )
         return alarm_type
 
     async def getArmedType(self):
-        &#34;&#34;&#34;Returns details about the current arm type.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
         armed_type = await self.director.getItemVariableValue(
             self.item_id, &#34;ARMED_TYPE&#34;
         )
         return armed_type
 
     async def getLastEmergency(self):
-        &#34;&#34;&#34;Returns details about the last emergency trigger.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
         last_emergency = await self.director.getItemVariableValue(
             self.item_id, &#34;LAST_EMERGENCY&#34;
         )
         return last_emergency
 
     async def getLastArmFailure(self):
-        &#34;&#34;&#34;Returns details about the last arm failure.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
         last_arm_failed = await self.director.getItemVariableValue(
             self.item_id, &#34;LAST_ARM_FAILED&#34;
         )
@@ -242,8 +231,7 @@ class C4ContactSensor:
         self.item_id = item_id
 
     async def getContactState(self):
-        &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.&#34;&#34;&#34;
         contact_state = await self.director.getItemVariableValue(
             self.item_id, &#34;ContactState&#34;
         )
@@ -285,8 +273,7 @@ class C4ContactSensor:
         self.item_id = item_id
 
     async def getContactState(self):
-        &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.&#34;&#34;&#34;
         contact_state = await self.director.getItemVariableValue(
             self.item_id, &#34;ContactState&#34;
         )
@@ -304,8 +291,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getContactState(self):
-    &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.&#34;&#34;&#34;
     contact_state = await self.director.getItemVariableValue(
         self.item_id, &#34;ContactState&#34;
     )
@@ -340,8 +326,7 @@ class C4ContactSensor:
         self.item_id = item_id
 
     async def getArmState(self):
-        &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
         disarmed = await self.director.getItemVariableValue(
             self.item_id, &#34;DISARMED_STATE&#34;
         )
@@ -359,24 +344,21 @@ class C4ContactSensor:
             return &#34;ARMED_AWAY&#34;
 
     async def getAlarmState(self):
-        &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
         alarm_state = await self.director.getItemVariableValue(
             self.item_id, &#34;ALARM_STATE&#34;
         )
         return bool(alarm_state)
 
     async def getDisplayText(self):
-        &#34;&#34;&#34;Returns the display text of the security panel.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
         display_text = await self.director.getItemVariableValue(
             self.item_id, &#34;DISPLAY_TEXT&#34;
         )
         return display_text
 
     async def getTroubleText(self):
-        &#34;&#34;&#34;Returns the trouble display text of the security panel.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
         trouble_text = await self.director.getItemVariableValue(
             self.item_id, &#34;TROUBLE_TEXT&#34;
         )
@@ -393,56 +375,49 @@ class C4ContactSensor:
         return partition_state
 
     async def getDelayTimeTotal(self):
-        &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
         delay_time_total = await self.director.getItemVariableValue(
             self.item_id, &#34;DELAY_TIME_TOTAL&#34;
         )
         return delay_time_total
 
     async def getDelayTimeRemaining(self):
-        &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
         delay_time_remaining = await self.director.getItemVariableValue(
             self.item_id, &#34;DELAY_TIME_REMAINING&#34;
         )
         return delay_time_remaining
 
     async def getOpenZoneCount(self):
-        &#34;&#34;&#34;Returns the number of open/unsecured zones.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
         open_zone_count = await self.director.getItemVariableValue(
             self.item_id, &#34;OPEN_ZONE_COUNT&#34;
         )
         return open_zone_count
 
     async def getAlarmType(self):
-        &#34;&#34;&#34;Returns details about the current alarm type.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
         alarm_type = await self.director.getItemVariableValue(
             self.item_id, &#34;ALARM_TYPE&#34;
         )
         return alarm_type
 
     async def getArmedType(self):
-        &#34;&#34;&#34;Returns details about the current arm type.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
         armed_type = await self.director.getItemVariableValue(
             self.item_id, &#34;ARMED_TYPE&#34;
         )
         return armed_type
 
     async def getLastEmergency(self):
-        &#34;&#34;&#34;Returns details about the last emergency trigger.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
         last_emergency = await self.director.getItemVariableValue(
             self.item_id, &#34;LAST_EMERGENCY&#34;
         )
         return last_emergency
 
     async def getLastArmFailure(self):
-        &#34;&#34;&#34;Returns details about the last arm failure.
-        &#34;&#34;&#34;
+        &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
         last_arm_failed = await self.director.getItemVariableValue(
             self.item_id, &#34;LAST_ARM_FAILED&#34;
         )
@@ -537,8 +512,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getAlarmState(self):
-    &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
     alarm_state = await self.director.getItemVariableValue(
         self.item_id, &#34;ALARM_STATE&#34;
     )
@@ -555,8 +529,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getAlarmType(self):
-    &#34;&#34;&#34;Returns details about the current alarm type.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
     alarm_type = await self.director.getItemVariableValue(
         self.item_id, &#34;ALARM_TYPE&#34;
     )
@@ -573,8 +546,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getArmState(self):
-    &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
     disarmed = await self.director.getItemVariableValue(
         self.item_id, &#34;DISARMED_STATE&#34;
     )
@@ -602,8 +574,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getArmedType(self):
-    &#34;&#34;&#34;Returns details about the current arm type.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
     armed_type = await self.director.getItemVariableValue(
         self.item_id, &#34;ARMED_TYPE&#34;
     )
@@ -620,8 +591,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getDelayTimeRemaining(self):
-    &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
     delay_time_remaining = await self.director.getItemVariableValue(
         self.item_id, &#34;DELAY_TIME_REMAINING&#34;
     )
@@ -638,8 +608,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getDelayTimeTotal(self):
-    &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
     delay_time_total = await self.director.getItemVariableValue(
         self.item_id, &#34;DELAY_TIME_TOTAL&#34;
     )
@@ -656,8 +625,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getDisplayText(self):
-    &#34;&#34;&#34;Returns the display text of the security panel.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
     display_text = await self.director.getItemVariableValue(
         self.item_id, &#34;DISPLAY_TEXT&#34;
     )
@@ -706,8 +674,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getLastArmFailure(self):
-    &#34;&#34;&#34;Returns details about the last arm failure.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
     last_arm_failed = await self.director.getItemVariableValue(
         self.item_id, &#34;LAST_ARM_FAILED&#34;
     )
@@ -724,8 +691,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getLastEmergency(self):
-    &#34;&#34;&#34;Returns details about the last emergency trigger.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
     last_emergency = await self.director.getItemVariableValue(
         self.item_id, &#34;LAST_EMERGENCY&#34;
     )
@@ -742,8 +708,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getOpenZoneCount(self):
-    &#34;&#34;&#34;Returns the number of open/unsecured zones.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
     open_zone_count = await self.director.getItemVariableValue(
         self.item_id, &#34;OPEN_ZONE_COUNT&#34;
     )
@@ -781,8 +746,7 @@ class C4ContactSensor:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getTroubleText(self):
-    &#34;&#34;&#34;Returns the trouble display text of the security panel.
-    &#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
     trouble_text = await self.director.getItemVariableValue(
         self.item_id, &#34;TROUBLE_TEXT&#34;
     )
