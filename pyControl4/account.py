@@ -21,7 +21,10 @@ _LOGGER = logging.getLogger(__name__)
 
 class C4Account:
     def __init__(
-        self, username, password, session: aiohttp.ClientSession = None,
+        self,
+        username,
+        password,
+        session: aiohttp.ClientSession = None,
     ):
         """Creates a Control4 account object.
 
@@ -140,8 +143,7 @@ class C4Account:
                     return await resp.text()
 
     async def getAccountBearerToken(self):
-        """Gets an account bearer token for making Control4 online API requests.
-        """
+        """Gets an account bearer token for making Control4 online API requests."""
         data = await self.__sendAccountAuthRequest()
         jsonDictionary = json.loads(data)
         try:

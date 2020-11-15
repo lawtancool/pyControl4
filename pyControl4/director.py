@@ -88,8 +88,7 @@ class C4Director:
                     return await resp.text()
 
     async def getAllItemInfo(self):
-        """Returns a JSON list of all the items on the Director.
-        """
+        """Returns a JSON list of all the items on the Director."""
         return await self.sendGetRequest("/api/v1/items")
 
     async def getItemInfo(self, item_id):

@@ -22,8 +22,7 @@ class C4Light:
         return int(value)
 
     async def getState(self):
-        """Returns the power state of a dimmer or switch as a boolean (True=on, False=off).
-        """
+        """Returns the power state of a dimmer or switch as a boolean (True=on, False=off)."""
         value = await self.director.getItemVariableValue(self.item_id, "LIGHT_STATE")
         return bool(value)
 
