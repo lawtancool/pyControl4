@@ -11,7 +11,7 @@ class C4Lock:
         self.director = C4Director
         self.item_id = item_id
 
-    async def is_locked(self):
+    async def getLockState(self):
         """Returns True if it is currently Locked or False if it is Unlocked
 
         Notes:
@@ -22,7 +22,7 @@ class C4Lock:
             await self.director.getItemVariableValue(self.item_id, "RelayState")
         )
 
-    async def state_verified(self):
+    async def getLockStateVerified(self):
         """Returns True if Lock Relay is functional
 
         Notes:
