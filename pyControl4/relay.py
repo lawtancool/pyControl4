@@ -12,9 +12,7 @@ class C4Relay:
         self.item_id = item_id
 
     async def getRelayState(self):
-        """Returns the current state of the relay
-
-        """
+        """Returns the current state of the relay"""
         return await self.director.getItemVariableValue(self.item_id, "RelayState")
 
     async def getRelayStateVerified(self):
