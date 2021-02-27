@@ -8,6 +8,8 @@ An asynchronous library to interact with Control4 systems through their built-in
 
 Auto-generated function documentation can be found at <https://lawtancool.github.io/pyControl4>
 
+For those who are looking for a pre-built solution for controlling their devices, this library is implemented in the [official Home Assistant Control4 integration](https://www.home-assistant.io/integrations/control4/).
+
 ## Usage example
 ```python
 from pyControl4.auth import C4Account
