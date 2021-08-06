@@ -21,10 +21,7 @@ _LOGGER = logging.getLogger(__name__)
 
 class C4Account:
     def __init__(
-        self,
-        username,
-        password,
-        session: aiohttp.ClientSession = None,
+        self, username, password, session: aiohttp.ClientSession = None,
     ):
         """Creates a Control4 account object.
 

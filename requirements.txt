@@ -1,2 +1,3 @@
 aiohttp
 xmltodict
+python-socketio
