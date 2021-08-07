@@ -134,7 +134,7 @@ class C4Director:
             await c(message["iddevice"], message)
 
     async def sio_connect(self):
-        """ Start SocketIO Connection ad listen """
+        """Start SocketIO Connection and listen"""
         sio = socketio.AsyncClient(ssl_verify=False)
         sio.register_namespace(
             C4DirectorNamespace(
@@ -150,7 +150,7 @@ class C4Director:
         )
 
     def remove_all_device_callbacks(self, device):
-        """Unregister all callbacks for a device """
+        """Unregister all callbacks for a device"""
         self._device_callbacks[device].clear()
 
     async def sendGetRequest(self, uri):
@@ -334,7 +334,7 @@ class C4Director:
         return await self.sendGetRequest("/api/v1/items/{}/bindings".format(item_id))
 
     async def _execute_callback(self, callback, *args, **kwargs):
-        """ Callback with some data capturing any excpetions """
+        """Callback with some data capturing any excpetions"""
         try:
             self.sio.emit("ping")
             await callback(*args, **kwargs)
