@@ -121,6 +121,7 @@ class C4Director:
 
     async def _process_message(self, message):
         """Process in the incoming event message"""
+        _LOGGER.debug(message)
         try:
             c = self._device_callbacks[message["iddevice"]]
         except KeyError:
