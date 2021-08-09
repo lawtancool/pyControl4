@@ -1,9 +1,13 @@
+"""Controls Control4 Relay devices. These can include locks, and potentially other types of devices.
+"""
+
+
 class C4Relay:
     def __init__(self, C4Director, item_id):
         """Creates a Control4 Relay object.
 
         Parameters:
-            `C4Director` - A `pyControl4Ex.director.C4Director` object that
+            `C4Director` - A `pyControl4.director.C4Director` object that
             corresponds to the Control4 Director that the Relay is connected to.
 
             `item_id` - The Control4 item ID of the Relay.
@@ -12,11 +16,11 @@ class C4Relay:
         self.item_id = item_id
 
     async def getRelayState(self):
-        """Returns the current state of the relay"""
+        """Returns the current state of the relay."""
         return await self.director.getItemVariableValue(self.item_id, "RelayState")
 
     async def getRelayStateVerified(self):
-        """Returns True if Relay is functional
+        """Returns True if Relay is functional.
 
         Notes:
             I think this is just used to verify that the relay is functional,
@@ -27,9 +31,9 @@ class C4Relay:
         )
 
     async def open(self):
-        """Set the relay to it's open state
+        """Set the relay to its open state.
 
-        Example Json for this command from the director:
+        Example description JSON for this command from the director:
         {
           "display": "Lock the Front › Door Lock",
           "command": "OPEN",
@@ -43,9 +47,9 @@ class C4Relay:
         )
 
     async def close(self):
-        """Set the relay to it's closed state
+        """Set the relay to its closed state.
 
-        Example Json for this command from the director:
+        Example description JSON for this command from the director:
         {
           "display": "Unlock the Front › Door Lock",
           "command": "CLOSE",
@@ -59,9 +63,9 @@ class C4Relay:
         )
 
     async def toggle(self):
-        """Toggles the relay state
+        """Toggles the relay state.
 
-        Example Json for this command from the director:
+        Example description JSON for this command from the director:
         {
           "display": "Toggle the Front › Door Lock",
           "command": "TOGGLE",
