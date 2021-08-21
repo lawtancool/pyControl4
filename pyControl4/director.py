@@ -61,12 +61,7 @@ class C4Director:
                 async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
-                    try:
-                        await checkResponseForError(await resp.text())
-                    except KeyError as err:
-                        _LOGGER.debug(str(err))
-                        _LOGGER.exception(await resp.text())
-                        raise
+                    await checkResponseForError(await resp.text())
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params, async_variable=True):
