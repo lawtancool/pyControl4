@@ -77,7 +77,7 @@ class C4Blind:
             "SET_LEVEL_TARGET:LEVEL_TARGET_OPEN",
             {},
         )
-        
+
     async def close(self):
         """Closes the blind completely."""
         await self.director.sendPostRequest(
