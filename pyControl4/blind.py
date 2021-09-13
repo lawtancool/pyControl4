@@ -14,14 +14,6 @@ class C4Blind:
         self.director = C4Director
         self.item_id = item_id
 
-    async def close(self):
-        """Closes the blind completely."""
-        await self.director.sendPostRequest(
-            "/api/v1/items/{}/commands".format(self.item_id),
-            "SET_LEVEL_TARGET:LEVEL_TARGET_CLOSED",
-            {},
-        )
-
     async def getBatteryLevel(self):
         """Returns the battery of a blind. We currently don't know the range or meaning."""
         value = await self.director.getItemVariableValue(self.item_id, "Battery Level")
@@ -83,6 +75,14 @@ class C4Blind:
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
             "SET_LEVEL_TARGET:LEVEL_TARGET_OPEN",
+            {},
+        )
+        
+    async def close(self):
+        """Closes the blind completely."""
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "SET_LEVEL_TARGET:LEVEL_TARGET_CLOSED",
             {},
         )
 
