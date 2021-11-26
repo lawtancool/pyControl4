@@ -4,7 +4,7 @@
 [![CI](https://github.com/lawtancool/pyControl4/workflows/CI/badge.svg)](https://github.com/lawtancool/pyControl4/actions?query=workflow%3ACI)[![pdoc](https://github.com/lawtancool/pyControl4/workflows/pdoc/badge.svg)](https://github.com/lawtancool/pyControl4/actions?query=workflow%3Apdoc)[![PyPI Release](https://github.com/lawtancool/pyControl4/workflows/PyPI%20Release/badge.svg)](https://github.com/lawtancool/pyControl4/actions?query=workflow%3A%22PyPI+Release%22)
 
 
-An asynchronous library to interact with Control4 systems through their built-in REST API. This is only known to work on controllers with OS 3.0 or newer. 
+An asynchronous library to interact with Control4 systems through their built-in REST API. This is known to work on controllers with OS 2.10.1.544795-res and OS 3.0+. 
 
 Auto-generated function documentation can be found at <https://lawtancool.github.io/pyControl4>
 
