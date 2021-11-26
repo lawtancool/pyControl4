@@ -1,1 +1,4 @@
-﻿pdoc3
+﻿aiohttp
+xmltodict
+python-socketio
+pdoc3
