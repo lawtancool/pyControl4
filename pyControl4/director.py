@@ -4,11 +4,8 @@
 import aiohttp
 import async_timeout
 import json
-import logging
 
 from .error_handling import checkResponseForError
-
-_LOGGER = logging.getLogger(__name__)
 
 
 class C4Director:
