@@ -3,15 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.1" />
+<meta name="generator" content="pdoc 0.10.0" />
 <title>pyControl4.director API documentation</title>
-<meta name="description" content="Handles communication with a Control4 Director, and provides functions for getting details about items on the Director." />
-<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
-<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
-<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<meta name="description" content="Handles communication with a Control4 Director, and provides functions for
+getting details about items on the Director." />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
 <style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
 </head>
 <body>
 <main>
@@ -20,12 +23,14 @@
 <h1 class="title">Module <code>pyControl4.director</code></h1>
 </header>
 <section id="section-intro">
-<p>Handles communication with a Control4 Director, and provides functions for getting details about items on the Director.</p>
+<p>Handles communication with a Control4 Director, and provides functions for
+getting details about items on the Director.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">&#34;&#34;&#34;Handles communication with a Control4 Director, and provides functions for getting details about items on the Director.
+<pre><code class="python">&#34;&#34;&#34;Handles communication with a Control4 Director, and provides functions for
+   getting details about items on the Director.
 &#34;&#34;&#34;
 import aiohttp
 import async_timeout
@@ -45,14 +50,20 @@ class C4Director:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
-
-            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
-            If not provided, the library will open and close its own `ClientSession`s as needed.
+            `director_bearer_token` - The bearer token used to authenticate
+                                      with the Director.
+                See `pyControl4.account.C4Account.getDirectorBearerToken`
+                for how to get this.
+            `session` - (Optional) Allows the use of an
+                        `aiohttp.ClientSession` object
+                        for all network requests. This
+                        session will not be closed by the library.
+                        If not provided, the library will open and
+                        close its own `ClientSession`s as needed.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
+        self.director_bearer_token = director_bearer_token
         self.session = session_no_verify_ssl
 
     async def sendGetRequest(self, uri):
@@ -60,7 +71,8 @@ class C4Director:
         Returns the Director&#39;s JSON response as a string.
 
         Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+            `uri` - The API URI to send the request to. Do not include the IP
+                    address of the Director.
         &#34;&#34;&#34;
         if self.session is None:
             async with aiohttp.ClientSession(
@@ -81,11 +93,13 @@ class C4Director:
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params, async_variable=True):
-        &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands to the Director.
+        &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
+           to the Director.
         Returns the Director&#39;s JSON response as a string.
 
         Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+            `uri` - The API URI to send the request to. Do not include the IP
+                    address of the Director.
 
             `command` - The Control4 command to send.
 
@@ -113,6 +127,23 @@ class C4Director:
                 ) as resp:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
+
+    async def getAllItemsByCategory(self, category, query_string=None):
+        &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
+
+        Parameters:
+            `category` - Control4 Category Name: controllers, comfort, lights,
+                         cameras, sensors, audio_video,
+                         motorization, thermostats, motors,
+                         control4_remote_hub,
+                         outlet_wireless_dimmer, voice-scene
+            `query_string` - Query to limit devices in category
+                             (not implemented yet)
+        &#34;&#34;&#34;
+        return_list = await self.sendGetRequest(
+            &#34;/api/v1/categories/{}&#34;.format(category)
+        )
+        return return_list
 
     async def getAllItemInfo(self):
         &#34;&#34;&#34;Returns a JSON list of all the items on the Director.&#34;&#34;&#34;
@@ -145,7 +176,8 @@ class C4Director:
         return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))
 
     async def getItemVariableValue(self, item_id, var_name):
-        &#34;&#34;&#34;Returns the value of the specified variable for the specified item as a string.
+        &#34;&#34;&#34;Returns the value of the specified variable for the
+        specified item as a string.
 
         Parameters:
             `item_id` - The Control4 item ID.
@@ -157,7 +189,8 @@ class C4Director:
         )
         if data == &#34;[]&#34;:
             raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for item {}.&#34;.format(
+                &#34;Empty response recieved from Director! The variable {} \
+                    doesn&#39;t seem to exist for item {}.&#34;.format(
                     var_name, item_id
                 )
             )
@@ -165,7 +198,8 @@ class C4Director:
         return jsonDictionary[0][&#34;value&#34;]
 
     async def getAllItemVariableValue(self, var_name):
-        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable for all items that have it.
+        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
+        for all items that have it.
 
         Parameters:
             `var_name` - The Control4 variable name.
@@ -175,7 +209,8 @@ class C4Director:
         )
         if data == &#34;[]&#34;:
             raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for any items.&#34;.format(
+                &#34;Empty response recieved from Director! The variable {} \
+                    doesn&#39;t seem to exist for any items.&#34;.format(
                     var_name
                 )
             )
@@ -223,10 +258,17 @@ class C4Director:
 <dd>
 <div class="desc"><p>Creates a Control4 Director object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
-<p><code>director_bearer_token</code> - The bearer token used to authenticate with the Director. See <code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code> for how to get this.</p>
-<p><code>session</code> - (Optional) Allows the use of an <code>aiohttp.ClientSession</code> object for all network requests. This session will not be closed by the library.
-If not provided, the library will open and close its own <code>ClientSession</code>s as needed.</p></div>
+<p><code>ip</code> - The IP address of the Control4 Director/Controller.
+<code>director_bearer_token</code> - The bearer token used to authenticate
+with the Director.
+See <code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code>
+for how to get this.
+<code>session</code> - (Optional) Allows the use of an
+<code>aiohttp.ClientSession</code> object
+for all network requests. This
+session will not be closed by the library.
+If not provided, the library will open and
+close its own <code>ClientSession</code>s as needed.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -242,14 +284,20 @@ If not provided, the library will open and close its own <code>ClientSession</co
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
-
-            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
-            If not provided, the library will open and close its own `ClientSession`s as needed.
+            `director_bearer_token` - The bearer token used to authenticate
+                                      with the Director.
+                See `pyControl4.account.C4Account.getDirectorBearerToken`
+                for how to get this.
+            `session` - (Optional) Allows the use of an
+                        `aiohttp.ClientSession` object
+                        for all network requests. This
+                        session will not be closed by the library.
+                        If not provided, the library will open and
+                        close its own `ClientSession`s as needed.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
+        self.director_bearer_token = director_bearer_token
         self.session = session_no_verify_ssl
 
     async def sendGetRequest(self, uri):
@@ -257,7 +305,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
         Returns the Director&#39;s JSON response as a string.
 
         Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+            `uri` - The API URI to send the request to. Do not include the IP
+                    address of the Director.
         &#34;&#34;&#34;
         if self.session is None:
             async with aiohttp.ClientSession(
@@ -278,11 +327,13 @@ If not provided, the library will open and close its own <code>ClientSession</co
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params, async_variable=True):
-        &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands to the Director.
+        &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
+           to the Director.
         Returns the Director&#39;s JSON response as a string.
 
         Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+            `uri` - The API URI to send the request to. Do not include the IP
+                    address of the Director.
 
             `command` - The Control4 command to send.
 
@@ -310,6 +361,23 @@ If not provided, the library will open and close its own <code>ClientSession</co
                 ) as resp:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
+
+    async def getAllItemsByCategory(self, category, query_string=None):
+        &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
+
+        Parameters:
+            `category` - Control4 Category Name: controllers, comfort, lights,
+                         cameras, sensors, audio_video,
+                         motorization, thermostats, motors,
+                         control4_remote_hub,
+                         outlet_wireless_dimmer, voice-scene
+            `query_string` - Query to limit devices in category
+                             (not implemented yet)
+        &#34;&#34;&#34;
+        return_list = await self.sendGetRequest(
+            &#34;/api/v1/categories/{}&#34;.format(category)
+        )
+        return return_list
 
     async def getAllItemInfo(self):
         &#34;&#34;&#34;Returns a JSON list of all the items on the Director.&#34;&#34;&#34;
@@ -342,7 +410,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
         return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))
 
     async def getItemVariableValue(self, item_id, var_name):
-        &#34;&#34;&#34;Returns the value of the specified variable for the specified item as a string.
+        &#34;&#34;&#34;Returns the value of the specified variable for the
+        specified item as a string.
 
         Parameters:
             `item_id` - The Control4 item ID.
@@ -354,7 +423,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
         )
         if data == &#34;[]&#34;:
             raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for item {}.&#34;.format(
+                &#34;Empty response recieved from Director! The variable {} \
+                    doesn&#39;t seem to exist for item {}.&#34;.format(
                     var_name, item_id
                 )
             )
@@ -362,7 +432,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
         return jsonDictionary[0][&#34;value&#34;]
 
     async def getAllItemVariableValue(self, var_name):
-        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable for all items that have it.
+        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
+        for all items that have it.
 
         Parameters:
             `var_name` - The Control4 variable name.
@@ -372,7 +443,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
         )
         if data == &#34;[]&#34;:
             raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for any items.&#34;.format(
+                &#34;Empty response recieved from Director! The variable {} \
+                    doesn&#39;t seem to exist for any items.&#34;.format(
                     var_name
                 )
             )
@@ -423,7 +495,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <span>async def <span class="ident">getAllItemVariableValue</span></span>(<span>self, var_name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns a dictionary with the values of the specified variable for all items that have it.</p>
+<div class="desc"><p>Returns a dictionary with the values of the specified variable
+for all items that have it.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>var_name</code> - The Control4 variable name.</p></div>
 <details class="source">
@@ -431,7 +504,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getAllItemVariableValue(self, var_name):
-    &#34;&#34;&#34;Returns a dictionary with the values of the specified variable for all items that have it.
+    &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
+    for all items that have it.
 
     Parameters:
         `var_name` - The Control4 variable name.
@@ -441,12 +515,48 @@ If not provided, the library will open and close its own <code>ClientSession</co
     )
     if data == &#34;[]&#34;:
         raise ValueError(
-            &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for any items.&#34;.format(
+            &#34;Empty response recieved from Director! The variable {} \
+                doesn&#39;t seem to exist for any items.&#34;.format(
                 var_name
             )
         )
     jsonDictionary = json.loads(data)
     return jsonDictionary</code></pre>
+</details>
+</dd>
+<dt id="pyControl4.director.C4Director.getAllItemsByCategory"><code class="name flex">
+<span>async def <span class="ident">getAllItemsByCategory</span></span>(<span>self, category, query_string=None)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a JSON list of items related to a particular category.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>category</code> - Control4 Category Name: controllers, comfort, lights,
+cameras, sensors, audio_video,
+motorization, thermostats, motors,
+control4_remote_hub,
+outlet_wireless_dimmer, voice-scene
+<code>query_string</code> - Query to limit devices in category
+(not implemented yet)</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getAllItemsByCategory(self, category, query_string=None):
+    &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
+
+    Parameters:
+        `category` - Control4 Category Name: controllers, comfort, lights,
+                     cameras, sensors, audio_video,
+                     motorization, thermostats, motors,
+                     control4_remote_hub,
+                     outlet_wireless_dimmer, voice-scene
+        `query_string` - Query to limit devices in category
+                         (not implemented yet)
+    &#34;&#34;&#34;
+    return_list = await self.sendGetRequest(
+        &#34;/api/v1/categories/{}&#34;.format(category)
+    )
+    return return_list</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemBindings"><code class="name flex">
@@ -555,7 +665,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <span>async def <span class="ident">getItemVariableValue</span></span>(<span>self, item_id, var_name)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns the value of the specified variable for the specified item as a string.</p>
+<div class="desc"><p>Returns the value of the specified variable for the
+specified item as a string.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p>
 <p><code>var_name</code> - The Control4 variable name.</p></div>
@@ -564,7 +675,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getItemVariableValue(self, item_id, var_name):
-    &#34;&#34;&#34;Returns the value of the specified variable for the specified item as a string.
+    &#34;&#34;&#34;Returns the value of the specified variable for the
+    specified item as a string.
 
     Parameters:
         `item_id` - The Control4 item ID.
@@ -576,7 +688,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
     )
     if data == &#34;[]&#34;:
         raise ValueError(
-            &#34;Empty response recieved from Director! The variable {} doesn&#39;t seem to exist for item {}.&#34;.format(
+            &#34;Empty response recieved from Director! The variable {} \
+                doesn&#39;t seem to exist for item {}.&#34;.format(
                 var_name, item_id
             )
         )
@@ -611,7 +724,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <div class="desc"><p>Sends a GET request to the specified API URI.
 Returns the Director's JSON response as a string.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>uri</code> - The API URI to send the request to. Do not include the IP address of the Director.</p></div>
+<p><code>uri</code> - The API URI to send the request to. Do not include the IP
+address of the Director.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -621,7 +735,8 @@ Returns the Director's JSON response as a string.</p>
     Returns the Director&#39;s JSON response as a string.
 
     Parameters:
-        `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+        `uri` - The API URI to send the request to. Do not include the IP
+                address of the Director.
     &#34;&#34;&#34;
     if self.session is None:
         async with aiohttp.ClientSession(
@@ -646,10 +761,12 @@ Returns the Director's JSON response as a string.</p>
 <span>async def <span class="ident">sendPostRequest</span></span>(<span>self, uri, command, params, async_variable=True)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Sends a POST request to the specified API URI. Used to send commands to the Director.
+<div class="desc"><p>Sends a POST request to the specified API URI. Used to send commands
+to the Director.
 Returns the Director's JSON response as a string.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>uri</code> - The API URI to send the request to. Do not include the IP address of the Director.</p>
+<p><code>uri</code> - The API URI to send the request to. Do not include the IP
+address of the Director.</p>
 <p><code>command</code> - The Control4 command to send.</p>
 <p><code>params</code> - The parameters of the command, provided as a dictionary.</p></div>
 <details class="source">
@@ -657,11 +774,13 @@ Returns the Director's JSON response as a string.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def sendPostRequest(self, uri, command, params, async_variable=True):
-    &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands to the Director.
+    &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
+       to the Director.
     Returns the Director&#39;s JSON response as a string.
 
     Parameters:
-        `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+        `uri` - The API URI to send the request to. Do not include the IP
+                address of the Director.
 
         `command` - The Control4 command to send.
 
@@ -714,6 +833,7 @@ Returns the Director's JSON response as a string.</p>
 <ul class="">
 <li><code><a title="pyControl4.director.C4Director.getAllItemInfo" href="#pyControl4.director.C4Director.getAllItemInfo">getAllItemInfo</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getAllItemVariableValue" href="#pyControl4.director.C4Director.getAllItemVariableValue">getAllItemVariableValue</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.getAllItemsByCategory" href="#pyControl4.director.C4Director.getAllItemsByCategory">getAllItemsByCategory</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemBindings" href="#pyControl4.director.C4Director.getItemBindings">getItemBindings</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemCommands" href="#pyControl4.director.C4Director.getItemCommands">getItemCommands</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemInfo" href="#pyControl4.director.C4Director.getItemInfo">getItemInfo</a></code></li>
@@ -731,9 +851,7 @@ Returns the Director's JSON response as a string.</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.1</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
 </footer>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
 </body>
 </html>
