@@ -1,4 +1,5 @@
-"""Handles communication with a Control4 Director, and provides functions for getting details about items on the Director.
+"""Handles communication with a Control4 Director, and provides functions for
+   getting details about items on the Director.
 """
 import aiohttp
 import async_timeout
@@ -18,14 +19,20 @@ class C4Director:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
-
-            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
-            If not provided, the library will open and close its own `ClientSession`s as needed.
+            `director_bearer_token` - The bearer token used to authenticate
+                                      with the Director.
+                See `pyControl4.account.C4Account.getDirectorBearerToken`
+                for how to get this.
+            `session` - (Optional) Allows the use of an
+                        `aiohttp.ClientSession` object
+                        for all network requests. This
+                        session will not be closed by the library.
+                        If not provided, the library will open and
+                        close its own `ClientSession`s as needed.
         """
         self.base_url = "https://{}".format(ip)
         self.headers = {"Authorization": "Bearer {}".format(director_bearer_token)}
+        self.director_bearer_token = director_bearer_token
         self.session = session_no_verify_ssl
 
     async def sendGetRequest(self, uri):
@@ -33,7 +40,8 @@ class C4Director:
         Returns the Director's JSON response as a string.
 
         Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+            `uri` - The API URI to send the request to. Do not include the IP
+                    address of the Director.
         """
         if self.session is None:
             async with aiohttp.ClientSession(
@@ -54,11 +62,13 @@ class C4Director:
                     return await resp.text()
 
     async def sendPostRequest(self, uri, command, params, async_variable=True):
-        """Sends a POST request to the specified API URI. Used to send commands to the Director.
+        """Sends a POST request to the specified API URI. Used to send commands
+           to the Director.
         Returns the Director's JSON response as a string.
 
         Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP address of the Director.
+            `uri` - The API URI to send the request to. Do not include the IP
+                    address of the Director.
 
             `command` - The Control4 command to send.
 
@@ -86,6 +96,23 @@ class C4Director:
                 ) as resp:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
+
+    async def getAllItemsByCategory(self, category, query_string=None):
+        """Returns a JSON list of items related to a particular category.
+
+        Parameters:
+            `category` - Control4 Category Name: controllers, comfort, lights,
+                         cameras, sensors, audio_video,
+                         motorization, thermostats, motors,
+                         control4_remote_hub,
+                         outlet_wireless_dimmer, voice-scene
+            `query_string` - Query to limit devices in category
+                             (not implemented yet)
+        """
+        return_list = await self.sendGetRequest(
+            "/api/v1/categories/{}".format(category)
+        )
+        return return_list
 
     async def getAllItemInfo(self):
         """Returns a JSON list of all the items on the Director."""
@@ -118,7 +145,8 @@ class C4Director:
         return await self.sendGetRequest("/api/v1/items/{}/variables".format(item_id))
 
     async def getItemVariableValue(self, item_id, var_name):
-        """Returns the value of the specified variable for the specified item as a string.
+        """Returns the value of the specified variable for the
+        specified item as a string.
 
         Parameters:
             `item_id` - The Control4 item ID.
@@ -130,7 +158,8 @@ class C4Director:
         )
         if data == "[]":
             raise ValueError(
-                "Empty response recieved from Director! The variable {} doesn't seem to exist for item {}.".format(
+                "Empty response recieved from Director! The variable {} \
+                    doesn't seem to exist for item {}.".format(
                     var_name, item_id
                 )
             )
@@ -138,7 +167,8 @@ class C4Director:
         return jsonDictionary[0]["value"]
 
     async def getAllItemVariableValue(self, var_name):
-        """Returns a dictionary with the values of the specified variable for all items that have it.
+        """Returns a dictionary with the values of the specified variable
+        for all items that have it.
 
         Parameters:
             `var_name` - The Control4 variable name.
@@ -148,7 +178,8 @@ class C4Director:
         )
         if data == "[]":
             raise ValueError(
-                "Empty response recieved from Director! The variable {} doesn't seem to exist for any items.".format(
+                "Empty response recieved from Director! The variable {} \
+                    doesn't seem to exist for any items.".format(
                     var_name
                 )
             )
