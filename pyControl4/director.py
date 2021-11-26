@@ -98,7 +98,7 @@ class C4Director:
                     return await resp.text()
 
     async def getAllItemsByCategory(self, category, query_string=None):
-        """Returns a JSON list of items related to a particular category
+        """Returns a JSON list of items related to a particular category.
 
         Parameters:
             `category` - Control4 Category Name: controllers, comfort, lights,
