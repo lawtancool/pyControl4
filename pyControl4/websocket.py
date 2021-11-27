@@ -157,7 +157,7 @@ class C4Websocket:
         await sio.connect(
             self.wss_url,
             transports=["websocket"],
-            auth={"JWT": self.director_bearer_token},
+            headers={"JWT": self.director_bearer_token},
         )
 
     def remove_all_device_callbacks(self, device):

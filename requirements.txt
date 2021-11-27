@@ -1,3 +1,4 @@
 aiohttp
 xmltodict
-python-socketio
+python-socketio>=4,<5
+websocket-client
