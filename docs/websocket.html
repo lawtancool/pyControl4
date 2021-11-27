@@ -186,7 +186,7 @@ class C4Websocket:
         await sio.connect(
             self.wss_url,
             transports=[&#34;websocket&#34;],
-            auth={&#34;JWT&#34;: self.director_bearer_token},
+            headers={&#34;JWT&#34;: self.director_bearer_token},
         )
 
     def remove_all_device_callbacks(self, device):
@@ -396,7 +396,7 @@ omitted, the default namespace is used.</p></div>
 <div class="desc"><p>Dispatch an event to the proper handler method.</p>
 <p>In the most common usage, this method is not overloaded by subclasses,
 as it performs the routing of events to methods. However, this
-method can be overridden if special dispatching rules are needed, or if
+method can be overriden if special dispatching rules are needed, or if
 having a single method that catches all events is desired.</p>
 <p>Note: this method is a coroutine.</p></div>
 <details class="source">
@@ -523,7 +523,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         await sio.connect(
             self.wss_url,
             transports=[&#34;websocket&#34;],
-            auth={&#34;JWT&#34;: self.director_bearer_token},
+            headers={&#34;JWT&#34;: self.director_bearer_token},
         )
 
     def remove_all_device_callbacks(self, device):
@@ -614,7 +614,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
     await sio.connect(
         self.wss_url,
         transports=[&#34;websocket&#34;],
-        auth={&#34;JWT&#34;: self.director_bearer_token},
+        headers={&#34;JWT&#34;: self.director_bearer_token},
     )</code></pre>
 </details>
 </dd>
