@@ -226,17 +226,14 @@ class C4Account:
         return jsonDictionary["osVersion"]
 
     async def getDirectorBearerToken(self, controller_common_name):
-        """Returns a dictionary with a director bearer token for making Control4 Director API requests, and its expiry time (generally 86400 seconds after current time)
+        """Returns a dictionary with a director bearer token for making Control4 Director API requests, and its time valid in seconds (usually 86400 seconds)
 
         Parameters:
             `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
         """
         data = await self.__sendControllerAuthRequest(controller_common_name)
         jsonDictionary = json.loads(data)
-        token_expiration = datetime.datetime.now() + datetime.timedelta(
-            seconds=jsonDictionary["authToken"]["validSeconds"]
-        )
         return {
             "token": jsonDictionary["authToken"]["token"],
-            "token_expiration": token_expiration,
+            "validSeconds": jsonDictionary["authToken"]["validSeconds"],
         }
