@@ -19,10 +19,12 @@ class C4Director:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+            
             `director_bearer_token` - The bearer token used to authenticate
                                       with the Director.
                 See `pyControl4.account.C4Account.getDirectorBearerToken`
                 for how to get this.
+            
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -106,6 +108,7 @@ class C4Director:
                          motorization, thermostats, motors,
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
+            
             `query_string` - Query to limit devices in category
                              (not implemented yet)
         """

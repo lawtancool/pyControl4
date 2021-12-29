@@ -89,6 +89,7 @@ class C4Websocket:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+            
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -121,6 +122,7 @@ class C4Websocket:
 
         Parameters:
             `item_id` - The Control4 item ID.
+            
             `callback` - The callback to be called when an update is received for the provided item id.
         """
 
