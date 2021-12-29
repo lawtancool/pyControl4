@@ -50,10 +50,12 @@ class C4Director:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+            
             `director_bearer_token` - The bearer token used to authenticate
                                       with the Director.
                 See `pyControl4.account.C4Account.getDirectorBearerToken`
                 for how to get this.
+            
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -137,6 +139,7 @@ class C4Director:
                          motorization, thermostats, motors,
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
+            
             `query_string` - Query to limit devices in category
                              (not implemented yet)
         &#34;&#34;&#34;
@@ -258,12 +261,12 @@ class C4Director:
 <dd>
 <div class="desc"><p>Creates a Control4 Director object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>ip</code> - The IP address of the Control4 Director/Controller.
-<code>director_bearer_token</code> - The bearer token used to authenticate
+<p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
+<p><code>director_bearer_token</code> - The bearer token used to authenticate
 with the Director.
 See <code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code>
-for how to get this.
-<code>session</code> - (Optional) Allows the use of an
+for how to get this.</p>
+<p><code>session</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
 session will not be closed by the library.
@@ -284,10 +287,12 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+            
             `director_bearer_token` - The bearer token used to authenticate
                                       with the Director.
                 See `pyControl4.account.C4Account.getDirectorBearerToken`
                 for how to get this.
+            
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -371,6 +376,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
                          motorization, thermostats, motors,
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
+            
             `query_string` - Query to limit devices in category
                              (not implemented yet)
         &#34;&#34;&#34;
@@ -534,8 +540,8 @@ for all items that have it.</p>
 cameras, sensors, audio_video,
 motorization, thermostats, motors,
 control4_remote_hub,
-outlet_wireless_dimmer, voice-scene
-<code>query_string</code> - Query to limit devices in category
+outlet_wireless_dimmer, voice-scene</p>
+<p><code>query_string</code> - Query to limit devices in category
 (not implemented yet)</p></div>
 <details class="source">
 <summary>
@@ -550,6 +556,7 @@ outlet_wireless_dimmer, voice-scene
                      motorization, thermostats, motors,
                      control4_remote_hub,
                      outlet_wireless_dimmer, voice-scene
+        
         `query_string` - Query to limit devices in category
                          (not implemented yet)
     &#34;&#34;&#34;

@@ -118,6 +118,7 @@ class C4Websocket:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+            
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -150,6 +151,7 @@ class C4Websocket:
 
         Parameters:
             `item_id` - The Control4 item ID.
+            
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
 
@@ -447,8 +449,8 @@ having a single method that catches all events is desired.</p>
 <dd>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>ip</code> - The IP address of the Control4 Director/Controller.
-<code>session</code> - (Optional) Allows the use of an
+<p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
+<p><code>session</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
 session will not be closed by the library.
@@ -468,6 +470,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+            
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -500,6 +503,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 
         Parameters:
             `item_id` - The Control4 item ID.
+            
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
 
@@ -579,8 +583,8 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 <div class="desc"><p>Register a callback to receive updates about an item.
 If a callback is already registered for the item, it will be overwritten with the provided callback.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.
-<code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
+<p><code>item_id</code> - The Control4 item ID.</p>
+<p><code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -591,6 +595,7 @@ If a callback is already registered for the item, it will be overwritten with th
 
     Parameters:
         `item_id` - The Control4 item ID.
+        
         `callback` - The callback to be called when an update is received for the provided item id.
     &#34;&#34;&#34;
 
