@@ -50,12 +50,12 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
         self.connected = False
 
     def on_connect(self):
-        _LOGGER.debug(&#34;C4 Director socket.io connection established!&#34;)
+        _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
 
     def on_disconnect(self):
         self.connected = False
         self.subscriptionId = None
-        _LOGGER.debug(&#34;C4 Director socket.io disconnected.&#34;)
+        _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
 
     async def trigger_event(self, event, *args):
         if event == &#34;subscribe&#34;:
@@ -70,7 +70,7 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
             msg = args[0]
             if &#34;status&#34; in msg:
                 _LOGGER.debug(
-                    f&#39;Status message received from directory: {msg[&#34;status&#34;]}&#39;
+                    f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;
                 )
                 await self.emit(&#34;2&#34;)
             else:
@@ -79,7 +79,7 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
     async def on_clientId(self, clientId):
         await self.emit(&#34;2probe&#34;)
         if not self.connected and not self.subscriptionId:
-            _LOGGER.debug(&#34;Fetching subscriptionID from C4&#34;)
+            _LOGGER.debug(&#34;Fetching subscriptionID from Control4&#34;)
             if self.session is None:
                 async with aiohttp.ClientSession(
                     connector=aiohttp.TCPConnector(verify_ssl=False)
@@ -114,17 +114,12 @@ class C4Websocket:
     def __init__(
         self,
         ip,
-        director_bearer_token,
         session_no_verify_ssl: aiohttp.ClientSession = None,
     ):
         &#34;&#34;&#34;Creates a Control4 Websocket object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-            `director_bearer_token` - The bearer token used to authenticate
-                                      with the Director.
-                See `pyControl4.account.C4Account.getDirectorBearerToken`
-                for how to get this.
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -134,11 +129,12 @@ class C4Websocket:
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.wss_url = &#34;wss://{}&#34;.format(ip)
-        self.director_bearer_token = director_bearer_token
         self.session = session_no_verify_ssl
 
-        # Keep track of the device callbacks within the director
-        self._device_callbacks = dict()
+        # Keep track of the callbacks registered for each item id
+        self._item_callbacks = dict()
+        # Initialize self._sio to None
+        self._sio = None
 
     async def callback(self, message):
         if &#34;status&#34; in message:
@@ -150,18 +146,64 @@ class C4Websocket:
         else:
             await self._process_message(message)
 
-    def add_device_callback(self, device, device_callback):
-        &#34;&#34;&#34;Register a device callback.&#34;&#34;&#34;
+    def add_item_callback(self, item_id, callback):
+        &#34;&#34;&#34;Register a callback to receive updates about an item.
+        If a callback is already registered for the item, it will be overwritten with the provided callback.
 
-        _LOGGER.debug(&#34;Subscribing to updates for device_id: %s&#34;, device)
+        Parameters:
+            `item_id` - The Control4 item ID.
+            `callback` - The callback to be called when an update is received for the provided item id.
+        &#34;&#34;&#34;
 
-        self._device_callbacks[device] = device_callback
+        _LOGGER.debug(&#34;Subscribing to updates for item id: %s&#34;, item_id)
+
+        self._item_callbacks[item_id] = callback
+
+    def remove_item_callback(self, item_id):
+        &#34;&#34;&#34;Unregister callback for an item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        self._item_callbacks.pop(item_id)
+
+    async def sio_connect(self, director_bearer_token):
+        &#34;&#34;&#34;Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
+        If a connection already exists, it will be disconnected and a new connection will be created.
+
+        This function should be called using a new token every 86400 seconds (the expiry time of the director tokens), otherwise the Control4 Director will stop sending WebSocket messages.
+
+        Parameters:
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
+        &#34;&#34;&#34;
+        # Disconnect previous sio object
+        await self.sio_disconnect()
+
+        self._sio = socketio.AsyncClient(ssl_verify=False)
+        self._sio.register_namespace(
+            C4DirectorNamespace(
+                token=director_bearer_token,
+                url=self.base_url,
+                callback=self.callback,
+                session=self.session,
+            )
+        )
+        await self._sio.connect(
+            self.wss_url,
+            transports=[&#34;websocket&#34;],
+            headers={&#34;JWT&#34;: director_bearer_token},
+        )
+
+    async def sio_disconnect(self):
+        &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
+        if isinstance(self._sio, socketio.AsyncClient):
+            await self._sio.disconnect()
 
     async def _process_message(self, message):
-        &#34;&#34;&#34;Process in the incoming event message&#34;&#34;&#34;
+        &#34;&#34;&#34;Process an incoming event message.&#34;&#34;&#34;
         _LOGGER.debug(message)
         try:
-            c = self._device_callbacks[message[&#34;iddevice&#34;]]
+            c = self._item_callbacks[message[&#34;iddevice&#34;]]
         except KeyError:
             _LOGGER.debug(&#34;No Callback for device id {}&#34;.format(message[&#34;iddevice&#34;]))
             return True
@@ -172,29 +214,8 @@ class C4Websocket:
         else:
             await c(message[&#34;iddevice&#34;], message)
 
-    async def sio_connect(self):
-        &#34;&#34;&#34;Start SocketIO Connection and listen&#34;&#34;&#34;
-        sio = socketio.AsyncClient(ssl_verify=False)
-        sio.register_namespace(
-            C4DirectorNamespace(
-                token=self.director_bearer_token,
-                url=self.base_url,
-                callback=self.callback,
-                session=self.session,
-            )
-        )
-        await sio.connect(
-            self.wss_url,
-            transports=[&#34;websocket&#34;],
-            headers={&#34;JWT&#34;: self.director_bearer_token},
-        )
-
-    def remove_all_device_callbacks(self, device):
-        &#34;&#34;&#34;Unregister all callbacks for a device&#34;&#34;&#34;
-        self._device_callbacks[device].clear()
-
     async def _execute_callback(self, callback, *args, **kwargs):
-        &#34;&#34;&#34;Callback with some data capturing any excpetions&#34;&#34;&#34;
+        &#34;&#34;&#34;Callback with some data capturing any excpetions.&#34;&#34;&#34;
         try:
             self.sio.emit(&#34;ping&#34;)
             await callback(*args, **kwargs)
@@ -241,12 +262,12 @@ omitted, the default namespace is used.</p></div>
         self.connected = False
 
     def on_connect(self):
-        _LOGGER.debug(&#34;C4 Director socket.io connection established!&#34;)
+        _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
 
     def on_disconnect(self):
         self.connected = False
         self.subscriptionId = None
-        _LOGGER.debug(&#34;C4 Director socket.io disconnected.&#34;)
+        _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
 
     async def trigger_event(self, event, *args):
         if event == &#34;subscribe&#34;:
@@ -261,7 +282,7 @@ omitted, the default namespace is used.</p></div>
             msg = args[0]
             if &#34;status&#34; in msg:
                 _LOGGER.debug(
-                    f&#39;Status message received from directory: {msg[&#34;status&#34;]}&#39;
+                    f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;
                 )
                 await self.emit(&#34;2&#34;)
             else:
@@ -270,7 +291,7 @@ omitted, the default namespace is used.</p></div>
     async def on_clientId(self, clientId):
         await self.emit(&#34;2probe&#34;)
         if not self.connected and not self.subscriptionId:
-            _LOGGER.debug(&#34;Fetching subscriptionID from C4&#34;)
+            _LOGGER.debug(&#34;Fetching subscriptionID from Control4&#34;)
             if self.session is None:
                 async with aiohttp.ClientSession(
                     connector=aiohttp.TCPConnector(verify_ssl=False)
@@ -320,7 +341,7 @@ omitted, the default namespace is used.</p></div>
 <pre><code class="python">async def on_clientId(self, clientId):
     await self.emit(&#34;2probe&#34;)
     if not self.connected and not self.subscriptionId:
-        _LOGGER.debug(&#34;Fetching subscriptionID from C4&#34;)
+        _LOGGER.debug(&#34;Fetching subscriptionID from Control4&#34;)
         if self.session is None:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
@@ -358,7 +379,7 @@ omitted, the default namespace is used.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def on_connect(self):
-    _LOGGER.debug(&#34;C4 Director socket.io connection established!&#34;)</code></pre>
+    _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4DirectorNamespace.on_disconnect"><code class="name flex">
@@ -373,7 +394,7 @@ omitted, the default namespace is used.</p></div>
 <pre><code class="python">def on_disconnect(self):
     self.connected = False
     self.subscriptionId = None
-    _LOGGER.debug(&#34;C4 Director socket.io disconnected.&#34;)</code></pre>
+    _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4DirectorNamespace.on_subscribe"><code class="name flex">
@@ -416,7 +437,7 @@ having a single method that catches all events is desired.</p>
         msg = args[0]
         if &#34;status&#34; in msg:
             _LOGGER.debug(
-                f&#39;Status message received from directory: {msg[&#34;status&#34;]}&#39;
+                f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;
             )
             await self.emit(&#34;2&#34;)
         else:
@@ -427,16 +448,12 @@ having a single method that catches all events is desired.</p>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket"><code class="flex name class">
 <span>class <span class="ident">C4Websocket</span></span>
-<span>(</span><span>ip, director_bearer_token, session_no_verify_ssl: aiohttp.client.ClientSession = None)</span>
+<span>(</span><span>ip, session_no_verify_ssl: aiohttp.client.ClientSession = None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>ip</code> - The IP address of the Control4 Director/Controller.
-<code>director_bearer_token</code> - The bearer token used to authenticate
-with the Director.
-See <code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code>
-for how to get this.
 <code>session</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
@@ -451,17 +468,12 @@ close its own <code>ClientSession</code>s as needed.</p></div>
     def __init__(
         self,
         ip,
-        director_bearer_token,
         session_no_verify_ssl: aiohttp.ClientSession = None,
     ):
         &#34;&#34;&#34;Creates a Control4 Websocket object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-            `director_bearer_token` - The bearer token used to authenticate
-                                      with the Director.
-                See `pyControl4.account.C4Account.getDirectorBearerToken`
-                for how to get this.
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
@@ -471,11 +483,12 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.wss_url = &#34;wss://{}&#34;.format(ip)
-        self.director_bearer_token = director_bearer_token
         self.session = session_no_verify_ssl
 
-        # Keep track of the device callbacks within the director
-        self._device_callbacks = dict()
+        # Keep track of the callbacks registered for each item id
+        self._item_callbacks = dict()
+        # Initialize self._sio to None
+        self._sio = None
 
     async def callback(self, message):
         if &#34;status&#34; in message:
@@ -487,18 +500,64 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         else:
             await self._process_message(message)
 
-    def add_device_callback(self, device, device_callback):
-        &#34;&#34;&#34;Register a device callback.&#34;&#34;&#34;
+    def add_item_callback(self, item_id, callback):
+        &#34;&#34;&#34;Register a callback to receive updates about an item.
+        If a callback is already registered for the item, it will be overwritten with the provided callback.
 
-        _LOGGER.debug(&#34;Subscribing to updates for device_id: %s&#34;, device)
+        Parameters:
+            `item_id` - The Control4 item ID.
+            `callback` - The callback to be called when an update is received for the provided item id.
+        &#34;&#34;&#34;
 
-        self._device_callbacks[device] = device_callback
+        _LOGGER.debug(&#34;Subscribing to updates for item id: %s&#34;, item_id)
+
+        self._item_callbacks[item_id] = callback
+
+    def remove_item_callback(self, item_id):
+        &#34;&#34;&#34;Unregister callback for an item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        self._item_callbacks.pop(item_id)
+
+    async def sio_connect(self, director_bearer_token):
+        &#34;&#34;&#34;Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
+        If a connection already exists, it will be disconnected and a new connection will be created.
+
+        This function should be called using a new token every 86400 seconds (the expiry time of the director tokens), otherwise the Control4 Director will stop sending WebSocket messages.
+
+        Parameters:
+            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
+        &#34;&#34;&#34;
+        # Disconnect previous sio object
+        await self.sio_disconnect()
+
+        self._sio = socketio.AsyncClient(ssl_verify=False)
+        self._sio.register_namespace(
+            C4DirectorNamespace(
+                token=director_bearer_token,
+                url=self.base_url,
+                callback=self.callback,
+                session=self.session,
+            )
+        )
+        await self._sio.connect(
+            self.wss_url,
+            transports=[&#34;websocket&#34;],
+            headers={&#34;JWT&#34;: director_bearer_token},
+        )
+
+    async def sio_disconnect(self):
+        &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
+        if isinstance(self._sio, socketio.AsyncClient):
+            await self._sio.disconnect()
 
     async def _process_message(self, message):
-        &#34;&#34;&#34;Process in the incoming event message&#34;&#34;&#34;
+        &#34;&#34;&#34;Process an incoming event message.&#34;&#34;&#34;
         _LOGGER.debug(message)
         try:
-            c = self._device_callbacks[message[&#34;iddevice&#34;]]
+            c = self._item_callbacks[message[&#34;iddevice&#34;]]
         except KeyError:
             _LOGGER.debug(&#34;No Callback for device id {}&#34;.format(message[&#34;iddevice&#34;]))
             return True
@@ -509,29 +568,8 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         else:
             await c(message[&#34;iddevice&#34;], message)
 
-    async def sio_connect(self):
-        &#34;&#34;&#34;Start SocketIO Connection and listen&#34;&#34;&#34;
-        sio = socketio.AsyncClient(ssl_verify=False)
-        sio.register_namespace(
-            C4DirectorNamespace(
-                token=self.director_bearer_token,
-                url=self.base_url,
-                callback=self.callback,
-                session=self.session,
-            )
-        )
-        await sio.connect(
-            self.wss_url,
-            transports=[&#34;websocket&#34;],
-            headers={&#34;JWT&#34;: self.director_bearer_token},
-        )
-
-    def remove_all_device_callbacks(self, device):
-        &#34;&#34;&#34;Unregister all callbacks for a device&#34;&#34;&#34;
-        self._device_callbacks[device].clear()
-
     async def _execute_callback(self, callback, *args, **kwargs):
-        &#34;&#34;&#34;Callback with some data capturing any excpetions&#34;&#34;&#34;
+        &#34;&#34;&#34;Callback with some data capturing any excpetions.&#34;&#34;&#34;
         try:
             self.sio.emit(&#34;ping&#34;)
             await callback(*args, **kwargs)
@@ -540,21 +578,31 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 </details>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.websocket.C4Websocket.add_device_callback"><code class="name flex">
-<span>def <span class="ident">add_device_callback</span></span>(<span>self, device, device_callback)</span>
+<dt id="pyControl4.websocket.C4Websocket.add_item_callback"><code class="name flex">
+<span>def <span class="ident">add_item_callback</span></span>(<span>self, item_id, callback)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Register a device callback.</p></div>
+<div class="desc"><p>Register a callback to receive updates about an item.
+If a callback is already registered for the item, it will be overwritten with the provided callback.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>item_id</code> - The Control4 item ID.
+<code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_device_callback(self, device, device_callback):
-    &#34;&#34;&#34;Register a device callback.&#34;&#34;&#34;
+<pre><code class="python">def add_item_callback(self, item_id, callback):
+    &#34;&#34;&#34;Register a callback to receive updates about an item.
+    If a callback is already registered for the item, it will be overwritten with the provided callback.
 
-    _LOGGER.debug(&#34;Subscribing to updates for device_id: %s&#34;, device)
+    Parameters:
+        `item_id` - The Control4 item ID.
+        `callback` - The callback to be called when an update is received for the provided item id.
+    &#34;&#34;&#34;
 
-    self._device_callbacks[device] = device_callback</code></pre>
+    _LOGGER.debug(&#34;Subscribing to updates for item id: %s&#34;, item_id)
+
+    self._item_callbacks[item_id] = callback</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.callback"><code class="name flex">
@@ -577,45 +625,80 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         await self._process_message(message)</code></pre>
 </details>
 </dd>
-<dt id="pyControl4.websocket.C4Websocket.remove_all_device_callbacks"><code class="name flex">
-<span>def <span class="ident">remove_all_device_callbacks</span></span>(<span>self, device)</span>
+<dt id="pyControl4.websocket.C4Websocket.remove_item_callback"><code class="name flex">
+<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Unregister all callbacks for a device</p></div>
+<div class="desc"><p>Unregister callback for an item.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>item_id</code> - The Control4 item ID.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def remove_all_device_callbacks(self, device):
-    &#34;&#34;&#34;Unregister all callbacks for a device&#34;&#34;&#34;
-    self._device_callbacks[device].clear()</code></pre>
+<pre><code class="python">def remove_item_callback(self, item_id):
+    &#34;&#34;&#34;Unregister callback for an item.
+
+    Parameters:
+        `item_id` - The Control4 item ID.
+    &#34;&#34;&#34;
+    self._item_callbacks.pop(item_id)</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.sio_connect"><code class="name flex">
-<span>async def <span class="ident">sio_connect</span></span>(<span>self)</span>
+<span>async def <span class="ident">sio_connect</span></span>(<span>self, director_bearer_token)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Start SocketIO Connection and listen</p></div>
+<div class="desc"><p>Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
+If a connection already exists, it will be disconnected and a new connection will be created.</p>
+<p>This function should be called using a new token every 86400 seconds (the expiry time of the director tokens), otherwise the Control4 Director will stop sending WebSocket messages.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>director_bearer_token</code> - The bearer token used to authenticate with the Director. See <code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code> for how to get this.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sio_connect(self):
-    &#34;&#34;&#34;Start SocketIO Connection and listen&#34;&#34;&#34;
-    sio = socketio.AsyncClient(ssl_verify=False)
-    sio.register_namespace(
+<pre><code class="python">async def sio_connect(self, director_bearer_token):
+    &#34;&#34;&#34;Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
+    If a connection already exists, it will be disconnected and a new connection will be created.
+
+    This function should be called using a new token every 86400 seconds (the expiry time of the director tokens), otherwise the Control4 Director will stop sending WebSocket messages.
+
+    Parameters:
+        `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
+    &#34;&#34;&#34;
+    # Disconnect previous sio object
+    await self.sio_disconnect()
+
+    self._sio = socketio.AsyncClient(ssl_verify=False)
+    self._sio.register_namespace(
         C4DirectorNamespace(
-            token=self.director_bearer_token,
+            token=director_bearer_token,
             url=self.base_url,
             callback=self.callback,
             session=self.session,
         )
     )
-    await sio.connect(
+    await self._sio.connect(
         self.wss_url,
         transports=[&#34;websocket&#34;],
-        headers={&#34;JWT&#34;: self.director_bearer_token},
+        headers={&#34;JWT&#34;: director_bearer_token},
     )</code></pre>
+</details>
+</dd>
+<dt id="pyControl4.websocket.C4Websocket.sio_disconnect"><code class="name flex">
+<span>async def <span class="ident">sio_disconnect</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Disconnects the WebSockets connection, if it has been created.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def sio_disconnect(self):
+    &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
+    if isinstance(self._sio, socketio.AsyncClient):
+        await self._sio.disconnect()</code></pre>
 </details>
 </dd>
 </dl>
@@ -649,10 +732,11 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 <li>
 <h4><code><a title="pyControl4.websocket.C4Websocket" href="#pyControl4.websocket.C4Websocket">C4Websocket</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.websocket.C4Websocket.add_device_callback" href="#pyControl4.websocket.C4Websocket.add_device_callback">add_device_callback</a></code></li>
+<li><code><a title="pyControl4.websocket.C4Websocket.add_item_callback" href="#pyControl4.websocket.C4Websocket.add_item_callback">add_item_callback</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.callback" href="#pyControl4.websocket.C4Websocket.callback">callback</a></code></li>
-<li><code><a title="pyControl4.websocket.C4Websocket.remove_all_device_callbacks" href="#pyControl4.websocket.C4Websocket.remove_all_device_callbacks">remove_all_device_callbacks</a></code></li>
+<li><code><a title="pyControl4.websocket.C4Websocket.remove_item_callback" href="#pyControl4.websocket.C4Websocket.remove_item_callback">remove_item_callback</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.sio_connect" href="#pyControl4.websocket.C4Websocket.sio_connect">sio_connect</a></code></li>
+<li><code><a title="pyControl4.websocket.C4Websocket.sio_disconnect" href="#pyControl4.websocket.C4Websocket.sio_disconnect">sio_disconnect</a></code></li>
 </ul>
 </li>
 </ul>
