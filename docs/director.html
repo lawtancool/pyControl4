@@ -130,7 +130,7 @@ class C4Director:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
 
-    async def getAllItemsByCategory(self, category, query_string=None):
+    async def getAllItemsByCategory(self, category):
         &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
 
         Parameters:
@@ -139,9 +139,6 @@ class C4Director:
                          motorization, thermostats, motors,
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
-            
-            `query_string` - Query to limit devices in category
-                             (not implemented yet)
         &#34;&#34;&#34;
         return_list = await self.sendGetRequest(
             &#34;/api/v1/categories/{}&#34;.format(category)
@@ -367,7 +364,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
                     await checkResponseForError(await resp.text())
                     return await resp.text()
 
-    async def getAllItemsByCategory(self, category, query_string=None):
+    async def getAllItemsByCategory(self, category):
         &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
 
         Parameters:
@@ -376,9 +373,6 @@ close its own <code>ClientSession</code>s as needed.</p></div>
                          motorization, thermostats, motors,
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
-            
-            `query_string` - Query to limit devices in category
-                             (not implemented yet)
         &#34;&#34;&#34;
         return_list = await self.sendGetRequest(
             &#34;/api/v1/categories/{}&#34;.format(category)
@@ -531,7 +525,7 @@ for all items that have it.</p>
 </details>
 </dd>
 <dt id="pyControl4.director.C4Director.getAllItemsByCategory"><code class="name flex">
-<span>async def <span class="ident">getAllItemsByCategory</span></span>(<span>self, category, query_string=None)</span>
+<span>async def <span class="ident">getAllItemsByCategory</span></span>(<span>self, category)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a JSON list of items related to a particular category.</p>
@@ -540,14 +534,12 @@ for all items that have it.</p>
 cameras, sensors, audio_video,
 motorization, thermostats, motors,
 control4_remote_hub,
-outlet_wireless_dimmer, voice-scene</p>
-<p><code>query_string</code> - Query to limit devices in category
-(not implemented yet)</p></div>
+outlet_wireless_dimmer, voice-scene</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAllItemsByCategory(self, category, query_string=None):
+<pre><code class="python">async def getAllItemsByCategory(self, category):
     &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
 
     Parameters:
@@ -556,9 +548,6 @@ outlet_wireless_dimmer, voice-scene</p>
                      motorization, thermostats, motors,
                      control4_remote_hub,
                      outlet_wireless_dimmer, voice-scene
-        
-        `query_string` - Query to limit devices in category
-                         (not implemented yet)
     &#34;&#34;&#34;
     return_list = await self.sendGetRequest(
         &#34;/api/v1/categories/{}&#34;.format(category)
