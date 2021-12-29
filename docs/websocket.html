@@ -69,9 +69,7 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
         elif event == self.subscriptionId:
             msg = args[0]
             if &#34;status&#34; in msg:
-                _LOGGER.debug(
-                    f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;
-                )
+                _LOGGER.debug(f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;)
                 await self.emit(&#34;2&#34;)
             else:
                 await self.callback(args[0])
@@ -281,9 +279,7 @@ omitted, the default namespace is used.</p></div>
         elif event == self.subscriptionId:
             msg = args[0]
             if &#34;status&#34; in msg:
-                _LOGGER.debug(
-                    f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;
-                )
+                _LOGGER.debug(f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;)
                 await self.emit(&#34;2&#34;)
             else:
                 await self.callback(args[0])
@@ -436,9 +432,7 @@ having a single method that catches all events is desired.</p>
     elif event == self.subscriptionId:
         msg = args[0]
         if &#34;status&#34; in msg:
-            _LOGGER.debug(
-                f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;
-            )
+            _LOGGER.debug(f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;)
             await self.emit(&#34;2&#34;)
         else:
             await self.callback(args[0])</code></pre>
