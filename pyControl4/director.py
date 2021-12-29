@@ -99,7 +99,7 @@ class C4Director:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
 
-    async def getAllItemsByCategory(self, category, query_string=None):
+    async def getAllItemsByCategory(self, category):
         """Returns a JSON list of items related to a particular category.
 
         Parameters:
@@ -108,9 +108,6 @@ class C4Director:
                          motorization, thermostats, motors,
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
-            
-            `query_string` - Query to limit devices in category
-                             (not implemented yet)
         """
         return_list = await self.sendGetRequest(
             "/api/v1/categories/{}".format(category)
