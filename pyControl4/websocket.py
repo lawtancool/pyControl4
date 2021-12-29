@@ -40,9 +40,7 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
         elif event == self.subscriptionId:
             msg = args[0]
             if "status" in msg:
-                _LOGGER.debug(
-                    f'Status message received from Director: {msg["status"]}'
-                )
+                _LOGGER.debug(f'Status message received from Director: {msg["status"]}')
                 await self.emit("2")
             else:
                 await self.callback(args[0])
