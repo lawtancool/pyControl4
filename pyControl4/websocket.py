@@ -15,26 +15,32 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
         self.token = kwargs.pop("token")
         self.callback = kwargs.pop("callback")
         self.session = kwargs.pop("session")
+        self.connect_callback = kwargs.pop("connect_callback")
+        self.disconnect_callback = kwargs.pop("disconnect_callback")
         super().__init__(*args, **kwargs)
         self.uri = "/api/v1/items/datatoui"
         self.subscriptionId = None
         self.connected = False
 
-    def on_connect(self):
+    async def on_connect(self):
         _LOGGER.debug("Control4 Director socket.io connection established!")
+        if self.connect_callback is not None:
+            await self.connect_callback()
 
-    def on_disconnect(self):
+    async def on_disconnect(self):
         self.connected = False
         self.subscriptionId = None
         _LOGGER.debug("Control4 Director socket.io disconnected.")
+        if self.disconnect_callback is not None:
+            await self.disconnect_callback()
 
     async def trigger_event(self, event, *args):
         if event == "subscribe":
             await self.on_subscribe(*args)
         elif event == "connect":
-            self.on_connect()
+            await self.on_connect()
         elif event == "disconnect":
-            self.on_disconnect()
+            await self.on_disconnect()
         elif event == "clientId":
             await self.on_clientId(*args)
         elif event == self.subscriptionId:
@@ -84,22 +90,27 @@ class C4Websocket:
         self,
         ip,
         session_no_verify_ssl: aiohttp.ClientSession = None,
+        connect_callback=None,
+        disconnect_callback=None,
     ):
         """Creates a Control4 Websocket object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+            `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+            `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
         """
         self.base_url = "https://{}".format(ip)
         self.wss_url = "wss://{}".format(ip)
         self.session = session_no_verify_ssl
+        self.connect_callback = connect_callback
+        self.disconnect_callback = disconnect_callback
 
         # Keep track of the callbacks registered for each item id
         self._item_callbacks = dict()
@@ -116,13 +127,19 @@ class C4Websocket:
         else:
             await self._process_message(message)
 
+    @property
+    def item_callbacks(self):
+        """Returns a dictionary of registered item ids (key) and their callbacks (value).
+
+        item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead."""
+        return self._item_callbacks
+
     def add_item_callback(self, item_id, callback):
         """Register a callback to receive updates about an item.
         If a callback is already registered for the item, it will be overwritten with the provided callback.
 
         Parameters:
             `item_id` - The Control4 item ID.
-
             `callback` - The callback to be called when an update is received for the provided item id.
         """
 
@@ -157,6 +174,8 @@ class C4Websocket:
                 url=self.base_url,
                 callback=self.callback,
                 session=self.session,
+                connect_callback=self.connect_callback,
+                disconnect_callback=self.disconnect_callback,
             )
         )
         await self._sio.connect(
