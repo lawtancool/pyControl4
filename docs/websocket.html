@@ -44,26 +44,32 @@ class C4DirectorNamespace(socketio.AsyncClientNamespace):
         self.token = kwargs.pop(&#34;token&#34;)
         self.callback = kwargs.pop(&#34;callback&#34;)
         self.session = kwargs.pop(&#34;session&#34;)
+        self.connect_callback = kwargs.pop(&#34;connect_callback&#34;)
+        self.disconnect_callback = kwargs.pop(&#34;disconnect_callback&#34;)
         super().__init__(*args, **kwargs)
         self.uri = &#34;/api/v1/items/datatoui&#34;
         self.subscriptionId = None
         self.connected = False
 
-    def on_connect(self):
+    async def on_connect(self):
         _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
+        if self.connect_callback is not None:
+            await self.connect_callback()
 
-    def on_disconnect(self):
+    async def on_disconnect(self):
         self.connected = False
         self.subscriptionId = None
         _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
+        if self.disconnect_callback is not None:
+            await self.disconnect_callback()
 
     async def trigger_event(self, event, *args):
         if event == &#34;subscribe&#34;:
             await self.on_subscribe(*args)
         elif event == &#34;connect&#34;:
-            self.on_connect()
+            await self.on_connect()
         elif event == &#34;disconnect&#34;:
-            self.on_disconnect()
+            await self.on_disconnect()
         elif event == &#34;clientId&#34;:
             await self.on_clientId(*args)
         elif event == self.subscriptionId:
@@ -113,22 +119,27 @@ class C4Websocket:
         self,
         ip,
         session_no_verify_ssl: aiohttp.ClientSession = None,
+        connect_callback=None,
+        disconnect_callback=None,
     ):
         &#34;&#34;&#34;Creates a Control4 Websocket object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+            `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+            `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.wss_url = &#34;wss://{}&#34;.format(ip)
         self.session = session_no_verify_ssl
+        self.connect_callback = connect_callback
+        self.disconnect_callback = disconnect_callback
 
         # Keep track of the callbacks registered for each item id
         self._item_callbacks = dict()
@@ -145,13 +156,19 @@ class C4Websocket:
         else:
             await self._process_message(message)
 
+    @property
+    def item_callbacks(self):
+        &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).
+
+        item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.&#34;&#34;&#34;
+        return self._item_callbacks
+
     def add_item_callback(self, item_id, callback):
         &#34;&#34;&#34;Register a callback to receive updates about an item.
         If a callback is already registered for the item, it will be overwritten with the provided callback.
 
         Parameters:
             `item_id` - The Control4 item ID.
-
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
 
@@ -186,6 +203,8 @@ class C4Websocket:
                 url=self.base_url,
                 callback=self.callback,
                 session=self.session,
+                connect_callback=self.connect_callback,
+                disconnect_callback=self.disconnect_callback,
             )
         )
         await self._sio.connect(
@@ -256,26 +275,32 @@ omitted, the default namespace is used.</p></div>
         self.token = kwargs.pop(&#34;token&#34;)
         self.callback = kwargs.pop(&#34;callback&#34;)
         self.session = kwargs.pop(&#34;session&#34;)
+        self.connect_callback = kwargs.pop(&#34;connect_callback&#34;)
+        self.disconnect_callback = kwargs.pop(&#34;disconnect_callback&#34;)
         super().__init__(*args, **kwargs)
         self.uri = &#34;/api/v1/items/datatoui&#34;
         self.subscriptionId = None
         self.connected = False
 
-    def on_connect(self):
+    async def on_connect(self):
         _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
+        if self.connect_callback is not None:
+            await self.connect_callback()
 
-    def on_disconnect(self):
+    async def on_disconnect(self):
         self.connected = False
         self.subscriptionId = None
         _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
+        if self.disconnect_callback is not None:
+            await self.disconnect_callback()
 
     async def trigger_event(self, event, *args):
         if event == &#34;subscribe&#34;:
             await self.on_subscribe(*args)
         elif event == &#34;connect&#34;:
-            self.on_connect()
+            await self.on_connect()
         elif event == &#34;disconnect&#34;:
-            self.on_disconnect()
+            await self.on_disconnect()
         elif event == &#34;clientId&#34;:
             await self.on_clientId(*args)
         elif event == self.subscriptionId:
@@ -368,7 +393,7 @@ omitted, the default namespace is used.</p></div>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4DirectorNamespace.on_connect"><code class="name flex">
-<span>def <span class="ident">on_connect</span></span>(<span>self)</span>
+<span>async def <span class="ident">on_connect</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -376,12 +401,14 @@ omitted, the default namespace is used.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def on_connect(self):
-    _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)</code></pre>
+<pre><code class="python">async def on_connect(self):
+    _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
+    if self.connect_callback is not None:
+        await self.connect_callback()</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4DirectorNamespace.on_disconnect"><code class="name flex">
-<span>def <span class="ident">on_disconnect</span></span>(<span>self)</span>
+<span>async def <span class="ident">on_disconnect</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -389,10 +416,12 @@ omitted, the default namespace is used.</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def on_disconnect(self):
+<pre><code class="python">async def on_disconnect(self):
     self.connected = False
     self.subscriptionId = None
-    _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)</code></pre>
+    _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
+    if self.disconnect_callback is not None:
+        await self.disconnect_callback()</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4DirectorNamespace.on_subscribe"><code class="name flex">
@@ -426,9 +455,9 @@ having a single method that catches all events is desired.</p>
     if event == &#34;subscribe&#34;:
         await self.on_subscribe(*args)
     elif event == &#34;connect&#34;:
-        self.on_connect()
+        await self.on_connect()
     elif event == &#34;disconnect&#34;:
-        self.on_disconnect()
+        await self.on_disconnect()
     elif event == &#34;clientId&#34;:
         await self.on_clientId(*args)
     elif event == self.subscriptionId:
@@ -444,18 +473,20 @@ having a single method that catches all events is desired.</p>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket"><code class="flex name class">
 <span>class <span class="ident">C4Websocket</span></span>
-<span>(</span><span>ip, session_no_verify_ssl: aiohttp.client.ClientSession = None)</span>
+<span>(</span><span>ip, session_no_verify_ssl: aiohttp.client.ClientSession = None, connect_callback=None, disconnect_callback=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
-<p><code>session</code> - (Optional) Allows the use of an
+<p><code>ip</code> - The IP address of the Control4 Director/Controller.
+<code>session</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
 session will not be closed by the library.
 If not provided, the library will open and
-close its own <code>ClientSession</code>s as needed.</p></div>
+close its own <code>ClientSession</code>s as needed.
+<code>connect_callback</code> - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+<code>disconnect_callback</code> - (Optional) A callback to be called when the Websocket connection is lost due to a network error.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -465,22 +496,27 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         self,
         ip,
         session_no_verify_ssl: aiohttp.ClientSession = None,
+        connect_callback=None,
+        disconnect_callback=None,
     ):
         &#34;&#34;&#34;Creates a Control4 Websocket object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
-
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+            `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+            `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
         self.wss_url = &#34;wss://{}&#34;.format(ip)
         self.session = session_no_verify_ssl
+        self.connect_callback = connect_callback
+        self.disconnect_callback = disconnect_callback
 
         # Keep track of the callbacks registered for each item id
         self._item_callbacks = dict()
@@ -497,13 +533,19 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         else:
             await self._process_message(message)
 
+    @property
+    def item_callbacks(self):
+        &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).
+
+        item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.&#34;&#34;&#34;
+        return self._item_callbacks
+
     def add_item_callback(self, item_id, callback):
         &#34;&#34;&#34;Register a callback to receive updates about an item.
         If a callback is already registered for the item, it will be overwritten with the provided callback.
 
         Parameters:
             `item_id` - The Control4 item ID.
-
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
 
@@ -538,6 +580,8 @@ close its own <code>ClientSession</code>s as needed.</p></div>
                 url=self.base_url,
                 callback=self.callback,
                 session=self.session,
+                connect_callback=self.connect_callback,
+                disconnect_callback=self.disconnect_callback,
             )
         )
         await self._sio.connect(
@@ -574,6 +618,25 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         except Exception as exc:
             _LOGGER.warning(&#34;Captured exception during callback: {}&#34;.format(str(exc)))</code></pre>
 </details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="pyControl4.websocket.C4Websocket.item_callbacks"><code class="name">var <span class="ident">item_callbacks</span></code></dt>
+<dd>
+<div class="desc"><p>Returns a dictionary of registered item ids (key) and their callbacks (value).</p>
+<p>item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@property
+def item_callbacks(self):
+    &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).
+
+    item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.&#34;&#34;&#34;
+    return self._item_callbacks</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.websocket.C4Websocket.add_item_callback"><code class="name flex">
@@ -583,8 +646,8 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 <div class="desc"><p>Register a callback to receive updates about an item.
 If a callback is already registered for the item, it will be overwritten with the provided callback.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.</p>
-<p><code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
+<p><code>item_id</code> - The Control4 item ID.
+<code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -595,7 +658,6 @@ If a callback is already registered for the item, it will be overwritten with th
 
     Parameters:
         `item_id` - The Control4 item ID.
-
         `callback` - The callback to be called when an update is received for the provided item id.
     &#34;&#34;&#34;
 
@@ -676,6 +738,8 @@ If a connection already exists, it will be disconnected and a new connection wil
             url=self.base_url,
             callback=self.callback,
             session=self.session,
+            connect_callback=self.connect_callback,
+            disconnect_callback=self.disconnect_callback,
         )
     )
     await self._sio.connect(
@@ -733,6 +797,7 @@ If a connection already exists, it will be disconnected and a new connection wil
 <ul class="">
 <li><code><a title="pyControl4.websocket.C4Websocket.add_item_callback" href="#pyControl4.websocket.C4Websocket.add_item_callback">add_item_callback</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.callback" href="#pyControl4.websocket.C4Websocket.callback">callback</a></code></li>
+<li><code><a title="pyControl4.websocket.C4Websocket.item_callbacks" href="#pyControl4.websocket.C4Websocket.item_callbacks">item_callbacks</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.remove_item_callback" href="#pyControl4.websocket.C4Websocket.remove_item_callback">remove_item_callback</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.sio_connect" href="#pyControl4.websocket.C4Websocket.sio_connect">sio_connect</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.sio_disconnect" href="#pyControl4.websocket.C4Websocket.sio_disconnect">sio_disconnect</a></code></li>
