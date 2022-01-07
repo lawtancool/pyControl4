@@ -117,16 +117,6 @@ class C4Websocket:
         # Initialize self._sio to None
         self._sio = None
 
-    async def callback(self, message):
-        if "status" in message:
-            _LOGGER.debug(f'Subscription {message["status"]}')
-            return True
-        if isinstance(message, list):
-            for m in message:
-                await self._process_message(m)
-        else:
-            await self._process_message(message)
-
     @property
     def item_callbacks(self):
         """Returns a dictionary of registered item ids (key) and their callbacks (value).
@@ -172,7 +162,7 @@ class C4Websocket:
             C4DirectorNamespace(
                 token=director_bearer_token,
                 url=self.base_url,
-                callback=self.callback,
+                callback=self._callback,
                 session=self.session,
                 connect_callback=self.connect_callback,
                 disconnect_callback=self.disconnect_callback,
@@ -188,6 +178,16 @@ class C4Websocket:
         """Disconnects the WebSockets connection, if it has been created."""
         if isinstance(self._sio, socketio.AsyncClient):
             await self._sio.disconnect()
+
+    async def _callback(self, message):
+        if "status" in message:
+            _LOGGER.debug(f'Subscription {message["status"]}')
+            return True
+        if isinstance(message, list):
+            for m in message:
+                await self._process_message(m)
+        else:
+            await self._process_message(message)
 
     async def _process_message(self, message):
         """Process an incoming event message."""
