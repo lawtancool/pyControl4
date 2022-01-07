@@ -38,7 +38,7 @@ from .error_handling import checkResponseForError
 _LOGGER = logging.getLogger(__name__)
 
 
-class C4DirectorNamespace(socketio.AsyncClientNamespace):
+class _C4DirectorNamespace(socketio.AsyncClientNamespace):
     def __init__(self, *args, **kwargs):
         self.url = kwargs.pop(&#34;url&#34;)
         self.token = kwargs.pop(&#34;token&#34;)
@@ -126,13 +126,16 @@ class C4Websocket:
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+
             `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+
             `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
@@ -145,16 +148,6 @@ class C4Websocket:
         self._item_callbacks = dict()
         # Initialize self._sio to None
         self._sio = None
-
-    async def callback(self, message):
-        if &#34;status&#34; in message:
-            _LOGGER.debug(f&#39;Subscription {message[&#34;status&#34;]}&#39;)
-            return True
-        if isinstance(message, list):
-            for m in message:
-                await self._process_message(m)
-        else:
-            await self._process_message(message)
 
     @property
     def item_callbacks(self):
@@ -169,6 +162,7 @@ class C4Websocket:
 
         Parameters:
             `item_id` - The Control4 item ID.
+
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
 
@@ -198,10 +192,10 @@ class C4Websocket:
 
         self._sio = socketio.AsyncClient(ssl_verify=False)
         self._sio.register_namespace(
-            C4DirectorNamespace(
+            _C4DirectorNamespace(
                 token=director_bearer_token,
                 url=self.base_url,
-                callback=self.callback,
+                callback=self._callback,
                 session=self.session,
                 connect_callback=self.connect_callback,
                 disconnect_callback=self.disconnect_callback,
@@ -217,6 +211,16 @@ class C4Websocket:
         &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
         if isinstance(self._sio, socketio.AsyncClient):
             await self._sio.disconnect()
+
+    async def _callback(self, message):
+        if &#34;status&#34; in message:
+            _LOGGER.debug(f&#39;Subscription {message[&#34;status&#34;]}&#39;)
+            return True
+        if isinstance(message, list):
+            for m in message:
+                await self._process_message(m)
+        else:
+            await self._process_message(message)
 
     async def _process_message(self, message):
         &#34;&#34;&#34;Process an incoming event message.&#34;&#34;&#34;
@@ -251,226 +255,6 @@ class C4Websocket:
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="pyControl4.websocket.C4DirectorNamespace"><code class="flex name class">
-<span>class <span class="ident">C4DirectorNamespace</span></span>
-<span>(</span><span>*args, **kwargs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Base class for asyncio client-side class-based namespaces.</p>
-<p>A class-based namespace is a class that contains all the event handlers
-for a Socket.IO namespace. The event handlers are methods of the class
-with the prefix <code>on_</code>, such as <code>on_connect</code>, <code>on_disconnect</code>,
-<code>on_message</code>, <code>on_json</code>, and so on. These can be regular functions or
-coroutines.</p>
-<p>:param namespace: The Socket.IO namespace to be used with all the event
-handlers defined in this class. If this argument is
-omitted, the default namespace is used.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">class C4DirectorNamespace(socketio.AsyncClientNamespace):
-    def __init__(self, *args, **kwargs):
-        self.url = kwargs.pop(&#34;url&#34;)
-        self.token = kwargs.pop(&#34;token&#34;)
-        self.callback = kwargs.pop(&#34;callback&#34;)
-        self.session = kwargs.pop(&#34;session&#34;)
-        self.connect_callback = kwargs.pop(&#34;connect_callback&#34;)
-        self.disconnect_callback = kwargs.pop(&#34;disconnect_callback&#34;)
-        super().__init__(*args, **kwargs)
-        self.uri = &#34;/api/v1/items/datatoui&#34;
-        self.subscriptionId = None
-        self.connected = False
-
-    async def on_connect(self):
-        _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
-        if self.connect_callback is not None:
-            await self.connect_callback()
-
-    async def on_disconnect(self):
-        self.connected = False
-        self.subscriptionId = None
-        _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
-        if self.disconnect_callback is not None:
-            await self.disconnect_callback()
-
-    async def trigger_event(self, event, *args):
-        if event == &#34;subscribe&#34;:
-            await self.on_subscribe(*args)
-        elif event == &#34;connect&#34;:
-            await self.on_connect()
-        elif event == &#34;disconnect&#34;:
-            await self.on_disconnect()
-        elif event == &#34;clientId&#34;:
-            await self.on_clientId(*args)
-        elif event == self.subscriptionId:
-            msg = args[0]
-            if &#34;status&#34; in msg:
-                _LOGGER.debug(f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;)
-                await self.emit(&#34;2&#34;)
-            else:
-                await self.callback(args[0])
-
-    async def on_clientId(self, clientId):
-        await self.emit(&#34;2probe&#34;)
-        if not self.connected and not self.subscriptionId:
-            _LOGGER.debug(&#34;Fetching subscriptionID from Control4&#34;)
-            if self.session is None:
-                async with aiohttp.ClientSession(
-                    connector=aiohttp.TCPConnector(verify_ssl=False)
-                ) as session:
-                    with async_timeout.timeout(10):
-                        async with session.get(
-                            self.url + self.uri,
-                            params={&#34;JWT&#34;: self.token, &#34;SubscriptionClient&#34;: clientId},
-                        ) as resp:
-                            await checkResponseForError(await resp.text())
-                            data = await resp.json()
-                            self.connected = True
-                            self.subscriptionId = data[&#34;subscriptionId&#34;]
-                            await self.emit(&#34;startSubscription&#34;, self.subscriptionId)
-            else:
-                with async_timeout.timeout(10):
-                    async with self.session.get(
-                        self.url + self.uri,
-                        params={&#34;JWT&#34;: self.token, &#34;SubscriptionClient&#34;: clientId},
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        data = await resp.json()
-                        self.connected = True
-                        self.subscriptionId = data[&#34;subscriptionId&#34;]
-                        await self.emit(&#34;startSubscription&#34;, self.subscriptionId)
-
-    async def on_subscribe(self, message):
-        await self.message(message)</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>socketio.asyncio_namespace.AsyncClientNamespace</li>
-<li>socketio.namespace.ClientNamespace</li>
-<li>socketio.namespace.BaseNamespace</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="pyControl4.websocket.C4DirectorNamespace.on_clientId"><code class="name flex">
-<span>async def <span class="ident">on_clientId</span></span>(<span>self, clientId)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def on_clientId(self, clientId):
-    await self.emit(&#34;2probe&#34;)
-    if not self.connected and not self.subscriptionId:
-        _LOGGER.debug(&#34;Fetching subscriptionID from Control4&#34;)
-        if self.session is None:
-            async with aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
-            ) as session:
-                with async_timeout.timeout(10):
-                    async with session.get(
-                        self.url + self.uri,
-                        params={&#34;JWT&#34;: self.token, &#34;SubscriptionClient&#34;: clientId},
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        data = await resp.json()
-                        self.connected = True
-                        self.subscriptionId = data[&#34;subscriptionId&#34;]
-                        await self.emit(&#34;startSubscription&#34;, self.subscriptionId)
-        else:
-            with async_timeout.timeout(10):
-                async with self.session.get(
-                    self.url + self.uri,
-                    params={&#34;JWT&#34;: self.token, &#34;SubscriptionClient&#34;: clientId},
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    data = await resp.json()
-                    self.connected = True
-                    self.subscriptionId = data[&#34;subscriptionId&#34;]
-                    await self.emit(&#34;startSubscription&#34;, self.subscriptionId)</code></pre>
-</details>
-</dd>
-<dt id="pyControl4.websocket.C4DirectorNamespace.on_connect"><code class="name flex">
-<span>async def <span class="ident">on_connect</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def on_connect(self):
-    _LOGGER.debug(&#34;Control4 Director socket.io connection established!&#34;)
-    if self.connect_callback is not None:
-        await self.connect_callback()</code></pre>
-</details>
-</dd>
-<dt id="pyControl4.websocket.C4DirectorNamespace.on_disconnect"><code class="name flex">
-<span>async def <span class="ident">on_disconnect</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def on_disconnect(self):
-    self.connected = False
-    self.subscriptionId = None
-    _LOGGER.debug(&#34;Control4 Director socket.io disconnected.&#34;)
-    if self.disconnect_callback is not None:
-        await self.disconnect_callback()</code></pre>
-</details>
-</dd>
-<dt id="pyControl4.websocket.C4DirectorNamespace.on_subscribe"><code class="name flex">
-<span>async def <span class="ident">on_subscribe</span></span>(<span>self, message)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def on_subscribe(self, message):
-    await self.message(message)</code></pre>
-</details>
-</dd>
-<dt id="pyControl4.websocket.C4DirectorNamespace.trigger_event"><code class="name flex">
-<span>async def <span class="ident">trigger_event</span></span>(<span>self, event, *args)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Dispatch an event to the proper handler method.</p>
-<p>In the most common usage, this method is not overloaded by subclasses,
-as it performs the routing of events to methods. However, this
-method can be overriden if special dispatching rules are needed, or if
-having a single method that catches all events is desired.</p>
-<p>Note: this method is a coroutine.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def trigger_event(self, event, *args):
-    if event == &#34;subscribe&#34;:
-        await self.on_subscribe(*args)
-    elif event == &#34;connect&#34;:
-        await self.on_connect()
-    elif event == &#34;disconnect&#34;:
-        await self.on_disconnect()
-    elif event == &#34;clientId&#34;:
-        await self.on_clientId(*args)
-    elif event == self.subscriptionId:
-        msg = args[0]
-        if &#34;status&#34; in msg:
-            _LOGGER.debug(f&#39;Status message received from Director: {msg[&#34;status&#34;]}&#39;)
-            await self.emit(&#34;2&#34;)
-        else:
-            await self.callback(args[0])</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
 <dt id="pyControl4.websocket.C4Websocket"><code class="flex name class">
 <span>class <span class="ident">C4Websocket</span></span>
 <span>(</span><span>ip, session_no_verify_ssl: aiohttp.client.ClientSession = None, connect_callback=None, disconnect_callback=None)</span>
@@ -478,15 +262,15 @@ having a single method that catches all events is desired.</p>
 <dd>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>ip</code> - The IP address of the Control4 Director/Controller.
-<code>session</code> - (Optional) Allows the use of an
+<p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
+<p><code>session</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
 session will not be closed by the library.
 If not provided, the library will open and
-close its own <code>ClientSession</code>s as needed.
-<code>connect_callback</code> - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
-<code>disconnect_callback</code> - (Optional) A callback to be called when the Websocket connection is lost due to a network error.</p></div>
+close its own <code>ClientSession</code>s as needed.</p>
+<p><code>connect_callback</code> - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.</p>
+<p><code>disconnect_callback</code> - (Optional) A callback to be called when the Websocket connection is lost due to a network error.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -503,13 +287,16 @@ close its own <code>ClientSession</code>s as needed.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
+
             `session` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+
             `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+
             `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
         &#34;&#34;&#34;
         self.base_url = &#34;https://{}&#34;.format(ip)
@@ -522,16 +309,6 @@ close its own <code>ClientSession</code>s as needed.
         self._item_callbacks = dict()
         # Initialize self._sio to None
         self._sio = None
-
-    async def callback(self, message):
-        if &#34;status&#34; in message:
-            _LOGGER.debug(f&#39;Subscription {message[&#34;status&#34;]}&#39;)
-            return True
-        if isinstance(message, list):
-            for m in message:
-                await self._process_message(m)
-        else:
-            await self._process_message(message)
 
     @property
     def item_callbacks(self):
@@ -546,6 +323,7 @@ close its own <code>ClientSession</code>s as needed.
 
         Parameters:
             `item_id` - The Control4 item ID.
+
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
 
@@ -575,10 +353,10 @@ close its own <code>ClientSession</code>s as needed.
 
         self._sio = socketio.AsyncClient(ssl_verify=False)
         self._sio.register_namespace(
-            C4DirectorNamespace(
+            _C4DirectorNamespace(
                 token=director_bearer_token,
                 url=self.base_url,
-                callback=self.callback,
+                callback=self._callback,
                 session=self.session,
                 connect_callback=self.connect_callback,
                 disconnect_callback=self.disconnect_callback,
@@ -594,6 +372,16 @@ close its own <code>ClientSession</code>s as needed.
         &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
         if isinstance(self._sio, socketio.AsyncClient):
             await self._sio.disconnect()
+
+    async def _callback(self, message):
+        if &#34;status&#34; in message:
+            _LOGGER.debug(f&#39;Subscription {message[&#34;status&#34;]}&#39;)
+            return True
+        if isinstance(message, list):
+            for m in message:
+                await self._process_message(m)
+        else:
+            await self._process_message(message)
 
     async def _process_message(self, message):
         &#34;&#34;&#34;Process an incoming event message.&#34;&#34;&#34;
@@ -646,8 +434,8 @@ def item_callbacks(self):
 <div class="desc"><p>Register a callback to receive updates about an item.
 If a callback is already registered for the item, it will be overwritten with the provided callback.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.
-<code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
+<p><code>item_id</code> - The Control4 item ID.</p>
+<p><code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -658,32 +446,13 @@ If a callback is already registered for the item, it will be overwritten with th
 
     Parameters:
         `item_id` - The Control4 item ID.
+
         `callback` - The callback to be called when an update is received for the provided item id.
     &#34;&#34;&#34;
 
     _LOGGER.debug(&#34;Subscribing to updates for item id: %s&#34;, item_id)
 
     self._item_callbacks[item_id] = callback</code></pre>
-</details>
-</dd>
-<dt id="pyControl4.websocket.C4Websocket.callback"><code class="name flex">
-<span>async def <span class="ident">callback</span></span>(<span>self, message)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def callback(self, message):
-    if &#34;status&#34; in message:
-        _LOGGER.debug(f&#39;Subscription {message[&#34;status&#34;]}&#39;)
-        return True
-    if isinstance(message, list):
-        for m in message:
-            await self._process_message(m)
-    else:
-        await self._process_message(message)</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.remove_item_callback"><code class="name flex">
@@ -733,10 +502,10 @@ If a connection already exists, it will be disconnected and a new connection wil
 
     self._sio = socketio.AsyncClient(ssl_verify=False)
     self._sio.register_namespace(
-        C4DirectorNamespace(
+        _C4DirectorNamespace(
             token=director_bearer_token,
             url=self.base_url,
-            callback=self.callback,
+            callback=self._callback,
             session=self.session,
             connect_callback=self.connect_callback,
             disconnect_callback=self.disconnect_callback,
@@ -783,20 +552,9 @@ If a connection already exists, it will be disconnected and a new connection wil
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="pyControl4.websocket.C4DirectorNamespace" href="#pyControl4.websocket.C4DirectorNamespace">C4DirectorNamespace</a></code></h4>
-<ul class="">
-<li><code><a title="pyControl4.websocket.C4DirectorNamespace.on_clientId" href="#pyControl4.websocket.C4DirectorNamespace.on_clientId">on_clientId</a></code></li>
-<li><code><a title="pyControl4.websocket.C4DirectorNamespace.on_connect" href="#pyControl4.websocket.C4DirectorNamespace.on_connect">on_connect</a></code></li>
-<li><code><a title="pyControl4.websocket.C4DirectorNamespace.on_disconnect" href="#pyControl4.websocket.C4DirectorNamespace.on_disconnect">on_disconnect</a></code></li>
-<li><code><a title="pyControl4.websocket.C4DirectorNamespace.on_subscribe" href="#pyControl4.websocket.C4DirectorNamespace.on_subscribe">on_subscribe</a></code></li>
-<li><code><a title="pyControl4.websocket.C4DirectorNamespace.trigger_event" href="#pyControl4.websocket.C4DirectorNamespace.trigger_event">trigger_event</a></code></li>
-</ul>
-</li>
-<li>
 <h4><code><a title="pyControl4.websocket.C4Websocket" href="#pyControl4.websocket.C4Websocket">C4Websocket</a></code></h4>
 <ul class="">
 <li><code><a title="pyControl4.websocket.C4Websocket.add_item_callback" href="#pyControl4.websocket.C4Websocket.add_item_callback">add_item_callback</a></code></li>
-<li><code><a title="pyControl4.websocket.C4Websocket.callback" href="#pyControl4.websocket.C4Websocket.callback">callback</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.item_callbacks" href="#pyControl4.websocket.C4Websocket.item_callbacks">item_callbacks</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.remove_item_callback" href="#pyControl4.websocket.C4Websocket.remove_item_callback">remove_item_callback</a></code></li>
 <li><code><a title="pyControl4.websocket.C4Websocket.sio_connect" href="#pyControl4.websocket.C4Websocket.sio_connect">sio_connect</a></code></li>
