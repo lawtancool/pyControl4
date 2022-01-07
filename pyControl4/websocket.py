@@ -9,7 +9,7 @@ from .error_handling import checkResponseForError
 _LOGGER = logging.getLogger(__name__)
 
 
-class C4DirectorNamespace(socketio.AsyncClientNamespace):
+class _C4DirectorNamespace(socketio.AsyncClientNamespace):
     def __init__(self, *args, **kwargs):
         self.url = kwargs.pop("url")
         self.token = kwargs.pop("token")
@@ -163,7 +163,7 @@ class C4Websocket:
 
         self._sio = socketio.AsyncClient(ssl_verify=False)
         self._sio.register_namespace(
-            C4DirectorNamespace(
+            _C4DirectorNamespace(
                 token=director_bearer_token,
                 url=self.base_url,
                 callback=self._callback,
