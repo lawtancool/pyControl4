@@ -12,7 +12,7 @@ For those who are looking for a pre-built solution for controlling their devices
 
 ## Usage example
 ```python
-from pyControl4.auth import C4Account
+from pyControl4.account import C4Account
 from pyControl4.director import C4Director
 from pyControl4.light import C4Light
 import asyncio
