@@ -151,8 +151,12 @@ class C4Director:
         Parameters:
             `item_id` - The Control4 item ID.
 
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         """
+
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = ",".join(var_name)
+
         data = await self.sendGetRequest(
             "/api/v1/items/{}/variables?varnames={}".format(item_id, var_name)
         )
@@ -171,8 +175,11 @@ class C4Director:
         for all items that have it.
 
         Parameters:
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         """
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = ",".join(var_name)
+
         data = await self.sendGetRequest(
             "/api/v1/items/variables?varnames={}".format(var_name)
         )
@@ -209,3 +216,7 @@ class C4Director:
             `item_id` - The Control4 item ID.
         """
         return await self.sendGetRequest("/api/v1/items/{}/bindings".format(item_id))
+
+    async def getUiConfiguration(self):
+        """Get the JSON Control4 App UI Configuration enumerating rooms and capabilities"""
+        return await self.sendGetRequest("/api/v1/agents/ui_configuration")

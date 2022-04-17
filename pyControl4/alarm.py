@@ -1,20 +1,10 @@
 """Controls Control4 security panel and contact sensor (door, window, motion) devices.
 """
 import json
+from pyControl4 import C4Entity
 
 
-class C4SecurityPanel:
-    def __init__(self, C4Director, item_id):
-        """Creates a Control4 Security Panel object.
-
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
-
-            `item_id` - The Control4 item ID of the security panel partition.
-        """
-        self.director = C4Director
-        self.item_id = item_id
-
+class C4SecurityPanel(C4Entity):
     async def getArmState(self):
         """Returns the arm state of the security panel as "DISARMED", "ARMED_HOME", or "ARMED_AWAY"."""
         disarmed = await self.director.getItemVariableValue(
