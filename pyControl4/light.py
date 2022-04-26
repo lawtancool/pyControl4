@@ -6,7 +6,6 @@ from pyControl4 import C4Entity
 
 
 class C4Light(C4Entity):
-
     async def getLevel(self):
         """Returns the level of a dimming-capable light as an int 0-100.
         Will cause an error if called on a non-dimmer switch. Use `getState()` instead.

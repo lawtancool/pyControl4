@@ -6,7 +6,6 @@ from pyControl4 import C4Entity
 
 
 class C4Relay(C4Entity):
-
     async def getRelayState(self):
         """Returns the current state of the relay.
 

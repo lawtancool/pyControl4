@@ -6,7 +6,6 @@ from pyControl4 import C4Entity
 
 
 class C4Blind(C4Entity):
-
     async def getBatteryLevel(self):
         """Returns the battery of a blind. We currently don't know the range or meaning."""
         value = await self.director.getItemVariableValue(self.item_id, "Battery Level")

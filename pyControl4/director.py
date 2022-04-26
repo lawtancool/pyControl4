@@ -218,5 +218,5 @@ class C4Director:
         return await self.sendGetRequest("/api/v1/items/{}/bindings".format(item_id))
 
     async def getUiConfiguration(self):
-        """ Get the JSON Control4 App UI Configuration enumerating rooms and capabilities """
+        """Get the JSON Control4 App UI Configuration enumerating rooms and capabilities"""
         return await self.sendGetRequest("/api/v1/agents/ui_configuration")

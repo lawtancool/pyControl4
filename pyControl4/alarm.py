@@ -5,7 +5,6 @@ from pyControl4 import C4Entity
 
 
 class C4SecurityPanel(C4Entity):
-
     async def getArmState(self):
         """Returns the arm state of the security panel as "DISARMED", "ARMED_HOME", or "ARMED_AWAY"."""
         disarmed = await self.director.getItemVariableValue(
