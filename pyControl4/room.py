@@ -6,6 +6,9 @@ from pyControl4 import C4Entity
 
 
 class C4Room(C4Entity):
+    """
+    A media-oriented view of a Control4 Room, supporting items of type="room"
+    """
 
     async def isRoomHidden(self) -> bool:
         """Returns True if the room is hidden from the end-user"""

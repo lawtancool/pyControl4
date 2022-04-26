@@ -63,13 +63,7 @@ class C4Director:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
 
-    async def sendPostRequest(
-        self, 
-        uri, 
-        command, 
-        params, 
-        async_variable=True, 
-    ):
+    async def sendPostRequest(self, uri, command, params, async_variable=True):
         """Sends a POST request to the specified API URI. Used to send commands
            to the Director.
         Returns the Director's JSON response as a string.
@@ -81,9 +75,7 @@ class C4Director:
             `command` - The Control4 command to send.
 
             `params` - The parameters of the command, provided as a dictionary.
-
         """
-
         dataDictionary = {
             "async": async_variable,
             "command": command,
