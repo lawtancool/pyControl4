@@ -2,17 +2,10 @@
 """
 
 
-class C4Room:
-    def __init__(self, C4Director, item_id):
-        """Creates a Control4 Room object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the light is connected to.
 
-            `item_id` - The Control4 item ID of the room.
-        """
-        self.director = C4Director
-        self.item_id = item_id
+class C4Room(C4Entity):
 
     async def isRoomHidden(self) -> bool:
         """Returns True if the room is hidden from the end-user"""
@@ -32,6 +25,25 @@ class C4Room:
             "ROOM_OFF",
             {},
         )
+
+    async def setSource(self, source_id: int, audio_only: bool):
+        """ 
+        Sets the room source, turning on the room if necessary.
+        If audio_only, only the current audio device is changed
+        """
+        await self.director.sendPostRequest(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SELECT_AUDIO_DEVICE" if audio_only else "SELECT_VIDEO_DEVICE", 
+            {"deviceid": source_id}
+        )
+
+    async def setAudioSource(self, source_id: int):
+        """ Sets the current audio source for the room"""
+        await self.setSource(source_id, audio_only=True)
+
+    async def setVideoAndAudioSource(self, source_id: int):
+        """ Sets the current audio and video source for the room"""
+        await self.setSource(source_id, audio_only=False)
 
     async def getVolume(self) -> int:
         """Returns the current volume for the room from 0-100"""
@@ -64,5 +76,59 @@ class C4Room:
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
             "SET_VOLUME_LEVEL",
-            {"LEVEL": level},
+            {"LEVEL": volume},
         )
+
+    async def setIncrementOrDecrementVolume(self, increase:bool):
+        """ Increase/Decrease volume by 1"""
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PULSE_VOL_UP" if increase else "PULSE_VOL_DOWN",
+            {},
+        )
+
+    async def setPlay(self):
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PLAY",
+            {},
+        )
+
+    async def setPause(self):
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PAUSE",
+            {},
+        )
+
+    async def setStop(self):
+        """ Stops the currently playing media but does not turn off the room """
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "STOP",
+            {},
+        )
+
+    async def getAudioDevices(self):
+        """ 
+        Get the audio devices located in the room.
+
+        Note that this is literally the devices in the room,
+        not necessarily all devices _playable_ in the room.
+
+        See C4Director.getUiConfiguration for a more accurate list
+        
+        """
+        await self.director.sendGetRequest("/api/v1/locations/rooms/{}/audio_devices".format(self.item_id))
+
+    async def getVideoDevices(self):
+        """ 
+        Get the video devices located in the room.
+
+        Note that this is literally the devices in the room,
+        not necessarily all devices _playable_ in the room.
+
+        See C4Director.getUiConfiguration for a more accurate list
+        
+        """
+        await self.director.sendGetRequest("/api/v1/locations/rooms/{}/video_devices".format(self.item_id))

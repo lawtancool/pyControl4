@@ -63,7 +63,13 @@ class C4Director:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
 
-    async def sendPostRequest(self, uri, command, params, async_variable=True):
+    async def sendPostRequest(
+        self, 
+        uri, 
+        command, 
+        params, 
+        async_variable=True, 
+    ):
         """Sends a POST request to the specified API URI. Used to send commands
            to the Director.
         Returns the Director's JSON response as a string.
@@ -75,7 +81,9 @@ class C4Director:
             `command` - The Control4 command to send.
 
             `params` - The parameters of the command, provided as a dictionary.
+
         """
+
         dataDictionary = {
             "async": async_variable,
             "command": command,
@@ -151,8 +159,12 @@ class C4Director:
         Parameters:
             `item_id` - The Control4 item ID.
 
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         """
+
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = ",".join(var_name)
+
         data = await self.sendGetRequest(
             "/api/v1/items/{}/variables?varnames={}".format(item_id, var_name)
         )
@@ -171,8 +183,11 @@ class C4Director:
         for all items that have it.
 
         Parameters:
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         """
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = ",".join(var_name)
+
         data = await self.sendGetRequest(
             "/api/v1/items/variables?varnames={}".format(var_name)
         )
@@ -209,3 +224,7 @@ class C4Director:
             `item_id` - The Control4 item ID.
         """
         return await self.sendGetRequest("/api/v1/items/{}/bindings".format(item_id))
+
+    async def getUiConfiguration(self):
+        """ Get the JSON Control4 App UI Configuration enumerating rooms and capabilities """
+        return await self.sendGetRequest("/api/v1/agents/ui_configuration")

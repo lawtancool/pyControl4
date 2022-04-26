@@ -2,17 +2,10 @@
 """
 
 
-class C4Blind:
-    def __init__(self, C4Director, item_id):
-        """Creates a Control4 Blind object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the blind is connected to.
 
-            `item_id` - The Control4 item ID of the blind.
-        """
-        self.director = C4Director
-        self.item_id = item_id
+class C4Blind(C4Entity):
 
     async def getBatteryLevel(self):
         """Returns the battery of a blind. We currently don't know the range or meaning."""

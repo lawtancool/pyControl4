@@ -2,18 +2,10 @@
 """
 
 
-class C4Relay:
-    def __init__(self, C4Director, item_id):
-        """Creates a Control4 Relay object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that
-            corresponds to the Control4 Director that the Relay is connected to.
 
-            `item_id` - The Control4 item ID of the Relay.
-        """
-        self.director = C4Director
-        self.item_id = item_id
+class C4Relay(C4Entity):
 
     async def getRelayState(self):
         """Returns the current state of the relay.
