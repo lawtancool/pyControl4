@@ -218,5 +218,85 @@ class C4Director:
         return await self.sendGetRequest("/api/v1/items/{}/bindings".format(item_id))
 
     async def getUiConfiguration(self):
-        """Get the JSON Control4 App UI Configuration enumerating rooms and capabilities"""
+        """Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
+
+        Returns:
+
+            {
+             "experiences": [
+                {
+                 "type": "watch",
+                 "sources": {
+                    "source": [
+                     {
+                      "id": 59,
+                      "type": "HDMI"
+                     },
+                     {
+                      "id": 946,
+                      "type": "HDMI"
+                     },
+                     {
+                      "id": 950,
+                      "type": "HDMI"
+                     },
+                     {
+                      "id": 33,
+                      "type": "VIDEO_SELECTION"
+                     }
+                    ]
+                },
+                 "active": false,
+                 "room_id": 9,
+                 "username": "primaryuser"
+                },
+                {
+                 "type": "listen",
+                 "sources": {
+                    "source": [
+                    {
+                     "id": 298,
+                     "type": "DIGITAL_AUDIO_SERVER",
+                     "name": "My Music"
+                    },
+                    {
+                     "id": 302,
+                     "type": "AUDIO_SELECTION",
+                     "name": "Stations"
+                    },
+                    {
+                     "id": 306,
+                     "type": "DIGITAL_AUDIO_SERVER",
+                     "name": "ShairBridge"
+                    },
+                    {
+                     "id": 937,
+                     "type": "DIGITAL_AUDIO_SERVER",
+                     "name": "Spotify Connect"
+                    },
+                    {
+                     "id": 100002,
+                     "type": "DIGITAL_AUDIO_CLIENT",
+                     "name": "Digital Media"
+                    }
+                   ]
+                },
+                 "active": false,
+                 "room_id": 9,
+                 "username": "primaryuser"
+                },
+                {
+                 "type": "cameras",
+                 "sources": {
+                    "source": [
+                    {
+                     "id": 877,
+                     "type": "Camera"
+                    },
+                    ...
+                }
+                ...
+            }
+        """
+
         return await self.sendGetRequest("/api/v1/agents/ui_configuration")
