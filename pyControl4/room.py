@@ -57,11 +57,19 @@ class C4Room(C4Entity):
         value = await self.director.getItemVariableValue(self.item_id, "IS_MUTED")
         return int(value) != 0
 
-    async def setMute(self, muted: bool):
-        """Mute/Unmute the room"""
+    async def setMuteOn(self):
+        """Mute the room"""
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
-            "MUTE_ON" if muted else "MUTE_OFF",
+            "MUTE_ON",
+            {},
+        )
+
+    async def setMuteOff(self):
+        """Unmute the room"""
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "MUTE_OFF",
             {},
         )
 
@@ -81,11 +89,19 @@ class C4Room(C4Entity):
             {"LEVEL": volume},
         )
 
-    async def setIncrementOrDecrementVolume(self, increase: bool):
-        """Increase/Decrease volume by 1"""
+    async def setIncrementVolume(self):
+        """Decrease volume by 1"""
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
-            "PULSE_VOL_UP" if increase else "PULSE_VOL_DOWN",
+            "PULSE_VOL_UP",
+            {},
+        )
+
+    async def setDecrementVolume(self):
+        """Decrease volume by 1"""
+        await self.director.sendPostRequest(
+            "/api/v1/items/{}/commands".format(self.item_id),
+            "PULSE_VOL_DOWN",
             {},
         )
 
