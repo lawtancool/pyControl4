@@ -126,3 +126,29 @@ class C4Room(C4Entity):
             "STOP",
             {},
         )
+
+    async def getAudioDevices(self):
+        """
+        Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions
+
+        Get the audio devices located in the room.
+        Note that this is literally the devices in the room,
+        not necessarily all devices _playable_ in the room.
+        See C4Director.getUiConfiguration for a more accurate list
+        """
+        await self.director.sendGetRequest(
+            "/api/v1/locations/rooms/{}/audio_devices".format(self.item_id)
+        )
+
+    async def getVideoDevices(self):
+        """
+        Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions
+
+        Get the video devices located in the room.
+        Note that this is literally the devices in the room,
+        not necessarily all devices _playable_ in the room.
+        See C4Director.getUiConfiguration for a more accurate list
+        """
+        await self.director.sendGetRequest(
+            "/api/v1/locations/rooms/{}/video_devices".format(self.item_id)
+        )
