@@ -2,18 +2,10 @@
 """
 
 
-class C4Light:
-    def __init__(self, C4Director, item_id):
-        """Creates a Control4 Light object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the light is connected to.
 
-            `item_id` - The Control4 item ID of the light.
-        """
-        self.director = C4Director
-        self.item_id = item_id
-
+class C4Light(C4Entity):
     async def getLevel(self):
         """Returns the level of a dimming-capable light as an int 0-100.
         Will cause an error if called on a non-dimmer switch. Use `getState()` instead.

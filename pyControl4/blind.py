@@ -2,18 +2,10 @@
 """
 
 
-class C4Blind:
-    def __init__(self, C4Director, item_id):
-        """Creates a Control4 Blind object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the blind is connected to.
 
-            `item_id` - The Control4 item ID of the blind.
-        """
-        self.director = C4Director
-        self.item_id = item_id
-
+class C4Blind(C4Entity):
     async def getBatteryLevel(self):
         """Returns the battery of a blind. We currently don't know the range or meaning."""
         value = await self.director.getItemVariableValue(self.item_id, "Battery Level")
@@ -21,7 +13,8 @@ class C4Blind:
 
     async def getClosing(self):
         """Returns an indication of whether the blind is moving in the closed direction as a boolean
-        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved."""
+        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
+        """
         value = await self.director.getItemVariableValue(self.item_id, "Closing")
         return bool(value)
 
@@ -52,7 +45,8 @@ class C4Blind:
 
     async def getOpening(self):
         """Returns an indication of whether the blind is moving in the open direction as a boolean
-        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved."""
+        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
+        """
         value = await self.director.getItemVariableValue(self.item_id, "Opening")
         return bool(value)
 

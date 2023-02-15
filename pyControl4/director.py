@@ -151,8 +151,12 @@ class C4Director:
         Parameters:
             `item_id` - The Control4 item ID.
 
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         """
+
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = ",".join(var_name)
+
         data = await self.sendGetRequest(
             "/api/v1/items/{}/variables?varnames={}".format(item_id, var_name)
         )
@@ -171,8 +175,11 @@ class C4Director:
         for all items that have it.
 
         Parameters:
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         """
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = ",".join(var_name)
+
         data = await self.sendGetRequest(
             "/api/v1/items/variables?varnames={}".format(var_name)
         )
@@ -209,3 +216,87 @@ class C4Director:
             `item_id` - The Control4 item ID.
         """
         return await self.sendGetRequest("/api/v1/items/{}/bindings".format(item_id))
+
+    async def getUiConfiguration(self):
+        """Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
+
+        Returns:
+
+            {
+             "experiences": [
+                {
+                 "type": "watch",
+                 "sources": {
+                    "source": [
+                     {
+                      "id": 59,
+                      "type": "HDMI"
+                     },
+                     {
+                      "id": 946,
+                      "type": "HDMI"
+                     },
+                     {
+                      "id": 950,
+                      "type": "HDMI"
+                     },
+                     {
+                      "id": 33,
+                      "type": "VIDEO_SELECTION"
+                     }
+                    ]
+                },
+                 "active": false,
+                 "room_id": 9,
+                 "username": "primaryuser"
+                },
+                {
+                 "type": "listen",
+                 "sources": {
+                    "source": [
+                    {
+                     "id": 298,
+                     "type": "DIGITAL_AUDIO_SERVER",
+                     "name": "My Music"
+                    },
+                    {
+                     "id": 302,
+                     "type": "AUDIO_SELECTION",
+                     "name": "Stations"
+                    },
+                    {
+                     "id": 306,
+                     "type": "DIGITAL_AUDIO_SERVER",
+                     "name": "ShairBridge"
+                    },
+                    {
+                     "id": 937,
+                     "type": "DIGITAL_AUDIO_SERVER",
+                     "name": "Spotify Connect"
+                    },
+                    {
+                     "id": 100002,
+                     "type": "DIGITAL_AUDIO_CLIENT",
+                     "name": "Digital Media"
+                    }
+                   ]
+                },
+                 "active": false,
+                 "room_id": 9,
+                 "username": "primaryuser"
+                },
+                {
+                 "type": "cameras",
+                 "sources": {
+                    "source": [
+                    {
+                     "id": 877,
+                     "type": "Camera"
+                    },
+                    ...
+                }
+                ...
+            }
+        """
+
+        return await self.sendGetRequest("/api/v1/agents/ui_configuration")

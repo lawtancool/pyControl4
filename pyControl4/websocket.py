@@ -124,7 +124,8 @@ class C4Websocket:
     def item_callbacks(self):
         """Returns a dictionary of registered item ids (key) and their callbacks (value).
 
-        item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead."""
+        item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.
+        """
         return self._item_callbacks
 
     def add_item_callback(self, item_id, callback):
