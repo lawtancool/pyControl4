@@ -31,19 +31,10 @@
 &#34;&#34;&#34;
 
 
-class C4Relay:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Relay object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that
-            corresponds to the Control4 Director that the Relay is connected to.
 
-            `item_id` - The Control4 item ID of the Relay.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
+class C4Relay(C4Entity):
     async def getRelayState(self):
         &#34;&#34;&#34;Returns the current state of the relay.
 
@@ -136,28 +127,15 @@ class C4Relay:
 <span>(</span><span>C4Director, item_id)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a Control4 Relay object.</p>
+<div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that
-corresponds to the Control4 Director that the Relay is connected to.</p>
-<p><code>item_id</code> - The Control4 item ID of the Relay.</p></div>
+<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the device is connected to.</p>
+<p><code>item_id</code> - The Control4 item ID.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class C4Relay:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Relay object.
-
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that
-            corresponds to the Control4 Director that the Relay is connected to.
-
-            `item_id` - The Control4 item ID of the Relay.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
+<pre><code class="python">class C4Relay(C4Entity):
     async def getRelayState(self):
         &#34;&#34;&#34;Returns the current state of the relay.
 
@@ -235,6 +213,10 @@ corresponds to the Control4 Director that the Relay is connected to.</p>
             {},
         )</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyControl4.C4Entity" href="index.html#pyControl4.C4Entity">C4Entity</a></li>
+</ul>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.relay.C4Relay.close"><code class="name flex">

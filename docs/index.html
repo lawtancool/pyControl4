@@ -22,6 +22,22 @@
 <h1 class="title">Package <code>pyControl4</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class C4Entity:
+    def __init__(self, C4Director, item_id):
+        &#34;&#34;&#34;Creates a Control4 object.
+
+        Parameters:
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the device is connected to.
+
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        self.director = C4Director
+        self.item_id = int(item_id)</code></pre>
+</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
@@ -56,6 +72,10 @@ getting details about items on the Director.</p></div>
 <dd>
 <div class="desc"><p>Controls Control4 Relay devices. These can include locks, and potentially other types of devices.</p></div>
 </dd>
+<dt><code class="name"><a title="pyControl4.room" href="room.html">pyControl4.room</a></code></dt>
+<dd>
+<div class="desc"><p>Controls Control4 Room devices.</p></div>
+</dd>
 <dt><code class="name"><a title="pyControl4.websocket" href="websocket.html">pyControl4.websocket</a></code></dt>
 <dd>
 <div class="desc"><p>Handles Websocket connections to a Control4 Director, allowing for real-time updates using callbacks.</p></div>
@@ -67,6 +87,43 @@ getting details about items on the Director.</p></div>
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyControl4.C4Entity"><code class="flex name class">
+<span>class <span class="ident">C4Entity</span></span>
+<span>(</span><span>C4Director, item_id)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Creates a Control4 object.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the device is connected to.</p>
+<p><code>item_id</code> - The Control4 item ID.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class C4Entity:
+    def __init__(self, C4Director, item_id):
+        &#34;&#34;&#34;Creates a Control4 object.
+
+        Parameters:
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the device is connected to.
+
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        self.director = C4Director
+        self.item_id = int(item_id)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="pyControl4.alarm.C4SecurityPanel" href="alarm.html#pyControl4.alarm.C4SecurityPanel">C4SecurityPanel</a></li>
+<li><a title="pyControl4.blind.C4Blind" href="blind.html#pyControl4.blind.C4Blind">C4Blind</a></li>
+<li><a title="pyControl4.light.C4Light" href="light.html#pyControl4.light.C4Light">C4Light</a></li>
+<li><a title="pyControl4.relay.C4Relay" href="relay.html#pyControl4.relay.C4Relay">C4Relay</a></li>
+<li><a title="pyControl4.room.C4Room" href="room.html#pyControl4.room.C4Room">C4Room</a></li>
+</ul>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -84,7 +141,15 @@ getting details about items on the Director.</p></div>
 <li><code><a title="pyControl4.error_handling" href="error_handling.html">pyControl4.error_handling</a></code></li>
 <li><code><a title="pyControl4.light" href="light.html">pyControl4.light</a></code></li>
 <li><code><a title="pyControl4.relay" href="relay.html">pyControl4.relay</a></code></li>
+<li><code><a title="pyControl4.room" href="room.html">pyControl4.room</a></code></li>
 <li><code><a title="pyControl4.websocket" href="websocket.html">pyControl4.websocket</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyControl4.C4Entity" href="#pyControl4.C4Entity">C4Entity</a></code></h4>
+</li>
 </ul>
 </li>
 </ul>

@@ -30,20 +30,10 @@
 <pre><code class="python">&#34;&#34;&#34;Controls Control4 security panel and contact sensor (door, window, motion) devices.
 &#34;&#34;&#34;
 import json
+from pyControl4 import C4Entity
 
 
-class C4SecurityPanel:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Security Panel object.
-
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
-
-            `item_id` - The Control4 item ID of the security panel partition.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
+class C4SecurityPanel(C4Entity):
     async def getArmState(self):
         &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
         disarmed = await self.director.getItemVariableValue(
@@ -307,26 +297,15 @@ class C4ContactSensor:
 <span>(</span><span>C4Director, item_id)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a Control4 Security Panel object.</p>
+<div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the security panel is connected to.</p>
-<p><code>item_id</code> - The Control4 item ID of the security panel partition.</p></div>
+<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the device is connected to.</p>
+<p><code>item_id</code> - The Control4 item ID.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class C4SecurityPanel:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Security Panel object.
-
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
-
-            `item_id` - The Control4 item ID of the security panel partition.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
+<pre><code class="python">class C4SecurityPanel(C4Entity):
     async def getArmState(self):
         &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
         disarmed = await self.director.getItemVariableValue(
@@ -502,6 +481,10 @@ class C4ContactSensor:
             {&#34;KeyName&#34;: key},
         )</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyControl4.C4Entity" href="index.html#pyControl4.C4Entity">C4Entity</a></li>
+</ul>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.alarm.C4SecurityPanel.getAlarmState"><code class="name flex">

@@ -182,8 +182,12 @@ class C4Director:
         Parameters:
             `item_id` - The Control4 item ID.
 
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         &#34;&#34;&#34;
+
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = &#34;,&#34;.join(var_name)
+
         data = await self.sendGetRequest(
             &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
         )
@@ -202,8 +206,11 @@ class C4Director:
         for all items that have it.
 
         Parameters:
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         &#34;&#34;&#34;
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = &#34;,&#34;.join(var_name)
+
         data = await self.sendGetRequest(
             &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
         )
@@ -239,7 +246,91 @@ class C4Director:
         Parameters:
             `item_id` - The Control4 item ID.
         &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))</code></pre>
+        return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))
+
+    async def getUiConfiguration(self):
+        &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
+
+        Returns:
+
+            {
+             &#34;experiences&#34;: [
+                {
+                 &#34;type&#34;: &#34;watch&#34;,
+                 &#34;sources&#34;: {
+                    &#34;source&#34;: [
+                     {
+                      &#34;id&#34;: 59,
+                      &#34;type&#34;: &#34;HDMI&#34;
+                     },
+                     {
+                      &#34;id&#34;: 946,
+                      &#34;type&#34;: &#34;HDMI&#34;
+                     },
+                     {
+                      &#34;id&#34;: 950,
+                      &#34;type&#34;: &#34;HDMI&#34;
+                     },
+                     {
+                      &#34;id&#34;: 33,
+                      &#34;type&#34;: &#34;VIDEO_SELECTION&#34;
+                     }
+                    ]
+                },
+                 &#34;active&#34;: false,
+                 &#34;room_id&#34;: 9,
+                 &#34;username&#34;: &#34;primaryuser&#34;
+                },
+                {
+                 &#34;type&#34;: &#34;listen&#34;,
+                 &#34;sources&#34;: {
+                    &#34;source&#34;: [
+                    {
+                     &#34;id&#34;: 298,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                     &#34;name&#34;: &#34;My Music&#34;
+                    },
+                    {
+                     &#34;id&#34;: 302,
+                     &#34;type&#34;: &#34;AUDIO_SELECTION&#34;,
+                     &#34;name&#34;: &#34;Stations&#34;
+                    },
+                    {
+                     &#34;id&#34;: 306,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                     &#34;name&#34;: &#34;ShairBridge&#34;
+                    },
+                    {
+                     &#34;id&#34;: 937,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                     &#34;name&#34;: &#34;Spotify Connect&#34;
+                    },
+                    {
+                     &#34;id&#34;: 100002,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_CLIENT&#34;,
+                     &#34;name&#34;: &#34;Digital Media&#34;
+                    }
+                   ]
+                },
+                 &#34;active&#34;: false,
+                 &#34;room_id&#34;: 9,
+                 &#34;username&#34;: &#34;primaryuser&#34;
+                },
+                {
+                 &#34;type&#34;: &#34;cameras&#34;,
+                 &#34;sources&#34;: {
+                    &#34;source&#34;: [
+                    {
+                     &#34;id&#34;: 877,
+                     &#34;type&#34;: &#34;Camera&#34;
+                    },
+                    ...
+                }
+                ...
+            }
+        &#34;&#34;&#34;
+
+        return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
 </details>
 </section>
 <section>
@@ -416,8 +507,12 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         Parameters:
             `item_id` - The Control4 item ID.
 
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         &#34;&#34;&#34;
+
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = &#34;,&#34;.join(var_name)
+
         data = await self.sendGetRequest(
             &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
         )
@@ -436,8 +531,11 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         for all items that have it.
 
         Parameters:
-            `var_name` - The Control4 variable name.
+            `var_name` - The Control4 variable name or names.
         &#34;&#34;&#34;
+        if isinstance(var_name, (tuple, list, set)):
+            var_name = &#34;,&#34;.join(var_name)
+
         data = await self.sendGetRequest(
             &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
         )
@@ -473,7 +571,91 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         Parameters:
             `item_id` - The Control4 item ID.
         &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))</code></pre>
+        return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))
+
+    async def getUiConfiguration(self):
+        &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
+
+        Returns:
+
+            {
+             &#34;experiences&#34;: [
+                {
+                 &#34;type&#34;: &#34;watch&#34;,
+                 &#34;sources&#34;: {
+                    &#34;source&#34;: [
+                     {
+                      &#34;id&#34;: 59,
+                      &#34;type&#34;: &#34;HDMI&#34;
+                     },
+                     {
+                      &#34;id&#34;: 946,
+                      &#34;type&#34;: &#34;HDMI&#34;
+                     },
+                     {
+                      &#34;id&#34;: 950,
+                      &#34;type&#34;: &#34;HDMI&#34;
+                     },
+                     {
+                      &#34;id&#34;: 33,
+                      &#34;type&#34;: &#34;VIDEO_SELECTION&#34;
+                     }
+                    ]
+                },
+                 &#34;active&#34;: false,
+                 &#34;room_id&#34;: 9,
+                 &#34;username&#34;: &#34;primaryuser&#34;
+                },
+                {
+                 &#34;type&#34;: &#34;listen&#34;,
+                 &#34;sources&#34;: {
+                    &#34;source&#34;: [
+                    {
+                     &#34;id&#34;: 298,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                     &#34;name&#34;: &#34;My Music&#34;
+                    },
+                    {
+                     &#34;id&#34;: 302,
+                     &#34;type&#34;: &#34;AUDIO_SELECTION&#34;,
+                     &#34;name&#34;: &#34;Stations&#34;
+                    },
+                    {
+                     &#34;id&#34;: 306,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                     &#34;name&#34;: &#34;ShairBridge&#34;
+                    },
+                    {
+                     &#34;id&#34;: 937,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                     &#34;name&#34;: &#34;Spotify Connect&#34;
+                    },
+                    {
+                     &#34;id&#34;: 100002,
+                     &#34;type&#34;: &#34;DIGITAL_AUDIO_CLIENT&#34;,
+                     &#34;name&#34;: &#34;Digital Media&#34;
+                    }
+                   ]
+                },
+                 &#34;active&#34;: false,
+                 &#34;room_id&#34;: 9,
+                 &#34;username&#34;: &#34;primaryuser&#34;
+                },
+                {
+                 &#34;type&#34;: &#34;cameras&#34;,
+                 &#34;sources&#34;: {
+                    &#34;source&#34;: [
+                    {
+                     &#34;id&#34;: 877,
+                     &#34;type&#34;: &#34;Camera&#34;
+                    },
+                    ...
+                }
+                ...
+            }
+        &#34;&#34;&#34;
+
+        return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -498,7 +680,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 <div class="desc"><p>Returns a dictionary with the values of the specified variable
 for all items that have it.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>var_name</code> - The Control4 variable name.</p></div>
+<p><code>var_name</code> - The Control4 variable name or names.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -508,8 +690,11 @@ for all items that have it.</p>
     for all items that have it.
 
     Parameters:
-        `var_name` - The Control4 variable name.
+        `var_name` - The Control4 variable name or names.
     &#34;&#34;&#34;
+    if isinstance(var_name, (tuple, list, set)):
+        var_name = &#34;,&#34;.join(var_name)
+
     data = await self.sendGetRequest(
         &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
     )
@@ -665,7 +850,7 @@ outlet_wireless_dimmer, voice-scene</p></div>
 specified item as a string.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p>
-<p><code>var_name</code> - The Control4 variable name.</p></div>
+<p><code>var_name</code> - The Control4 variable name or names.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -677,8 +862,12 @@ specified item as a string.</p>
     Parameters:
         `item_id` - The Control4 item ID.
 
-        `var_name` - The Control4 variable name.
+        `var_name` - The Control4 variable name or names.
     &#34;&#34;&#34;
+
+    if isinstance(var_name, (tuple, list, set)):
+        var_name = &#34;,&#34;.join(var_name)
+
     data = await self.sendGetRequest(
         &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
     )
@@ -711,6 +900,176 @@ specified item as a string.</p>
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
     return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))</code></pre>
+</details>
+</dd>
+<dt id="pyControl4.director.C4Director.getUiConfiguration"><code class="name flex">
+<span>async def <span class="ident">getUiConfiguration</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities</p>
+<h2 id="returns">Returns</h2>
+<p>{
+"experiences": [
+{
+"type": "watch",
+"sources": {
+"source": [
+{
+"id": 59,
+"type": "HDMI"
+},
+{
+"id": 946,
+"type": "HDMI"
+},
+{
+"id": 950,
+"type": "HDMI"
+},
+{
+"id": 33,
+"type": "VIDEO_SELECTION"
+}
+]
+},
+"active": false,
+"room_id": 9,
+"username": "primaryuser"
+},
+{
+"type": "listen",
+"sources": {
+"source": [
+{
+"id": 298,
+"type": "DIGITAL_AUDIO_SERVER",
+"name": "My Music"
+},
+{
+"id": 302,
+"type": "AUDIO_SELECTION",
+"name": "Stations"
+},
+{
+"id": 306,
+"type": "DIGITAL_AUDIO_SERVER",
+"name": "ShairBridge"
+},
+{
+"id": 937,
+"type": "DIGITAL_AUDIO_SERVER",
+"name": "Spotify Connect"
+},
+{
+"id": 100002,
+"type": "DIGITAL_AUDIO_CLIENT",
+"name": "Digital Media"
+}
+]
+},
+"active": false,
+"room_id": 9,
+"username": "primaryuser"
+},
+{
+"type": "cameras",
+"sources": {
+"source": [
+{
+"id": 877,
+"type": "Camera"
+},
+&hellip;
+}
+&hellip;
+}</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getUiConfiguration(self):
+    &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
+
+    Returns:
+
+        {
+         &#34;experiences&#34;: [
+            {
+             &#34;type&#34;: &#34;watch&#34;,
+             &#34;sources&#34;: {
+                &#34;source&#34;: [
+                 {
+                  &#34;id&#34;: 59,
+                  &#34;type&#34;: &#34;HDMI&#34;
+                 },
+                 {
+                  &#34;id&#34;: 946,
+                  &#34;type&#34;: &#34;HDMI&#34;
+                 },
+                 {
+                  &#34;id&#34;: 950,
+                  &#34;type&#34;: &#34;HDMI&#34;
+                 },
+                 {
+                  &#34;id&#34;: 33,
+                  &#34;type&#34;: &#34;VIDEO_SELECTION&#34;
+                 }
+                ]
+            },
+             &#34;active&#34;: false,
+             &#34;room_id&#34;: 9,
+             &#34;username&#34;: &#34;primaryuser&#34;
+            },
+            {
+             &#34;type&#34;: &#34;listen&#34;,
+             &#34;sources&#34;: {
+                &#34;source&#34;: [
+                {
+                 &#34;id&#34;: 298,
+                 &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                 &#34;name&#34;: &#34;My Music&#34;
+                },
+                {
+                 &#34;id&#34;: 302,
+                 &#34;type&#34;: &#34;AUDIO_SELECTION&#34;,
+                 &#34;name&#34;: &#34;Stations&#34;
+                },
+                {
+                 &#34;id&#34;: 306,
+                 &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                 &#34;name&#34;: &#34;ShairBridge&#34;
+                },
+                {
+                 &#34;id&#34;: 937,
+                 &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
+                 &#34;name&#34;: &#34;Spotify Connect&#34;
+                },
+                {
+                 &#34;id&#34;: 100002,
+                 &#34;type&#34;: &#34;DIGITAL_AUDIO_CLIENT&#34;,
+                 &#34;name&#34;: &#34;Digital Media&#34;
+                }
+               ]
+            },
+             &#34;active&#34;: false,
+             &#34;room_id&#34;: 9,
+             &#34;username&#34;: &#34;primaryuser&#34;
+            },
+            {
+             &#34;type&#34;: &#34;cameras&#34;,
+             &#34;sources&#34;: {
+                &#34;source&#34;: [
+                {
+                 &#34;id&#34;: 877,
+                 &#34;type&#34;: &#34;Camera&#34;
+                },
+                ...
+            }
+            ...
+        }
+    &#34;&#34;&#34;
+
+    return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
 </details>
 </dd>
 <dt id="pyControl4.director.C4Director.sendGetRequest"><code class="name flex">
@@ -837,6 +1196,7 @@ address of the Director.</p>
 <li><code><a title="pyControl4.director.C4Director.getItemSetup" href="#pyControl4.director.C4Director.getItemSetup">getItemSetup</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemVariableValue" href="#pyControl4.director.C4Director.getItemVariableValue">getItemVariableValue</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.getItemVariables" href="#pyControl4.director.C4Director.getItemVariables">getItemVariables</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.getUiConfiguration" href="#pyControl4.director.C4Director.getUiConfiguration">getUiConfiguration</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.sendGetRequest" href="#pyControl4.director.C4Director.sendGetRequest">sendGetRequest</a></code></li>
 <li><code><a title="pyControl4.director.C4Director.sendPostRequest" href="#pyControl4.director.C4Director.sendPostRequest">sendPostRequest</a></code></li>
 </ul>

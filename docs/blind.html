@@ -31,18 +31,10 @@
 &#34;&#34;&#34;
 
 
-class C4Blind:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Blind object.
+from pyControl4 import C4Entity
 
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the blind is connected to.
 
-            `item_id` - The Control4 item ID of the blind.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
+class C4Blind(C4Entity):
     async def getBatteryLevel(self):
         &#34;&#34;&#34;Returns the battery of a blind. We currently don&#39;t know the range or meaning.&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Battery Level&#34;)
@@ -50,7 +42,8 @@ class C4Blind:
 
     async def getClosing(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is moving in the closed direction as a boolean
-        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.&#34;&#34;&#34;
+        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
+        &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
         return bool(value)
 
@@ -81,7 +74,8 @@ class C4Blind:
 
     async def getOpening(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is moving in the open direction as a boolean
-        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.&#34;&#34;&#34;
+        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
+        &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
         return bool(value)
 
@@ -160,26 +154,15 @@ class C4Blind:
 <span>(</span><span>C4Director, item_id)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Creates a Control4 Blind object.</p>
+<div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the blind is connected to.</p>
-<p><code>item_id</code> - The Control4 item ID of the blind.</p></div>
+<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the device is connected to.</p>
+<p><code>item_id</code> - The Control4 item ID.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class C4Blind:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Blind object.
-
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the blind is connected to.
-
-            `item_id` - The Control4 item ID of the blind.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
+<pre><code class="python">class C4Blind(C4Entity):
     async def getBatteryLevel(self):
         &#34;&#34;&#34;Returns the battery of a blind. We currently don&#39;t know the range or meaning.&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Battery Level&#34;)
@@ -187,7 +170,8 @@ class C4Blind:
 
     async def getClosing(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is moving in the closed direction as a boolean
-        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.&#34;&#34;&#34;
+        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
+        &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
         return bool(value)
 
@@ -218,7 +202,8 @@ class C4Blind:
 
     async def getOpening(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is moving in the open direction as a boolean
-        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.&#34;&#34;&#34;
+        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
+        &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
         return bool(value)
 
@@ -282,6 +267,10 @@ class C4Blind:
             {},
         )</code></pre>
 </details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyControl4.C4Entity" href="index.html#pyControl4.C4Entity">C4Entity</a></li>
+</ul>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.blind.C4Blind.close"><code class="name flex">
@@ -329,7 +318,8 @@ class C4Blind:
 </summary>
 <pre><code class="python">async def getClosing(self):
     &#34;&#34;&#34;Returns an indication of whether the blind is moving in the closed direction as a boolean
-    (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.&#34;&#34;&#34;
+    (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
+    &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
     return bool(value)</code></pre>
 </details>
@@ -415,7 +405,8 @@ This is true even if the blind is only partially open.</p></div>
 </summary>
 <pre><code class="python">async def getOpening(self):
     &#34;&#34;&#34;Returns an indication of whether the blind is moving in the open direction as a boolean
-    (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.&#34;&#34;&#34;
+    (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
+    &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
     return bool(value)</code></pre>
 </details>
