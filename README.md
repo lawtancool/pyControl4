@@ -10,6 +10,10 @@ Auto-generated function documentation can be found at <https://lawtancool.github
 
 For those who are looking for a pre-built solution for controlling their devices, this library is implemented in the [official Home Assistant Control4 integration](https://www.home-assistant.io/integrations/control4/).
 
+This library has also been ported to other languages:
+
+- [C# / .NET](https://www.github.com/brianhama/C4Sharp)
+
 ## Usage example
 ```python
 from pyControl4.account import C4Account
