@@ -29,7 +29,7 @@ class BadToken(Unauthorized):
 
 
 class InvalidCategory(C4Exception):
-    """Raised when an invalid category is provided when calling 
+    """Raised when an invalid category is provided when calling
     `pyControl4.director.C4Director.getAllItemsByCategory`."""
 
 
@@ -39,10 +39,7 @@ ERROR_DETAILS = {
     "Permission denied Bad credentials": BadCredentials,
 }
 
-DIRECTOR_ERRORS = {
-    "Unauthorized": Unauthorized,
-    "Invalid category": InvalidCategory
-}
+DIRECTOR_ERRORS = {"Unauthorized": Unauthorized, "Invalid category": InvalidCategory}
 
 DIRECTOR_ERROR_DETAILS = {"Expired or invalid token": BadToken}
 
