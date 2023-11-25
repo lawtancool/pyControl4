@@ -93,7 +93,10 @@ async def checkResponseForError(response_text: str):
     elif await __checkResponseFormat(response_text) == "XML":
         dictionary = xmltodict.parse(response_text)
     if "C4ErrorResponse" in dictionary:
-        if dictionary["C4ErrorResponse"]["details"] in ERROR_DETAILS:
+        if (
+            "details" in dictionary["C4ErrorResponse"]
+            and dictionary["C4ErrorResponse"]["details"] in ERROR_DETAILS
+        ):
             exception = ERROR_DETAILS.get(dictionary["C4ErrorResponse"]["details"])
             raise exception(response_text)
         else:
@@ -102,14 +105,14 @@ async def checkResponseForError(response_text: str):
             )
             raise exception(response_text)
     elif "code" in dictionary:
-        if dictionary["details"] in ERROR_DETAILS:
+        if "details" in dictionary and dictionary["details"] in ERROR_DETAILS:
             exception = ERROR_DETAILS.get(dictionary["details"])
             raise exception(response_text)
         else:
             exception = ERROR_CODES.get(str(dictionary["code"]), C4Exception)
             raise exception(response_text)
     elif "error" in dictionary:
-        if dictionary["details"] in DIRECTOR_ERROR_DETAILS:
+        if "details" in dictionary and dictionary["details"] in DIRECTOR_ERROR_DETAILS:
             exception = DIRECTOR_ERROR_DETAILS.get(dictionary["details"])
             raise exception(response_text)
         else:
