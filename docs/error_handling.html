@@ -122,7 +122,10 @@ async def checkResponseForError(response_text: str):
     elif await __checkResponseFormat(response_text) == &#34;XML&#34;:
         dictionary = xmltodict.parse(response_text)
     if &#34;C4ErrorResponse&#34; in dictionary:
-        if dictionary[&#34;C4ErrorResponse&#34;][&#34;details&#34;] in ERROR_DETAILS:
+        if (
+            &#34;details&#34; in dictionary[&#34;C4ErrorResponse&#34;]
+            and dictionary[&#34;C4ErrorResponse&#34;][&#34;details&#34;] in ERROR_DETAILS
+        ):
             exception = ERROR_DETAILS.get(dictionary[&#34;C4ErrorResponse&#34;][&#34;details&#34;])
             raise exception(response_text)
         else:
@@ -131,14 +134,14 @@ async def checkResponseForError(response_text: str):
             )
             raise exception(response_text)
     elif &#34;code&#34; in dictionary:
-        if dictionary[&#34;details&#34;] in ERROR_DETAILS:
+        if &#34;details&#34; in dictionary and dictionary[&#34;details&#34;] in ERROR_DETAILS:
             exception = ERROR_DETAILS.get(dictionary[&#34;details&#34;])
             raise exception(response_text)
         else:
             exception = ERROR_CODES.get(str(dictionary[&#34;code&#34;]), C4Exception)
             raise exception(response_text)
     elif &#34;error&#34; in dictionary:
-        if dictionary[&#34;details&#34;] in DIRECTOR_ERROR_DETAILS:
+        if &#34;details&#34; in dictionary and dictionary[&#34;details&#34;] in DIRECTOR_ERROR_DETAILS:
             exception = DIRECTOR_ERROR_DETAILS.get(dictionary[&#34;details&#34;])
             raise exception(response_text)
         else:
@@ -175,7 +178,10 @@ async def checkResponseForError(response_text: str):
     elif await __checkResponseFormat(response_text) == &#34;XML&#34;:
         dictionary = xmltodict.parse(response_text)
     if &#34;C4ErrorResponse&#34; in dictionary:
-        if dictionary[&#34;C4ErrorResponse&#34;][&#34;details&#34;] in ERROR_DETAILS:
+        if (
+            &#34;details&#34; in dictionary[&#34;C4ErrorResponse&#34;]
+            and dictionary[&#34;C4ErrorResponse&#34;][&#34;details&#34;] in ERROR_DETAILS
+        ):
             exception = ERROR_DETAILS.get(dictionary[&#34;C4ErrorResponse&#34;][&#34;details&#34;])
             raise exception(response_text)
         else:
@@ -184,14 +190,14 @@ async def checkResponseForError(response_text: str):
             )
             raise exception(response_text)
     elif &#34;code&#34; in dictionary:
-        if dictionary[&#34;details&#34;] in ERROR_DETAILS:
+        if &#34;details&#34; in dictionary and dictionary[&#34;details&#34;] in ERROR_DETAILS:
             exception = ERROR_DETAILS.get(dictionary[&#34;details&#34;])
             raise exception(response_text)
         else:
             exception = ERROR_CODES.get(str(dictionary[&#34;code&#34;]), C4Exception)
             raise exception(response_text)
     elif &#34;error&#34; in dictionary:
-        if dictionary[&#34;details&#34;] in DIRECTOR_ERROR_DETAILS:
+        if &#34;details&#34; in dictionary and dictionary[&#34;details&#34;] in DIRECTOR_ERROR_DETAILS:
             exception = DIRECTOR_ERROR_DETAILS.get(dictionary[&#34;details&#34;])
             raise exception(response_text)
         else:
