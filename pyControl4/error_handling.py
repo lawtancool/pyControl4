@@ -28,6 +28,11 @@ class BadToken(Unauthorized):
     """Raised when director bearer token is invalid."""
 
 
+class InvalidCategory(C4Exception):
+    """Raised when an invalid category is provided when calling 
+    `pyControl4.director.C4Director.getAllItemsByCategory`."""
+
+
 ERROR_CODES = {"401": Unauthorized, "404": NotFound}
 
 ERROR_DETAILS = {
@@ -36,6 +41,7 @@ ERROR_DETAILS = {
 
 DIRECTOR_ERRORS = {
     "Unauthorized": Unauthorized,
+    "Invalid category": InvalidCategory
 }
 
 DIRECTOR_ERROR_DETAILS = {"Expired or invalid token": BadToken}
