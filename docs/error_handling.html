@@ -57,6 +57,11 @@ class BadToken(Unauthorized):
     &#34;&#34;&#34;Raised when director bearer token is invalid.&#34;&#34;&#34;
 
 
+class InvalidCategory(C4Exception):
+    &#34;&#34;&#34;Raised when an invalid category is provided when calling 
+    `pyControl4.director.C4Director.getAllItemsByCategory`.&#34;&#34;&#34;
+
+
 ERROR_CODES = {&#34;401&#34;: Unauthorized, &#34;404&#34;: NotFound}
 
 ERROR_DETAILS = {
@@ -65,6 +70,7 @@ ERROR_DETAILS = {
 
 DIRECTOR_ERRORS = {
     &#34;Unauthorized&#34;: Unauthorized,
+    &#34;Invalid category&#34;: InvalidCategory
 }
 
 DIRECTOR_ERROR_DETAILS = {&#34;Expired or invalid token&#34;: BadToken}
@@ -275,8 +281,31 @@ async def checkResponseForError(response_text: str):
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="pyControl4.error_handling.InvalidCategory" href="#pyControl4.error_handling.InvalidCategory">InvalidCategory</a></li>
 <li><a title="pyControl4.error_handling.NotFound" href="#pyControl4.error_handling.NotFound">NotFound</a></li>
 <li><a title="pyControl4.error_handling.Unauthorized" href="#pyControl4.error_handling.Unauthorized">Unauthorized</a></li>
+</ul>
+</dd>
+<dt id="pyControl4.error_handling.InvalidCategory"><code class="flex name class">
+<span>class <span class="ident">InvalidCategory</span></span>
+<span>(</span><span>message)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Raised when an invalid category is provided when calling
+<code><a title="pyControl4.director.C4Director.getAllItemsByCategory" href="director.html#pyControl4.director.C4Director.getAllItemsByCategory">C4Director.getAllItemsByCategory()</a></code>.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class InvalidCategory(C4Exception):
+    &#34;&#34;&#34;Raised when an invalid category is provided when calling 
+    `pyControl4.director.C4Director.getAllItemsByCategory`.&#34;&#34;&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
 </ul>
 </dd>
 <dt id="pyControl4.error_handling.NotFound"><code class="flex name class">
@@ -357,6 +386,9 @@ Occurs when token is invalid.</p></div>
 </li>
 <li>
 <h4><code><a title="pyControl4.error_handling.C4Exception" href="#pyControl4.error_handling.C4Exception">C4Exception</a></code></h4>
+</li>
+<li>
+<h4><code><a title="pyControl4.error_handling.InvalidCategory" href="#pyControl4.error_handling.InvalidCategory">InvalidCategory</a></code></h4>
 </li>
 <li>
 <h4><code><a title="pyControl4.error_handling.NotFound" href="#pyControl4.error_handling.NotFound">NotFound</a></code></h4>
