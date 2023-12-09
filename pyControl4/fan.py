@@ -31,7 +31,7 @@ class C4Fan(C4Entity):
             "SET_SPEED",
             {"SPEED": speed},
         )
-    
+
     async def setPreset(self, preset):
         """Sets the preset fan speed, the speed the fan goes to if you just hit on
            speed 0 for off, 1 for low, 2 for medium, 3 for medium high, 4 for high
