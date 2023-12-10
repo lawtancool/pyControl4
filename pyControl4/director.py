@@ -133,7 +133,7 @@ class C4Director:
             `item_id` - The Control4 item ID.
         """
         return await self.sendPostRequest(
-            "/api/v1/items/{}/commands".format(item_id), "GET_SETUP", "{}", False
+            "/api/v1/items/{}/commands".format(item_id), "GET_SETUP", {}, False
         )
 
     async def getItemVariables(self, item_id):
