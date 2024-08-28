@@ -1,6 +1,7 @@
 """Authenticates with the Control4 API, retrieves account and registered
 controller info, and retrieves a bearer token for connecting to a Control4 Director.
 """
+
 import aiohttp
 import async_timeout
 import json

@@ -1,7 +1,6 @@
 """Controls Control4 blind devices.
 """
 
-
 from pyControl4 import C4Entity
 
 

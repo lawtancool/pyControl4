@@ -1,4 +1,5 @@
 """Handles errors recieved from the Control4 API."""
+
 import json
 import xmltodict
 
