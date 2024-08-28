@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyControl4",  # Replace with your own username
-    version="1.1.2",
+    version="1.2.0",
     author="lawtancool",
     author_email="contact@lawrencetan.ca",
     description="Python 3 asyncio package for interacting with Control4 systems",
@@ -20,9 +20,9 @@ setuptools.setup(
     ],
     python_requires=">=3.6",
     install_requires=[
-        'aiohttp',
-        'xmltodict',
-        'python-socketio-v4',
-        'websocket-client',
+        "aiohttp",
+        "xmltodict",
+        "python-socketio-v4",
+        "websocket-client",
     ],
 )
