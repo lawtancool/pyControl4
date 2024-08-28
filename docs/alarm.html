@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
 <title>pyControl4.alarm API documentation</title>
-<meta name="description" content="Controls Control4 security panel and contact sensor (door, window, motion) devices." />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<meta name="description" content="Controls Control4 security panel and contact sensor (door, window, motion) devices.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
 </head>
 <body>
 <main>
@@ -23,212 +26,6 @@
 </header>
 <section id="section-intro">
 <p>Controls Control4 security panel and contact sensor (door, window, motion) devices.</p>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">&#34;&#34;&#34;Controls Control4 security panel and contact sensor (door, window, motion) devices.
-&#34;&#34;&#34;
-import json
-from pyControl4 import C4Entity
-
-
-class C4SecurityPanel(C4Entity):
-    async def getArmState(self):
-        &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
-        disarmed = await self.director.getItemVariableValue(
-            self.item_id, &#34;DISARMED_STATE&#34;
-        )
-        armed_home = await self.director.getItemVariableValue(
-            self.item_id, &#34;HOME_STATE&#34;
-        )
-        armed_away = await self.director.getItemVariableValue(
-            self.item_id, &#34;AWAY_STATE&#34;
-        )
-        if disarmed == 1:
-            return &#34;DISARMED&#34;
-        elif armed_home == 1:
-            return &#34;ARMED_HOME&#34;
-        elif armed_away == 1:
-            return &#34;ARMED_AWAY&#34;
-
-    async def getAlarmState(self):
-        &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
-        alarm_state = await self.director.getItemVariableValue(
-            self.item_id, &#34;ALARM_STATE&#34;
-        )
-        return bool(alarm_state)
-
-    async def getDisplayText(self):
-        &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
-        display_text = await self.director.getItemVariableValue(
-            self.item_id, &#34;DISPLAY_TEXT&#34;
-        )
-        return display_text
-
-    async def getTroubleText(self):
-        &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
-        trouble_text = await self.director.getItemVariableValue(
-            self.item_id, &#34;TROUBLE_TEXT&#34;
-        )
-        return trouble_text
-
-    async def getPartitionState(self):
-        &#34;&#34;&#34;Returns the partition state of the security panel.
-
-        Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;, &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
-        &#34;&#34;&#34;
-        partition_state = await self.director.getItemVariableValue(
-            self.item_id, &#34;PARTITION_STATE&#34;
-        )
-        return partition_state
-
-    async def getDelayTimeTotal(self):
-        &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
-        delay_time_total = await self.director.getItemVariableValue(
-            self.item_id, &#34;DELAY_TIME_TOTAL&#34;
-        )
-        return delay_time_total
-
-    async def getDelayTimeRemaining(self):
-        &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
-        delay_time_remaining = await self.director.getItemVariableValue(
-            self.item_id, &#34;DELAY_TIME_REMAINING&#34;
-        )
-        return delay_time_remaining
-
-    async def getOpenZoneCount(self):
-        &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
-        open_zone_count = await self.director.getItemVariableValue(
-            self.item_id, &#34;OPEN_ZONE_COUNT&#34;
-        )
-        return open_zone_count
-
-    async def getAlarmType(self):
-        &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
-        alarm_type = await self.director.getItemVariableValue(
-            self.item_id, &#34;ALARM_TYPE&#34;
-        )
-        return alarm_type
-
-    async def getArmedType(self):
-        &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
-        armed_type = await self.director.getItemVariableValue(
-            self.item_id, &#34;ARMED_TYPE&#34;
-        )
-        return armed_type
-
-    async def getLastEmergency(self):
-        &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
-        last_emergency = await self.director.getItemVariableValue(
-            self.item_id, &#34;LAST_EMERGENCY&#34;
-        )
-        return last_emergency
-
-    async def getLastArmFailure(self):
-        &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
-        last_arm_failed = await self.director.getItemVariableValue(
-            self.item_id, &#34;LAST_ARM_FAILED&#34;
-        )
-        return last_arm_failed
-
-    async def setArm(self, usercode, mode: str):
-        &#34;&#34;&#34;Arms the security panel with the specified mode.
-
-        Parameters:
-            `usercode` - PIN/code for arming the system.
-
-            `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
-        &#34;&#34;&#34;
-        usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;PARTITION_ARM&#34;,
-            {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
-        )
-
-    async def setDisarm(self, usercode):
-        &#34;&#34;&#34;Disarms the security panel.
-
-        Parameters:
-            `usercode` - PIN/code for disarming the system.
-        &#34;&#34;&#34;
-        usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;PARTITION_DISARM&#34;,
-            {&#34;UserCode&#34;: usercode},
-        )
-
-    async def getEmergencyTypes(self):
-        &#34;&#34;&#34;Returns the available emergency types as a list.
-
-        Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
-        &#34;&#34;&#34;
-        types_list = []
-
-        data = await self.director.getItemInfo(self.item_id)
-        jsonDictionary = json.loads(data)
-
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
-            types_list.append(&#34;Fire&#34;)
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
-            types_list.append(&#34;Medical&#34;)
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
-            types_list.append(&#34;Panic&#34;)
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
-            types_list.append(&#34;Police&#34;)
-
-        return types_list
-
-    async def triggerEmergency(self, usercode, type):
-        &#34;&#34;&#34;Triggers an emergency of the specified type.
-
-        Parameters:
-            `usercode` - PIN/code for disarming the system.
-
-            `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
-        &#34;&#34;&#34;
-        usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;PARTITION_DISARM&#34;,
-            {&#34;UserCode&#34;: usercode},
-        )
-
-    async def sendKeyPress(self, key):
-        &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if supported).
-
-        Parameters:
-            `key` - Keypress to send. Only one key at a time.
-        &#34;&#34;&#34;
-        key = str(key)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;KEY_PRESS&#34;,
-            {&#34;KeyName&#34;: key},
-        )
-
-
-class C4ContactSensor:
-    def __init__(self, C4Director, item_id):
-        &#34;&#34;&#34;Creates a Control4 Contact Sensor object.
-
-        Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
-
-            `item_id` - The Control4 item ID of the contact sensor.
-        &#34;&#34;&#34;
-        self.director = C4Director
-        self.item_id = item_id
-
-    async def getContactState(self):
-        &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.&#34;&#34;&#34;
-        contact_state = await self.director.getItemVariableValue(
-            self.item_id, &#34;ContactState&#34;
-        )
-        return bool(contact_state)</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -278,17 +75,6 @@ class C4ContactSensor:
 </code></dt>
 <dd>
 <div class="desc"><p>Returns <code>True</code> if contact is triggered (door/window is closed, motion is detected), otherwise returns <code>False</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getContactState(self):
-    &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`.&#34;&#34;&#34;
-    contact_state = await self.director.getItemVariableValue(
-        self.item_id, &#34;ContactState&#34;
-    )
-    return bool(contact_state)</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -492,130 +278,42 @@ class C4ContactSensor:
 </code></dt>
 <dd>
 <div class="desc"><p>Returns <code>True</code> if alarm is triggered, otherwise returns <code>False</code>.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getAlarmState(self):
-    &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
-    alarm_state = await self.director.getItemVariableValue(
-        self.item_id, &#34;ALARM_STATE&#34;
-    )
-    return bool(alarm_state)</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getAlarmType"><code class="name flex">
 <span>async def <span class="ident">getAlarmType</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns details about the current alarm type.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getAlarmType(self):
-    &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
-    alarm_type = await self.director.getItemVariableValue(
-        self.item_id, &#34;ALARM_TYPE&#34;
-    )
-    return alarm_type</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getArmState"><code class="name flex">
 <span>async def <span class="ident">getArmState</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the arm state of the security panel as "DISARMED", "ARMED_HOME", or "ARMED_AWAY".</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getArmState(self):
-    &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;, or &#34;ARMED_AWAY&#34;.&#34;&#34;&#34;
-    disarmed = await self.director.getItemVariableValue(
-        self.item_id, &#34;DISARMED_STATE&#34;
-    )
-    armed_home = await self.director.getItemVariableValue(
-        self.item_id, &#34;HOME_STATE&#34;
-    )
-    armed_away = await self.director.getItemVariableValue(
-        self.item_id, &#34;AWAY_STATE&#34;
-    )
-    if disarmed == 1:
-        return &#34;DISARMED&#34;
-    elif armed_home == 1:
-        return &#34;ARMED_HOME&#34;
-    elif armed_away == 1:
-        return &#34;ARMED_AWAY&#34;</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getArmedType"><code class="name flex">
 <span>async def <span class="ident">getArmedType</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns details about the current arm type.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getArmedType(self):
-    &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
-    armed_type = await self.director.getItemVariableValue(
-        self.item_id, &#34;ARMED_TYPE&#34;
-    )
-    return armed_type</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getDelayTimeRemaining"><code class="name flex">
 <span>async def <span class="ident">getDelayTimeRemaining</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getDelayTimeRemaining(self):
-    &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
-    delay_time_remaining = await self.director.getItemVariableValue(
-        self.item_id, &#34;DELAY_TIME_REMAINING&#34;
-    )
-    return delay_time_remaining</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getDelayTimeTotal"><code class="name flex">
 <span>async def <span class="ident">getDelayTimeTotal</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the total exit delay time. Returns 0 if an exit delay is not currently running.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getDelayTimeTotal(self):
-    &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not currently running.&#34;&#34;&#34;
-    delay_time_total = await self.director.getItemVariableValue(
-        self.item_id, &#34;DELAY_TIME_TOTAL&#34;
-    )
-    return delay_time_total</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getDisplayText"><code class="name flex">
 <span>async def <span class="ident">getDisplayText</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the display text of the security panel.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getDisplayText(self):
-    &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
-    display_text = await self.director.getItemVariableValue(
-        self.item_id, &#34;DISPLAY_TEXT&#34;
-    )
-    return display_text</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getEmergencyTypes"><code class="name flex">
 <span>async def <span class="ident">getEmergencyTypes</span></span>(<span>self)</span>
@@ -623,82 +321,24 @@ class C4ContactSensor:
 <dd>
 <div class="desc"><p>Returns the available emergency types as a list.</p>
 <p>Possible types are "Fire", "Medical", "Panic", and "Police".</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getEmergencyTypes(self):
-    &#34;&#34;&#34;Returns the available emergency types as a list.
-
-    Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
-    &#34;&#34;&#34;
-    types_list = []
-
-    data = await self.director.getItemInfo(self.item_id)
-    jsonDictionary = json.loads(data)
-
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
-        types_list.append(&#34;Fire&#34;)
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
-        types_list.append(&#34;Medical&#34;)
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
-        types_list.append(&#34;Panic&#34;)
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
-        types_list.append(&#34;Police&#34;)
-
-    return types_list</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getLastArmFailure"><code class="name flex">
 <span>async def <span class="ident">getLastArmFailure</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns details about the last arm failure.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getLastArmFailure(self):
-    &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
-    last_arm_failed = await self.director.getItemVariableValue(
-        self.item_id, &#34;LAST_ARM_FAILED&#34;
-    )
-    return last_arm_failed</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getLastEmergency"><code class="name flex">
 <span>async def <span class="ident">getLastEmergency</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns details about the last emergency trigger.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getLastEmergency(self):
-    &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
-    last_emergency = await self.director.getItemVariableValue(
-        self.item_id, &#34;LAST_EMERGENCY&#34;
-    )
-    return last_emergency</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getOpenZoneCount"><code class="name flex">
 <span>async def <span class="ident">getOpenZoneCount</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the number of open/unsecured zones.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getOpenZoneCount(self):
-    &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
-    open_zone_count = await self.director.getItemVariableValue(
-        self.item_id, &#34;OPEN_ZONE_COUNT&#34;
-    )
-    return open_zone_count</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getPartitionState"><code class="name flex">
 <span>async def <span class="ident">getPartitionState</span></span>(<span>self)</span>
@@ -706,37 +346,12 @@ class C4ContactSensor:
 <dd>
 <div class="desc"><p>Returns the partition state of the security panel.</p>
 <p>Possible values include "DISARMED_NOT_READY", "DISARMED_READY", "ARMED_HOME", "ARMED_AWAY", "EXIT_DELAY", "ENTRY_DELAY"</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getPartitionState(self):
-    &#34;&#34;&#34;Returns the partition state of the security panel.
-
-    Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;, &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
-    &#34;&#34;&#34;
-    partition_state = await self.director.getItemVariableValue(
-        self.item_id, &#34;PARTITION_STATE&#34;
-    )
-    return partition_state</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.getTroubleText"><code class="name flex">
 <span>async def <span class="ident">getTroubleText</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns the trouble display text of the security panel.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getTroubleText(self):
-    &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
-    trouble_text = await self.director.getItemVariableValue(
-        self.item_id, &#34;TROUBLE_TEXT&#34;
-    )
-    return trouble_text</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.sendKeyPress"><code class="name flex">
 <span>async def <span class="ident">sendKeyPress</span></span>(<span>self, key)</span>
@@ -745,23 +360,6 @@ class C4ContactSensor:
 <div class="desc"><p>Sends a single keypress to the security panel's virtual keypad (if supported).</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>key</code> - Keypress to send. Only one key at a time.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def sendKeyPress(self, key):
-    &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if supported).
-
-    Parameters:
-        `key` - Keypress to send. Only one key at a time.
-    &#34;&#34;&#34;
-    key = str(key)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;KEY_PRESS&#34;,
-        {&#34;KeyName&#34;: key},
-    )</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.setArm"><code class="name flex">
 <span>async def <span class="ident">setArm</span></span>(<span>self, usercode, mode: str)</span>
@@ -771,25 +369,6 @@ class C4ContactSensor:
 <h2 id="parameters">Parameters</h2>
 <p><code>usercode</code> - PIN/code for arming the system.</p>
 <p><code>mode</code> - Arm mode to use. This depends on what is supported by the security panel itself.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def setArm(self, usercode, mode: str):
-    &#34;&#34;&#34;Arms the security panel with the specified mode.
-
-    Parameters:
-        `usercode` - PIN/code for arming the system.
-
-        `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
-    &#34;&#34;&#34;
-    usercode = str(usercode)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;PARTITION_ARM&#34;,
-        {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
-    )</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.setDisarm"><code class="name flex">
 <span>async def <span class="ident">setDisarm</span></span>(<span>self, usercode)</span>
@@ -798,23 +377,6 @@ class C4ContactSensor:
 <div class="desc"><p>Disarms the security panel.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>usercode</code> - PIN/code for disarming the system.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def setDisarm(self, usercode):
-    &#34;&#34;&#34;Disarms the security panel.
-
-    Parameters:
-        `usercode` - PIN/code for disarming the system.
-    &#34;&#34;&#34;
-    usercode = str(usercode)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;PARTITION_DISARM&#34;,
-        {&#34;UserCode&#34;: usercode},
-    )</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.triggerEmergency"><code class="name flex">
 <span>async def <span class="ident">triggerEmergency</span></span>(<span>self, usercode, type)</span>
@@ -824,25 +386,6 @@ class C4ContactSensor:
 <h2 id="parameters">Parameters</h2>
 <p><code>usercode</code> - PIN/code for disarming the system.</p>
 <p><code>type</code> - Type of emergency: "Fire", "Medical", "Panic", or "Police"</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def triggerEmergency(self, usercode, type):
-    &#34;&#34;&#34;Triggers an emergency of the specified type.
-
-    Parameters:
-        `usercode` - PIN/code for disarming the system.
-
-        `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
-    &#34;&#34;&#34;
-    usercode = str(usercode)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;PARTITION_DISARM&#34;,
-        {&#34;UserCode&#34;: usercode},
-    )</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -850,7 +393,6 @@ class C4ContactSensor:
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -896,7 +438,7 @@ class C4ContactSensor:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
 </footer>
 </body>
 </html>

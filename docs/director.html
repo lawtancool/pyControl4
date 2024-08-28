@@ -2,19 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.10.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.1">
 <title>pyControl4.director API documentation</title>
 <meta name="description" content="Handles communication with a Control4 Director, and provides functions for
-getting details about items on the Director." />
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
-<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
-<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
-<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
-<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+getting details about items on the Director.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
 <style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
-<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+})</script>
 </head>
 <body>
 <main>
@@ -25,313 +28,6 @@ getting details about items on the Director." />
 <section id="section-intro">
 <p>Handles communication with a Control4 Director, and provides functions for
 getting details about items on the Director.</p>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">&#34;&#34;&#34;Handles communication with a Control4 Director, and provides functions for
-   getting details about items on the Director.
-&#34;&#34;&#34;
-import aiohttp
-import async_timeout
-import json
-
-from .error_handling import checkResponseForError
-
-
-class C4Director:
-    def __init__(
-        self,
-        ip,
-        director_bearer_token,
-        session_no_verify_ssl: aiohttp.ClientSession = None,
-    ):
-        &#34;&#34;&#34;Creates a Control4 Director object.
-
-        Parameters:
-            `ip` - The IP address of the Control4 Director/Controller.
-
-            `director_bearer_token` - The bearer token used to authenticate
-                                      with the Director.
-                See `pyControl4.account.C4Account.getDirectorBearerToken`
-                for how to get this.
-
-            `session` - (Optional) Allows the use of an
-                        `aiohttp.ClientSession` object
-                        for all network requests. This
-                        session will not be closed by the library.
-                        If not provided, the library will open and
-                        close its own `ClientSession`s as needed.
-        &#34;&#34;&#34;
-        self.base_url = &#34;https://{}&#34;.format(ip)
-        self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
-        self.director_bearer_token = director_bearer_token
-        self.session = session_no_verify_ssl
-
-    async def sendGetRequest(self, uri):
-        &#34;&#34;&#34;Sends a GET request to the specified API URI.
-        Returns the Director&#39;s JSON response as a string.
-
-        Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP
-                    address of the Director.
-        &#34;&#34;&#34;
-        if self.session is None:
-            async with aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
-            ) as session:
-                with async_timeout.timeout(10):
-                    async with session.get(
-                        self.base_url + uri, headers=self.headers
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
-        else:
-            with async_timeout.timeout(10):
-                async with self.session.get(
-                    self.base_url + uri, headers=self.headers
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
-
-    async def sendPostRequest(self, uri, command, params, async_variable=True):
-        &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
-           to the Director.
-        Returns the Director&#39;s JSON response as a string.
-
-        Parameters:
-            `uri` - The API URI to send the request to. Do not include the IP
-                    address of the Director.
-
-            `command` - The Control4 command to send.
-
-            `params` - The parameters of the command, provided as a dictionary.
-        &#34;&#34;&#34;
-        dataDictionary = {
-            &#34;async&#34;: async_variable,
-            &#34;command&#34;: command,
-            &#34;tParams&#34;: params,
-        }
-        if self.session is None:
-            async with aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
-            ) as session:
-                with async_timeout.timeout(10):
-                    async with session.post(
-                        self.base_url + uri, headers=self.headers, json=dataDictionary
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
-        else:
-            with async_timeout.timeout(10):
-                async with self.session.post(
-                    self.base_url + uri, headers=self.headers, json=dataDictionary
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
-
-    async def getAllItemsByCategory(self, category):
-        &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
-
-        Parameters:
-            `category` - Control4 Category Name: controllers, comfort, lights,
-                         cameras, sensors, audio_video,
-                         motorization, thermostats, motors,
-                         control4_remote_hub,
-                         outlet_wireless_dimmer, voice-scene
-        &#34;&#34;&#34;
-        return_list = await self.sendGetRequest(
-            &#34;/api/v1/categories/{}&#34;.format(category)
-        )
-        return return_list
-
-    async def getAllItemInfo(self):
-        &#34;&#34;&#34;Returns a JSON list of all the items on the Director.&#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items&#34;)
-
-    async def getItemInfo(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the details of the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}&#34;.format(item_id))
-
-    async def getItemSetup(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the setup info of the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(item_id), &#34;GET_SETUP&#34;, &#34;{}&#34;, False
-        )
-
-    async def getItemVariables(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the variables available for the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))
-
-    async def getItemVariableValue(self, item_id, var_name):
-        &#34;&#34;&#34;Returns the value of the specified variable for the
-        specified item as a string.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-
-            `var_name` - The Control4 variable name or names.
-        &#34;&#34;&#34;
-
-        if isinstance(var_name, (tuple, list, set)):
-            var_name = &#34;,&#34;.join(var_name)
-
-        data = await self.sendGetRequest(
-            &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
-        )
-        if data == &#34;[]&#34;:
-            raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} \
-                    doesn&#39;t seem to exist for item {}.&#34;.format(
-                    var_name, item_id
-                )
-            )
-        jsonDictionary = json.loads(data)
-        return jsonDictionary[0][&#34;value&#34;]
-
-    async def getAllItemVariableValue(self, var_name):
-        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
-        for all items that have it.
-
-        Parameters:
-            `var_name` - The Control4 variable name or names.
-        &#34;&#34;&#34;
-        if isinstance(var_name, (tuple, list, set)):
-            var_name = &#34;,&#34;.join(var_name)
-
-        data = await self.sendGetRequest(
-            &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
-        )
-        if data == &#34;[]&#34;:
-            raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} \
-                    doesn&#39;t seem to exist for any items.&#34;.format(
-                    var_name
-                )
-            )
-        jsonDictionary = json.loads(data)
-        return jsonDictionary
-
-    async def getItemCommands(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the commands available for the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/commands&#34;.format(item_id))
-
-    async def getItemNetwork(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the network information for the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/network&#34;.format(item_id))
-
-    async def getItemBindings(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the bindings information for the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))
-
-    async def getUiConfiguration(self):
-        &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
-
-        Returns:
-
-            {
-             &#34;experiences&#34;: [
-                {
-                 &#34;type&#34;: &#34;watch&#34;,
-                 &#34;sources&#34;: {
-                    &#34;source&#34;: [
-                     {
-                      &#34;id&#34;: 59,
-                      &#34;type&#34;: &#34;HDMI&#34;
-                     },
-                     {
-                      &#34;id&#34;: 946,
-                      &#34;type&#34;: &#34;HDMI&#34;
-                     },
-                     {
-                      &#34;id&#34;: 950,
-                      &#34;type&#34;: &#34;HDMI&#34;
-                     },
-                     {
-                      &#34;id&#34;: 33,
-                      &#34;type&#34;: &#34;VIDEO_SELECTION&#34;
-                     }
-                    ]
-                },
-                 &#34;active&#34;: false,
-                 &#34;room_id&#34;: 9,
-                 &#34;username&#34;: &#34;primaryuser&#34;
-                },
-                {
-                 &#34;type&#34;: &#34;listen&#34;,
-                 &#34;sources&#34;: {
-                    &#34;source&#34;: [
-                    {
-                     &#34;id&#34;: 298,
-                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
-                     &#34;name&#34;: &#34;My Music&#34;
-                    },
-                    {
-                     &#34;id&#34;: 302,
-                     &#34;type&#34;: &#34;AUDIO_SELECTION&#34;,
-                     &#34;name&#34;: &#34;Stations&#34;
-                    },
-                    {
-                     &#34;id&#34;: 306,
-                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
-                     &#34;name&#34;: &#34;ShairBridge&#34;
-                    },
-                    {
-                     &#34;id&#34;: 937,
-                     &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
-                     &#34;name&#34;: &#34;Spotify Connect&#34;
-                    },
-                    {
-                     &#34;id&#34;: 100002,
-                     &#34;type&#34;: &#34;DIGITAL_AUDIO_CLIENT&#34;,
-                     &#34;name&#34;: &#34;Digital Media&#34;
-                    }
-                   ]
-                },
-                 &#34;active&#34;: false,
-                 &#34;room_id&#34;: 9,
-                 &#34;username&#34;: &#34;primaryuser&#34;
-                },
-                {
-                 &#34;type&#34;: &#34;cameras&#34;,
-                 &#34;sources&#34;: {
-                    &#34;source&#34;: [
-                    {
-                     &#34;id&#34;: 877,
-                     &#34;type&#34;: &#34;Camera&#34;
-                    },
-                    ...
-                }
-                ...
-            }
-        &#34;&#34;&#34;
-
-        return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
-</details>
 </section>
 <section>
 </section>
@@ -664,14 +360,6 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns a JSON list of all the items on the Director.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getAllItemInfo(self):
-    &#34;&#34;&#34;Returns a JSON list of all the items on the Director.&#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items&#34;)</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getAllItemVariableValue"><code class="name flex">
 <span>async def <span class="ident">getAllItemVariableValue</span></span>(<span>self, var_name)</span>
@@ -681,33 +369,6 @@ close its own <code>ClientSession</code>s as needed.</p></div>
 for all items that have it.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>var_name</code> - The Control4 variable name or names.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getAllItemVariableValue(self, var_name):
-    &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
-    for all items that have it.
-
-    Parameters:
-        `var_name` - The Control4 variable name or names.
-    &#34;&#34;&#34;
-    if isinstance(var_name, (tuple, list, set)):
-        var_name = &#34;,&#34;.join(var_name)
-
-    data = await self.sendGetRequest(
-        &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
-    )
-    if data == &#34;[]&#34;:
-        raise ValueError(
-            &#34;Empty response recieved from Director! The variable {} \
-                doesn&#39;t seem to exist for any items.&#34;.format(
-                var_name
-            )
-        )
-    jsonDictionary = json.loads(data)
-    return jsonDictionary</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getAllItemsByCategory"><code class="name flex">
 <span>async def <span class="ident">getAllItemsByCategory</span></span>(<span>self, category)</span>
@@ -720,25 +381,6 @@ cameras, sensors, audio_video,
 motorization, thermostats, motors,
 control4_remote_hub,
 outlet_wireless_dimmer, voice-scene</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getAllItemsByCategory(self, category):
-    &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
-
-    Parameters:
-        `category` - Control4 Category Name: controllers, comfort, lights,
-                     cameras, sensors, audio_video,
-                     motorization, thermostats, motors,
-                     control4_remote_hub,
-                     outlet_wireless_dimmer, voice-scene
-    &#34;&#34;&#34;
-    return_list = await self.sendGetRequest(
-        &#34;/api/v1/categories/{}&#34;.format(category)
-    )
-    return return_list</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemBindings"><code class="name flex">
 <span>async def <span class="ident">getItemBindings</span></span>(<span>self, item_id)</span>
@@ -747,18 +389,6 @@ outlet_wireless_dimmer, voice-scene</p></div>
 <div class="desc"><p>Returns a JSON list of the bindings information for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemBindings(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the bindings information for the specified item.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-    &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemCommands"><code class="name flex">
 <span>async def <span class="ident">getItemCommands</span></span>(<span>self, item_id)</span>
@@ -767,18 +397,6 @@ outlet_wireless_dimmer, voice-scene</p></div>
 <div class="desc"><p>Returns a JSON list of the commands available for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemCommands(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the commands available for the specified item.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-    &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/commands&#34;.format(item_id))</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemInfo"><code class="name flex">
 <span>async def <span class="ident">getItemInfo</span></span>(<span>self, item_id)</span>
@@ -787,18 +405,6 @@ outlet_wireless_dimmer, voice-scene</p></div>
 <div class="desc"><p>Returns a JSON list of the details of the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemInfo(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the details of the specified item.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-    &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}&#34;.format(item_id))</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemNetwork"><code class="name flex">
 <span>async def <span class="ident">getItemNetwork</span></span>(<span>self, item_id)</span>
@@ -807,18 +413,6 @@ outlet_wireless_dimmer, voice-scene</p></div>
 <div class="desc"><p>Returns a JSON list of the network information for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemNetwork(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the network information for the specified item.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-    &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/network&#34;.format(item_id))</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemSetup"><code class="name flex">
 <span>async def <span class="ident">getItemSetup</span></span>(<span>self, item_id)</span>
@@ -827,20 +421,6 @@ outlet_wireless_dimmer, voice-scene</p></div>
 <div class="desc"><p>Returns a JSON list of the setup info of the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemSetup(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the setup info of the specified item.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-    &#34;&#34;&#34;
-    return await self.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(item_id), &#34;GET_SETUP&#34;, &#34;{}&#34;, False
-    )</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemVariableValue"><code class="name flex">
 <span>async def <span class="ident">getItemVariableValue</span></span>(<span>self, item_id, var_name)</span>
@@ -851,36 +431,6 @@ specified item as a string.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p>
 <p><code>var_name</code> - The Control4 variable name or names.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemVariableValue(self, item_id, var_name):
-    &#34;&#34;&#34;Returns the value of the specified variable for the
-    specified item as a string.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-
-        `var_name` - The Control4 variable name or names.
-    &#34;&#34;&#34;
-
-    if isinstance(var_name, (tuple, list, set)):
-        var_name = &#34;,&#34;.join(var_name)
-
-    data = await self.sendGetRequest(
-        &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
-    )
-    if data == &#34;[]&#34;:
-        raise ValueError(
-            &#34;Empty response recieved from Director! The variable {} \
-                doesn&#39;t seem to exist for item {}.&#34;.format(
-                var_name, item_id
-            )
-        )
-    jsonDictionary = json.loads(data)
-    return jsonDictionary[0][&#34;value&#34;]</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getItemVariables"><code class="name flex">
 <span>async def <span class="ident">getItemVariables</span></span>(<span>self, item_id)</span>
@@ -889,18 +439,6 @@ specified item as a string.</p>
 <div class="desc"><p>Returns a JSON list of the variables available for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getItemVariables(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the variables available for the specified item.
-
-    Parameters:
-        `item_id` - The Control4 item ID.
-    &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.getUiConfiguration"><code class="name flex">
 <span>async def <span class="ident">getUiConfiguration</span></span>(<span>self)</span>
@@ -983,94 +521,6 @@ specified item as a string.</p>
 }
 &hellip;
 }</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getUiConfiguration(self):
-    &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating rooms and capabilities
-
-    Returns:
-
-        {
-         &#34;experiences&#34;: [
-            {
-             &#34;type&#34;: &#34;watch&#34;,
-             &#34;sources&#34;: {
-                &#34;source&#34;: [
-                 {
-                  &#34;id&#34;: 59,
-                  &#34;type&#34;: &#34;HDMI&#34;
-                 },
-                 {
-                  &#34;id&#34;: 946,
-                  &#34;type&#34;: &#34;HDMI&#34;
-                 },
-                 {
-                  &#34;id&#34;: 950,
-                  &#34;type&#34;: &#34;HDMI&#34;
-                 },
-                 {
-                  &#34;id&#34;: 33,
-                  &#34;type&#34;: &#34;VIDEO_SELECTION&#34;
-                 }
-                ]
-            },
-             &#34;active&#34;: false,
-             &#34;room_id&#34;: 9,
-             &#34;username&#34;: &#34;primaryuser&#34;
-            },
-            {
-             &#34;type&#34;: &#34;listen&#34;,
-             &#34;sources&#34;: {
-                &#34;source&#34;: [
-                {
-                 &#34;id&#34;: 298,
-                 &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
-                 &#34;name&#34;: &#34;My Music&#34;
-                },
-                {
-                 &#34;id&#34;: 302,
-                 &#34;type&#34;: &#34;AUDIO_SELECTION&#34;,
-                 &#34;name&#34;: &#34;Stations&#34;
-                },
-                {
-                 &#34;id&#34;: 306,
-                 &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
-                 &#34;name&#34;: &#34;ShairBridge&#34;
-                },
-                {
-                 &#34;id&#34;: 937,
-                 &#34;type&#34;: &#34;DIGITAL_AUDIO_SERVER&#34;,
-                 &#34;name&#34;: &#34;Spotify Connect&#34;
-                },
-                {
-                 &#34;id&#34;: 100002,
-                 &#34;type&#34;: &#34;DIGITAL_AUDIO_CLIENT&#34;,
-                 &#34;name&#34;: &#34;Digital Media&#34;
-                }
-               ]
-            },
-             &#34;active&#34;: false,
-             &#34;room_id&#34;: 9,
-             &#34;username&#34;: &#34;primaryuser&#34;
-            },
-            {
-             &#34;type&#34;: &#34;cameras&#34;,
-             &#34;sources&#34;: {
-                &#34;source&#34;: [
-                {
-                 &#34;id&#34;: 877,
-                 &#34;type&#34;: &#34;Camera&#34;
-                },
-                ...
-            }
-            ...
-        }
-    &#34;&#34;&#34;
-
-    return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.sendGetRequest"><code class="name flex">
 <span>async def <span class="ident">sendGetRequest</span></span>(<span>self, uri)</span>
@@ -1081,36 +531,6 @@ Returns the Director's JSON response as a string.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>uri</code> - The API URI to send the request to. Do not include the IP
 address of the Director.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def sendGetRequest(self, uri):
-    &#34;&#34;&#34;Sends a GET request to the specified API URI.
-    Returns the Director&#39;s JSON response as a string.
-
-    Parameters:
-        `uri` - The API URI to send the request to. Do not include the IP
-                address of the Director.
-    &#34;&#34;&#34;
-    if self.session is None:
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
-            with async_timeout.timeout(10):
-                async with session.get(
-                    self.base_url + uri, headers=self.headers
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
-    else:
-        with async_timeout.timeout(10):
-            async with self.session.get(
-                self.base_url + uri, headers=self.headers
-            ) as resp:
-                await checkResponseForError(await resp.text())
-                return await resp.text()</code></pre>
-</details>
 </dd>
 <dt id="pyControl4.director.C4Director.sendPostRequest"><code class="name flex">
 <span>async def <span class="ident">sendPostRequest</span></span>(<span>self, uri, command, params, async_variable=True)</span>
@@ -1124,46 +544,6 @@ Returns the Director's JSON response as a string.</p>
 address of the Director.</p>
 <p><code>command</code> - The Control4 command to send.</p>
 <p><code>params</code> - The parameters of the command, provided as a dictionary.</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def sendPostRequest(self, uri, command, params, async_variable=True):
-    &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
-       to the Director.
-    Returns the Director&#39;s JSON response as a string.
-
-    Parameters:
-        `uri` - The API URI to send the request to. Do not include the IP
-                address of the Director.
-
-        `command` - The Control4 command to send.
-
-        `params` - The parameters of the command, provided as a dictionary.
-    &#34;&#34;&#34;
-    dataDictionary = {
-        &#34;async&#34;: async_variable,
-        &#34;command&#34;: command,
-        &#34;tParams&#34;: params,
-    }
-    if self.session is None:
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
-            with async_timeout.timeout(10):
-                async with session.post(
-                    self.base_url + uri, headers=self.headers, json=dataDictionary
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
-    else:
-        with async_timeout.timeout(10):
-            async with self.session.post(
-                self.base_url + uri, headers=self.headers, json=dataDictionary
-            ) as resp:
-                await checkResponseForError(await resp.text())
-                return await resp.text()</code></pre>
-</details>
 </dd>
 </dl>
 </dd>
@@ -1171,7 +551,6 @@ address of the Director.</p>
 </section>
 </article>
 <nav id="sidebar">
-<h1>Index</h1>
 <div class="toc">
 <ul></ul>
 </div>
@@ -1207,7 +586,7 @@ address of the Director.</p>
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.1</a>.</p>
 </footer>
 </body>
 </html>
