@@ -1,6 +1,6 @@
 ﻿aiohttp
 async_timeout
 xmltodict
-python-socketio>=4,<5
+python-socketio-v4
 websocket-client
 pdoc3
