@@ -22,7 +22,7 @@ setuptools.setup(
     install_requires=[
         'aiohttp',
         'xmltodict',
-        'python-socketio>=4,<5',
+        'python-socketio-v4',
         'websocket-client',
     ],
 )

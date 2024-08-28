@@ -1,7 +1,7 @@
 """Handles Websocket connections to a Control4 Director, allowing for real-time updates using callbacks."""
 import aiohttp
 import async_timeout
-import socketio
+import socketio_v4 as socketio
 import logging
 
 from .error_handling import checkResponseForError
