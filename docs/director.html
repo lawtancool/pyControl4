@@ -185,7 +185,7 @@ close its own <code>ClientSession</code>s as needed.</p></div>
             `item_id` - The Control4 item ID.
         &#34;&#34;&#34;
         return await self.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(item_id), &#34;GET_SETUP&#34;, &#34;{}&#34;, False
+            &#34;/api/v1/items/{}/commands&#34;.format(item_id), &#34;GET_SETUP&#34;, {}, False
         )
 
     async def getItemVariables(self, item_id):
