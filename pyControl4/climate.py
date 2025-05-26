@@ -2,6 +2,7 @@
 
 from pyControl4 import C4Entity
 
+
 class C4Climate(C4Entity):
     # ------------------------
     # HVAC and Fan States
@@ -106,4 +107,3 @@ class C4Climate(C4Entity):
             "SET_PRESET",
             {"NAME": preset},
         )
-

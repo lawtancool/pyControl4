@@ -77,4 +77,3 @@ class C4Fan(C4Entity):
             "DESIGNATE_PRESET",
             {"PRESET": preset},
         )
-
