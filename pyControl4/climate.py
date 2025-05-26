@@ -10,11 +10,13 @@ class C4Climate(C4Entity):
 
     async def getHVACState(self):
         """Returns the current HVAC state (e.g., on/off or active mode)."""
-        return await self.director.getItemVariableValue(self.item_id, "HVAC_STATE")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "HVAC_STATE")
 
     async def getFANState(self):
         """Returns the current power state of the fan (True=on, False=off)."""
-        return await self.director.getItemVariableValue(self.item_id, "FAN_STATE")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "FAN_STATE")
 
     # ------------------------
     # Mode Getters
@@ -22,19 +24,23 @@ class C4Climate(C4Entity):
 
     async def getHVACMode(self):
         """Returns the currently active HVAC mode."""
-        return await self.director.getItemVariableValue(self.item_id, "HVAC_MODE")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "HVAC_MODE")
 
     async def getHVACModes(self):
         """Returns a list of supported HVAC modes."""
-        return await self.director.getItemVariableValue(self.item_id, "HVAC_MODES_LIST")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "HVAC_MODES_LIST")
 
     async def getFANMode(self):
         """Returns the currently active fan mode."""
-        return await self.director.getItemVariableValue(self.item_id, "FAN_MODE")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "FAN_MODE")
 
     async def getFANModes(self):
         """Returns a list of supported fan modes."""
-        return await self.director.getItemVariableValue(self.item_id, "FAN_MODES_LIST")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "FAN_MODES_LIST")
 
     # ------------------------
     # Setpoint Getters
@@ -42,11 +48,13 @@ class C4Climate(C4Entity):
 
     async def getCoolSetpointF(self):
         """Returns the cooling setpoint temperature in Fahrenheit."""
-        return await self.director.getItemVariableValue(self.item_id, "COOL_SETPOINT_F")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "COOL_SETPOINT_F")
 
     async def getHeatSetpointF(self):
         """Returns the heating setpoint temperature in Fahrenheit."""
-        return await self.director.getItemVariableValue(self.item_id, "HEAT_SETPOINT_F")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "HEAT_SETPOINT_F")
 
     # ------------------------
     # Sensor Readings
@@ -54,11 +62,13 @@ class C4Climate(C4Entity):
 
     async def getHumidity(self):
         """Returns the current humidity percentage."""
-        return await self.director.getItemVariableValue(self.item_id, "HUMIDITY")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "HUMIDITY")
 
     async def getCurrentTemperature(self):
         """Returns the current ambient temperature in Fahrenheit."""
-        return await self.director.getItemVariableValue(self.item_id, "TEMPERATURE_F")
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        "TEMPERATURE_F")
 
     # ------------------------
     # Setters / Commands

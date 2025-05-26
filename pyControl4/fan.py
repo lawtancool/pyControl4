@@ -30,12 +30,14 @@ class C4Fan(C4Entity):
             4 - High
 
         Note:
-            Only valid for fan controllers. On non-dimmer switches, use `getState()` instead.
+            Only valid for fan controllers. On non-dimmer switches,
+            use `getState()` instead.
 
         Returns:
             int: Current fan speed (0–4).
         """
-        value = await self.director.getItemVariableValue(self.item_id, "CURRENT_SPEED")
+        value = await self.director.getItemVariableValue(self.item_id,
+                                                         "CURRENT_SPEED")
         return int(value)
 
     # ------------------------
@@ -62,7 +64,8 @@ class C4Fan(C4Entity):
 
     async def setPreset(self, preset: int):
         """
-        Sets the fan's preset speed — the speed used when the fan is turned on without specifying speed.
+        Sets the fan's preset speed — the speed used when the fan is
+        turned on without specifying speed.
 
         Parameters:
             preset (int): Preset fan speed level:
