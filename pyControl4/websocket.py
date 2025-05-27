@@ -93,6 +93,7 @@ class C4Websocket:
         session_no_verify_ssl: aiohttp.ClientSession = None,
         connect_callback=None,
         disconnect_callback=None,
+        ssl_context=None,
     ):
         """Creates a Control4 Websocket object.
 
@@ -109,12 +110,15 @@ class C4Websocket:
             `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
 
             `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
+
+            `ssl_context` - (Optional) A ssl context to be used on the websocket connection, needed for hass support.
         """
         self.base_url = "https://{}".format(ip)
         self.wss_url = "wss://{}".format(ip)
         self.session = session_no_verify_ssl
         self.connect_callback = connect_callback
         self.disconnect_callback = disconnect_callback
+        self.ssl_context = ssl_context
 
         # Keep track of the callbacks registered for each item id
         self._item_callbacks = dict()
@@ -163,7 +167,10 @@ class C4Websocket:
         # Disconnect previous sio object
         await self.sio_disconnect()
 
-        self._sio = socketio.AsyncClient(ssl_verify=False)
+        self._sio = socketio.AsyncClient(
+            ssl_verify=False,
+            ssl_context=self.ssl_context,
+        )
         self._sio.register_namespace(
             _C4DirectorNamespace(
                 token=director_bearer_token,
