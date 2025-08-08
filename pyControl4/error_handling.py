@@ -12,31 +12,25 @@ class C4Exception(Exception):
     """Base class for pyControl4 exceptions."""
     pass
 
-
 class Unauthorized(C4Exception):
     """Raised when the bearer token is invalid or expired."""
     pass
-
 
 class NotFound(C4Exception):
     """Raised when the Control4 Director returns a 404 Not Found error."""
     pass
 
-
 class BadCredentials(C4Exception):
     """Raised when the username or password for the Control4 account is invalid."""
     pass
-
 
 class InvalidCategory(C4Exception):
     """Raised when a category does not exist on the Control4 system."""
     pass
 
-
 class C4CorruptXMLResponse(C4Exception):
     """Raised when the Control4 Director sends a malformed XML response."""
     pass
-
 
 async def checkResponseForError(response_text):
     """
