@@ -1,5 +1,4 @@
-"""Controls Control4 Relay devices. These can include locks, and potentially other types of devices.
-"""
+"""Controls Control4 Relay devices. These can include locks, and potentially other types of devices."""
 
 from pyControl4 import C4Entity
 

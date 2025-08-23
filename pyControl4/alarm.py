@@ -1,5 +1,4 @@
-"""Controls Control4 security panel and contact sensor (door, window, motion) devices.
-"""
+"""Controls Control4 security panel and contact sensor (door, window, motion) devices."""
 
 import json
 from pyControl4 import C4Entity

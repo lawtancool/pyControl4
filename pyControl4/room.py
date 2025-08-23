@@ -1,5 +1,4 @@
-"""Controls Control4 Room devices.
-"""
+"""Controls Control4 Room devices."""
 
 from pyControl4 import C4Entity
 
