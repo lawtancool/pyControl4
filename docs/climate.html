@@ -63,13 +63,11 @@ el.replaceWith(d);
 
     async def getHVACState(self):
         &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;HVAC_STATE&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_STATE&#34;)
 
     async def getFANState(self):
         &#34;&#34;&#34;Returns the current power state of the fan (True=on, False=off).&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;FAN_STATE&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;FAN_STATE&#34;)
 
     # ------------------------
     # Mode Getters
@@ -77,23 +75,19 @@ el.replaceWith(d);
 
     async def getHVACMode(self):
         &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;HVAC_MODE&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODE&#34;)
 
     async def getHVACModes(self):
         &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;HVAC_MODES_LIST&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODES_LIST&#34;)
 
     async def getFANMode(self):
         &#34;&#34;&#34;Returns the currently active fan mode.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;FAN_MODE&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODE&#34;)
 
     async def getFANModes(self):
         &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;FAN_MODES_LIST&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODES_LIST&#34;)
 
     # ------------------------
     # Setpoint Getters
@@ -101,13 +95,11 @@ el.replaceWith(d);
 
     async def getCoolSetpointF(self):
         &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;COOL_SETPOINT_F&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_F&#34;)
 
     async def getHeatSetpointF(self):
         &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;HEAT_SETPOINT_F&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_F&#34;)
 
     # ------------------------
     # Sensor Readings
@@ -115,13 +107,11 @@ el.replaceWith(d);
 
     async def getHumidity(self):
         &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;HUMIDITY&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;HUMIDITY&#34;)
 
     async def getCurrentTemperature(self):
         &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id,
-                                                        &#34;TEMPERATURE_F&#34;)
+        return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)
 
     # ------------------------
     # Setters / Commands
@@ -191,8 +181,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getCoolSetpointF(self):
     &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;COOL_SETPOINT_F&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_F&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the cooling setpoint temperature in Fahrenheit.</p></div>
 </dd>
@@ -206,8 +195,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getCurrentTemperature(self):
     &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;TEMPERATURE_F&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the current ambient temperature in Fahrenheit.</p></div>
 </dd>
@@ -221,8 +209,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getFANMode(self):
     &#34;&#34;&#34;Returns the currently active fan mode.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;FAN_MODE&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODE&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the currently active fan mode.</p></div>
 </dd>
@@ -236,8 +223,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getFANModes(self):
     &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;FAN_MODES_LIST&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODES_LIST&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns a list of supported fan modes.</p></div>
 </dd>
@@ -251,8 +237,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getFANState(self):
     &#34;&#34;&#34;Returns the current power state of the fan (True=on, False=off).&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;FAN_STATE&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;FAN_STATE&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the current power state of the fan (True=on, False=off).</p></div>
 </dd>
@@ -266,8 +251,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getHVACMode(self):
     &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;HVAC_MODE&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODE&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the currently active HVAC mode.</p></div>
 </dd>
@@ -281,8 +265,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getHVACModes(self):
     &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;HVAC_MODES_LIST&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODES_LIST&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns a list of supported HVAC modes.</p></div>
 </dd>
@@ -296,8 +279,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getHVACState(self):
     &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;HVAC_STATE&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_STATE&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the current HVAC state (e.g., on/off or active mode).</p></div>
 </dd>
@@ -311,8 +293,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getHeatSetpointF(self):
     &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;HEAT_SETPOINT_F&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_F&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the heating setpoint temperature in Fahrenheit.</p></div>
 </dd>
@@ -326,8 +307,7 @@ el.replaceWith(d);
 </summary>
 <pre><code class="python">async def getHumidity(self):
     &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id,
-                                                    &#34;HUMIDITY&#34;)</code></pre>
+    return await self.director.getItemVariableValue(self.item_id, &#34;HUMIDITY&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the current humidity percentage.</p></div>
 </dd>

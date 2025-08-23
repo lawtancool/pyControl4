@@ -89,8 +89,7 @@ el.replaceWith(d);
         Returns:
             int: Current fan speed (0–4).
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id,
-                                                         &#34;CURRENT_SPEED&#34;)
+        value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_SPEED&#34;)
         return int(value)
 
     # ------------------------
@@ -170,8 +169,7 @@ el.replaceWith(d);
     Returns:
         int: Current fan speed (0–4).
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id,
-                                                     &#34;CURRENT_SPEED&#34;)
+    value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_SPEED&#34;)
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current speed of the fan controller.</p>
