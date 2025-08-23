@@ -1,5 +1,5 @@
 """Handles communication with a Control4 Director, and provides functions for
-   getting details about items on the Director.
+getting details about items on the Director.
 """
 
 import aiohttp
