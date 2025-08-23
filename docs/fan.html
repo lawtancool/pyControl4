@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
 <meta name="generator" content="pdoc3 0.11.6">
-<title>pyControl4.relay API documentation</title>
-<meta name="description" content="Controls Control4 Relay devices. These can include locks, and potentially other types of devices.">
+<title>pyControl4.fan API documentation</title>
+<meta name="description" content="Controls Control4 Fan devices.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
@@ -33,10 +33,10 @@ el.replaceWith(d);
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>pyControl4.relay</code></h1>
+<h1 class="title">Module <code>pyControl4.fan</code></h1>
 </header>
 <section id="section-intro">
-<p>Controls Control4 Relay devices. These can include locks, and potentially other types of devices.</p>
+<p>Controls Control4 Fan devices.</p>
 </section>
 <section>
 </section>
@@ -47,8 +47,8 @@ el.replaceWith(d);
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="pyControl4.relay.C4Relay"><code class="flex name class">
-<span>class <span class="ident">C4Relay</span></span>
+<dt id="pyControl4.fan.C4Fan"><code class="flex name class">
+<span>class <span class="ident">C4Fan</span></span>
 <span>(</span><span>C4Director, item_id)</span>
 </code></dt>
 <dd>
@@ -56,82 +56,82 @@ el.replaceWith(d);
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">class C4Relay(C4Entity):
-    async def getRelayState(self):
-        &#34;&#34;&#34;Returns the current state of the relay.
+<pre><code class="python">class C4Fan(C4Entity):
+    # ------------------------
+    # Fan State Getters
+    # ------------------------
 
-        For locks, `0` means locked and `1` means unlocked.
-        For relays in general, `0` probably means open and `1` probably means closed.
+    async def getState(self):
         &#34;&#34;&#34;
+        Returns the current power state of the fan.
 
-        return await self.director.getItemVariableValue(self.item_id, &#34;RelayState&#34;)
-
-    async def getRelayStateVerified(self):
-        &#34;&#34;&#34;Returns True if Relay is functional.
-
-        Notes:
-            I think this is just used to verify that the relay is functional,
-            not 100% sure though.
+        Returns:
+            bool: True if the fan is on, False otherwise.
         &#34;&#34;&#34;
-        return bool(
-            await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
+        value = await self.director.getItemVariableValue(self.item_id, &#34;IS_ON&#34;)
+        return bool(value)
+
+    async def getSpeed(self):
+        &#34;&#34;&#34;
+        Returns the current speed of the fan controller.
+
+        Valid speed values:
+            0 - Off
+            1 - Low
+            2 - Medium
+            3 - Medium High
+            4 - High
+
+        Note:
+            Only valid for fan controllers. On non-dimmer switches,
+            use `getState()` instead.
+
+        Returns:
+            int: Current fan speed (0–4).
+        &#34;&#34;&#34;
+        value = await self.director.getItemVariableValue(self.item_id,
+                                                         &#34;CURRENT_SPEED&#34;)
+        return int(value)
+
+    # ------------------------
+    # Fan Control Setters
+    # ------------------------
+
+    async def setSpeed(self, speed: int):
+        &#34;&#34;&#34;
+        Sets the fan speed or turns it off.
+
+        Parameters:
+            speed (int): Fan speed level:
+                0 - Off
+                1 - Low
+                2 - Medium
+                3 - Medium High
+                4 - High
+        &#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_SPEED&#34;,
+            {&#34;SPEED&#34;: speed},
         )
 
-    async def open(self):
-        &#34;&#34;&#34;Set the relay to its open state.
-
-        Example description JSON for this command from the director:
-        ```
-        {
-          &#34;display&#34;: &#34;Lock the Front › Door Lock&#34;,
-          &#34;command&#34;: &#34;OPEN&#34;,
-          &#34;deviceId&#34;: 307
-        }
-        ```
+    async def setPreset(self, preset: int):
         &#34;&#34;&#34;
+        Sets the fan&#39;s preset speed — the speed used when the fan is
+        turned on without specifying speed.
 
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;OPEN&#34;,
-            {},
-        )
-
-    async def close(self):
-        &#34;&#34;&#34;Set the relay to its closed state.
-
-        Example description JSON for this command from the director:
-        ```
-        {
-          &#34;display&#34;: &#34;Unlock the Front › Door Lock&#34;,
-          &#34;command&#34;: &#34;CLOSE&#34;,
-          &#34;deviceId&#34;: 307
-        }
-        ```
+        Parameters:
+            preset (int): Preset fan speed level:
+                0 - Off
+                1 - Low
+                2 - Medium
+                3 - Medium High
+                4 - High
         &#34;&#34;&#34;
-
         await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;CLOSE&#34;,
-            {},
-        )
-
-    async def toggle(self):
-        &#34;&#34;&#34;Toggles the relay state.
-
-        Example description JSON for this command from the director:
-        ```
-        {
-          &#34;display&#34;: &#34;Toggle the Front › Door Lock&#34;,
-          &#34;command&#34;: &#34;TOGGLE&#34;,
-          &#34;deviceId&#34;: 307
-        }
-        ```
-        &#34;&#34;&#34;
-
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;TOGGLE&#34;,
-            {},
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;DESIGNATE_PRESET&#34;,
+            {&#34;PRESET&#34;: preset},
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
@@ -144,158 +144,148 @@ el.replaceWith(d);
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.relay.C4Relay.close"><code class="name flex">
-<span>async def <span class="ident">close</span></span>(<span>self)</span>
+<dt id="pyControl4.fan.C4Fan.getSpeed"><code class="name flex">
+<span>async def <span class="ident">getSpeed</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def close(self):
-    &#34;&#34;&#34;Set the relay to its closed state.
-
-    Example description JSON for this command from the director:
-    ```
-    {
-      &#34;display&#34;: &#34;Unlock the Front › Door Lock&#34;,
-      &#34;command&#34;: &#34;CLOSE&#34;,
-      &#34;deviceId&#34;: 307
-    }
-    ```
+<pre><code class="python">async def getSpeed(self):
     &#34;&#34;&#34;
+    Returns the current speed of the fan controller.
 
+    Valid speed values:
+        0 - Off
+        1 - Low
+        2 - Medium
+        3 - Medium High
+        4 - High
+
+    Note:
+        Only valid for fan controllers. On non-dimmer switches,
+        use `getState()` instead.
+
+    Returns:
+        int: Current fan speed (0–4).
+    &#34;&#34;&#34;
+    value = await self.director.getItemVariableValue(self.item_id,
+                                                     &#34;CURRENT_SPEED&#34;)
+    return int(value)</code></pre>
+</details>
+<div class="desc"><p>Returns the current speed of the fan controller.</p>
+<p>Valid speed values:
+0 - Off
+1 - Low
+2 - Medium
+3 - Medium High
+4 - High</p>
+<h2 id="note">Note</h2>
+<p>Only valid for fan controllers. On non-dimmer switches,
+use <code>getState()</code> instead.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code></dt>
+<dd>Current fan speed (0–4).</dd>
+</dl></div>
+</dd>
+<dt id="pyControl4.fan.C4Fan.getState"><code class="name flex">
+<span>async def <span class="ident">getState</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getState(self):
+    &#34;&#34;&#34;
+    Returns the current power state of the fan.
+
+    Returns:
+        bool: True if the fan is on, False otherwise.
+    &#34;&#34;&#34;
+    value = await self.director.getItemVariableValue(self.item_id, &#34;IS_ON&#34;)
+    return bool(value)</code></pre>
+</details>
+<div class="desc"><p>Returns the current power state of the fan.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code></dt>
+<dd>True if the fan is on, False otherwise.</dd>
+</dl></div>
+</dd>
+<dt id="pyControl4.fan.C4Fan.setPreset"><code class="name flex">
+<span>async def <span class="ident">setPreset</span></span>(<span>self, preset: int)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setPreset(self, preset: int):
+    &#34;&#34;&#34;
+    Sets the fan&#39;s preset speed — the speed used when the fan is
+    turned on without specifying speed.
+
+    Parameters:
+        preset (int): Preset fan speed level:
+            0 - Off
+            1 - Low
+            2 - Medium
+            3 - Medium High
+            4 - High
+    &#34;&#34;&#34;
     await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;CLOSE&#34;,
-        {},
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;DESIGNATE_PRESET&#34;,
+        {&#34;PRESET&#34;: preset},
     )</code></pre>
 </details>
-<div class="desc"><p>Set the relay to its closed state.</p>
-<p>Example description JSON for this command from the director:</p>
-<pre><code>{
-  &quot;display&quot;: &quot;Unlock the Front › Door Lock&quot;,
-  &quot;command&quot;: &quot;CLOSE&quot;,
-  &quot;deviceId&quot;: 307
-}
-</code></pre></div>
+<div class="desc"><p>Sets the fan's preset speed — the speed used when the fan is
+turned on without specifying speed.</p>
+<h2 id="parameters">Parameters</h2>
+<p>preset (int): Preset fan speed level:
+0 - Off
+1 - Low
+2 - Medium
+3 - Medium High
+4 - High</p></div>
 </dd>
-<dt id="pyControl4.relay.C4Relay.getRelayState"><code class="name flex">
-<span>async def <span class="ident">getRelayState</span></span>(<span>self)</span>
+<dt id="pyControl4.fan.C4Fan.setSpeed"><code class="name flex">
+<span>async def <span class="ident">setSpeed</span></span>(<span>self, speed: int)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getRelayState(self):
-    &#34;&#34;&#34;Returns the current state of the relay.
-
-    For locks, `0` means locked and `1` means unlocked.
-    For relays in general, `0` probably means open and `1` probably means closed.
+<pre><code class="python">async def setSpeed(self, speed: int):
     &#34;&#34;&#34;
+    Sets the fan speed or turns it off.
 
-    return await self.director.getItemVariableValue(self.item_id, &#34;RelayState&#34;)</code></pre>
-</details>
-<div class="desc"><p>Returns the current state of the relay.</p>
-<p>For locks, <code>0</code> means locked and <code>1</code> means unlocked.
-For relays in general, <code>0</code> probably means open and <code>1</code> probably means closed.</p></div>
-</dd>
-<dt id="pyControl4.relay.C4Relay.getRelayStateVerified"><code class="name flex">
-<span>async def <span class="ident">getRelayStateVerified</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getRelayStateVerified(self):
-    &#34;&#34;&#34;Returns True if Relay is functional.
-
-    Notes:
-        I think this is just used to verify that the relay is functional,
-        not 100% sure though.
+    Parameters:
+        speed (int): Fan speed level:
+            0 - Off
+            1 - Low
+            2 - Medium
+            3 - Medium High
+            4 - High
     &#34;&#34;&#34;
-    return bool(
-        await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
-    )</code></pre>
-</details>
-<div class="desc"><p>Returns True if Relay is functional.</p>
-<h2 id="notes">Notes</h2>
-<p>I think this is just used to verify that the relay is functional,
-not 100% sure though.</p></div>
-</dd>
-<dt id="pyControl4.relay.C4Relay.open"><code class="name flex">
-<span>async def <span class="ident">open</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def open(self):
-    &#34;&#34;&#34;Set the relay to its open state.
-
-    Example description JSON for this command from the director:
-    ```
-    {
-      &#34;display&#34;: &#34;Lock the Front › Door Lock&#34;,
-      &#34;command&#34;: &#34;OPEN&#34;,
-      &#34;deviceId&#34;: 307
-    }
-    ```
-    &#34;&#34;&#34;
-
     await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;OPEN&#34;,
-        {},
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_SPEED&#34;,
+        {&#34;SPEED&#34;: speed},
     )</code></pre>
 </details>
-<div class="desc"><p>Set the relay to its open state.</p>
-<p>Example description JSON for this command from the director:</p>
-<pre><code>{
-  &quot;display&quot;: &quot;Lock the Front › Door Lock&quot;,
-  &quot;command&quot;: &quot;OPEN&quot;,
-  &quot;deviceId&quot;: 307
-}
-</code></pre></div>
-</dd>
-<dt id="pyControl4.relay.C4Relay.toggle"><code class="name flex">
-<span>async def <span class="ident">toggle</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def toggle(self):
-    &#34;&#34;&#34;Toggles the relay state.
-
-    Example description JSON for this command from the director:
-    ```
-    {
-      &#34;display&#34;: &#34;Toggle the Front › Door Lock&#34;,
-      &#34;command&#34;: &#34;TOGGLE&#34;,
-      &#34;deviceId&#34;: 307
-    }
-    ```
-    &#34;&#34;&#34;
-
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;TOGGLE&#34;,
-        {},
-    )</code></pre>
-</details>
-<div class="desc"><p>Toggles the relay state.</p>
-<p>Example description JSON for this command from the director:</p>
-<pre><code>{
-  &quot;display&quot;: &quot;Toggle the Front › Door Lock&quot;,
-  &quot;command&quot;: &quot;TOGGLE&quot;,
-  &quot;deviceId&quot;: 307
-}
-</code></pre></div>
+<div class="desc"><p>Sets the fan speed or turns it off.</p>
+<h2 id="parameters">Parameters</h2>
+<p>speed (int): Fan speed level:
+0 - Off
+1 - Low
+2 - Medium
+3 - Medium High
+4 - High</p></div>
 </dd>
 </dl>
 </dd>
@@ -315,13 +305,12 @@ not 100% sure though.</p></div>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="pyControl4.relay.C4Relay" href="#pyControl4.relay.C4Relay">C4Relay</a></code></h4>
+<h4><code><a title="pyControl4.fan.C4Fan" href="#pyControl4.fan.C4Fan">C4Fan</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.relay.C4Relay.close" href="#pyControl4.relay.C4Relay.close">close</a></code></li>
-<li><code><a title="pyControl4.relay.C4Relay.getRelayState" href="#pyControl4.relay.C4Relay.getRelayState">getRelayState</a></code></li>
-<li><code><a title="pyControl4.relay.C4Relay.getRelayStateVerified" href="#pyControl4.relay.C4Relay.getRelayStateVerified">getRelayStateVerified</a></code></li>
-<li><code><a title="pyControl4.relay.C4Relay.open" href="#pyControl4.relay.C4Relay.open">open</a></code></li>
-<li><code><a title="pyControl4.relay.C4Relay.toggle" href="#pyControl4.relay.C4Relay.toggle">toggle</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.getSpeed" href="#pyControl4.fan.C4Fan.getSpeed">getSpeed</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.getState" href="#pyControl4.fan.C4Fan.getState">getState</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.setPreset" href="#pyControl4.fan.C4Fan.setPreset">setPreset</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.setSpeed" href="#pyControl4.fan.C4Fan.setSpeed">setSpeed</a></code></li>
 </ul>
 </li>
 </ul>

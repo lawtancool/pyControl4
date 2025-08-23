@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>pyControl4.climate API documentation</title>
+<meta name="description" content="Controls Control4 Climate Control devices.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>pyControl4.climate</code></h1>
+</header>
+<section id="section-intro">
+<p>Controls Control4 Climate Control devices.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pyControl4.climate.C4Climate"><code class="flex name class">
+<span>class <span class="ident">C4Climate</span></span>
+<span>(</span><span>C4Director, item_id)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class C4Climate(C4Entity):
+    # ------------------------
+    # HVAC and Fan States
+    # ------------------------
+
+    async def getHVACState(self):
+        &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;HVAC_STATE&#34;)
+
+    async def getFANState(self):
+        &#34;&#34;&#34;Returns the current power state of the fan (True=on, False=off).&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;FAN_STATE&#34;)
+
+    # ------------------------
+    # Mode Getters
+    # ------------------------
+
+    async def getHVACMode(self):
+        &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;HVAC_MODE&#34;)
+
+    async def getHVACModes(self):
+        &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;HVAC_MODES_LIST&#34;)
+
+    async def getFANMode(self):
+        &#34;&#34;&#34;Returns the currently active fan mode.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;FAN_MODE&#34;)
+
+    async def getFANModes(self):
+        &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;FAN_MODES_LIST&#34;)
+
+    # ------------------------
+    # Setpoint Getters
+    # ------------------------
+
+    async def getCoolSetpointF(self):
+        &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;COOL_SETPOINT_F&#34;)
+
+    async def getHeatSetpointF(self):
+        &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;HEAT_SETPOINT_F&#34;)
+
+    # ------------------------
+    # Sensor Readings
+    # ------------------------
+
+    async def getHumidity(self):
+        &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;HUMIDITY&#34;)
+
+    async def getCurrentTemperature(self):
+        &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id,
+                                                        &#34;TEMPERATURE_F&#34;)
+
+    # ------------------------
+    # Setters / Commands
+    # ------------------------
+
+    async def setTemperature(self, temp):
+        &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+        await self.setCoolSetpoint(temp)  # Delegates to the proper method
+
+    async def setCoolSetpoint(self, temp):
+        &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_SETPOINT_COOL&#34;,
+            {&#34;FAHRENHEIT&#34;: temp},
+        )
+
+    async def setHeatSetpoint(self, temp):
+        &#34;&#34;&#34;Sets the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_SETPOINT_HEAT&#34;,
+            {&#34;FAHRENHEIT&#34;: temp},
+        )
+
+    async def setHvacMode(self, mode):
+        &#34;&#34;&#34;Sets the HVAC operating mode (e.g., heat, cool, auto).&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_MODE_HVAC&#34;,
+            {&#34;MODE&#34;: mode},
+        )
+
+    async def setFanMode(self, mode):
+        &#34;&#34;&#34;Sets the fan operating mode (e.g., auto, on, circulate).&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_MODE_FAN&#34;,
+            {&#34;MODE&#34;: mode},
+        )
+
+    async def setPreset(self, preset):
+        &#34;&#34;&#34;Applies a predefined climate preset by name.&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_PRESET&#34;,
+            {&#34;NAME&#34;: preset},
+        )</code></pre>
+</details>
+<div class="desc"><p>Creates a Control4 object.</p>
+<h2 id="parameters">Parameters</h2>
+<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the device is connected to.</p>
+<p><code>item_id</code> - The Control4 item ID.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="pyControl4.C4Entity" href="index.html#pyControl4.C4Entity">C4Entity</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="pyControl4.climate.C4Climate.getCoolSetpointF"><code class="name flex">
+<span>async def <span class="ident">getCoolSetpointF</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getCoolSetpointF(self):
+    &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;COOL_SETPOINT_F&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the cooling setpoint temperature in Fahrenheit.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getCurrentTemperature"><code class="name flex">
+<span>async def <span class="ident">getCurrentTemperature</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getCurrentTemperature(self):
+    &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;TEMPERATURE_F&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the current ambient temperature in Fahrenheit.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getFANMode"><code class="name flex">
+<span>async def <span class="ident">getFANMode</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getFANMode(self):
+    &#34;&#34;&#34;Returns the currently active fan mode.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;FAN_MODE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the currently active fan mode.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getFANModes"><code class="name flex">
+<span>async def <span class="ident">getFANModes</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getFANModes(self):
+    &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;FAN_MODES_LIST&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns a list of supported fan modes.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getFANState"><code class="name flex">
+<span>async def <span class="ident">getFANState</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getFANState(self):
+    &#34;&#34;&#34;Returns the current power state of the fan (True=on, False=off).&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;FAN_STATE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the current power state of the fan (True=on, False=off).</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getHVACMode"><code class="name flex">
+<span>async def <span class="ident">getHVACMode</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHVACMode(self):
+    &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;HVAC_MODE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the currently active HVAC mode.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getHVACModes"><code class="name flex">
+<span>async def <span class="ident">getHVACModes</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHVACModes(self):
+    &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;HVAC_MODES_LIST&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns a list of supported HVAC modes.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getHVACState"><code class="name flex">
+<span>async def <span class="ident">getHVACState</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHVACState(self):
+    &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;HVAC_STATE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the current HVAC state (e.g., on/off or active mode).</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getHeatSetpointF"><code class="name flex">
+<span>async def <span class="ident">getHeatSetpointF</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHeatSetpointF(self):
+    &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;HEAT_SETPOINT_F&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the heating setpoint temperature in Fahrenheit.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getHumidity"><code class="name flex">
+<span>async def <span class="ident">getHumidity</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHumidity(self):
+    &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id,
+                                                    &#34;HUMIDITY&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the current humidity percentage.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setCoolSetpoint"><code class="name flex">
+<span>async def <span class="ident">setCoolSetpoint</span></span>(<span>self, temp)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setCoolSetpoint(self, temp):
+    &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_SETPOINT_COOL&#34;,
+        {&#34;FAHRENHEIT&#34;: temp},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the cooling setpoint temperature in Fahrenheit.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setFanMode"><code class="name flex">
+<span>async def <span class="ident">setFanMode</span></span>(<span>self, mode)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setFanMode(self, mode):
+    &#34;&#34;&#34;Sets the fan operating mode (e.g., auto, on, circulate).&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_MODE_FAN&#34;,
+        {&#34;MODE&#34;: mode},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the fan operating mode (e.g., auto, on, circulate).</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setHeatSetpoint"><code class="name flex">
+<span>async def <span class="ident">setHeatSetpoint</span></span>(<span>self, temp)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setHeatSetpoint(self, temp):
+    &#34;&#34;&#34;Sets the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_SETPOINT_HEAT&#34;,
+        {&#34;FAHRENHEIT&#34;: temp},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the heating setpoint temperature in Fahrenheit.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setHvacMode"><code class="name flex">
+<span>async def <span class="ident">setHvacMode</span></span>(<span>self, mode)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setHvacMode(self, mode):
+    &#34;&#34;&#34;Sets the HVAC operating mode (e.g., heat, cool, auto).&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_MODE_HVAC&#34;,
+        {&#34;MODE&#34;: mode},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the HVAC operating mode (e.g., heat, cool, auto).</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setPreset"><code class="name flex">
+<span>async def <span class="ident">setPreset</span></span>(<span>self, preset)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setPreset(self, preset):
+    &#34;&#34;&#34;Applies a predefined climate preset by name.&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_PRESET&#34;,
+        {&#34;NAME&#34;: preset},
+    )</code></pre>
+</details>
+<div class="desc"><p>Applies a predefined climate preset by name.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setTemperature"><code class="name flex">
+<span>async def <span class="ident">setTemperature</span></span>(<span>self, temp)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setTemperature(self, temp):
+    &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
+    await self.setCoolSetpoint(temp)  # Delegates to the proper method</code></pre>
+</details>
+<div class="desc"><p>Sets the cooling setpoint temperature in Fahrenheit.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="pyControl4" href="index.html">pyControl4</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pyControl4.climate.C4Climate" href="#pyControl4.climate.C4Climate">C4Climate</a></code></h4>
+<ul class="">
+<li><code><a title="pyControl4.climate.C4Climate.getCoolSetpointF" href="#pyControl4.climate.C4Climate.getCoolSetpointF">getCoolSetpointF</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getCurrentTemperature" href="#pyControl4.climate.C4Climate.getCurrentTemperature">getCurrentTemperature</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getFANMode" href="#pyControl4.climate.C4Climate.getFANMode">getFANMode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getFANModes" href="#pyControl4.climate.C4Climate.getFANModes">getFANModes</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getFANState" href="#pyControl4.climate.C4Climate.getFANState">getFANState</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHVACMode" href="#pyControl4.climate.C4Climate.getHVACMode">getHVACMode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHVACModes" href="#pyControl4.climate.C4Climate.getHVACModes">getHVACModes</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHVACState" href="#pyControl4.climate.C4Climate.getHVACState">getHVACState</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointF" href="#pyControl4.climate.C4Climate.getHeatSetpointF">getHeatSetpointF</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHumidity" href="#pyControl4.climate.C4Climate.getHumidity">getHumidity</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setCoolSetpoint" href="#pyControl4.climate.C4Climate.setCoolSetpoint">setCoolSetpoint</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setFanMode" href="#pyControl4.climate.C4Climate.setFanMode">setFanMode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setHeatSetpoint" href="#pyControl4.climate.C4Climate.setHeatSetpoint">setHeatSetpoint</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setHvacMode" href="#pyControl4.climate.C4Climate.setHvacMode">setHvacMode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setPreset" href="#pyControl4.climate.C4Climate.setPreset">setPreset</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setTemperature" href="#pyControl4.climate.C4Climate.setTemperature">setTemperature</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
