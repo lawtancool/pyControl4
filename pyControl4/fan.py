@@ -36,8 +36,7 @@ class C4Fan(C4Entity):
         Returns:
             int: Current fan speed (0–4).
         """
-        value = await self.director.getItemVariableValue(self.item_id,
-                                                         "CURRENT_SPEED")
+        value = await self.director.getItemVariableValue(self.item_id, "CURRENT_SPEED")
         return int(value)
 
     # ------------------------
