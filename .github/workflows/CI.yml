@@ -44,5 +44,5 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Black Code Formatter
-    - uses: psf/black@stable
+      uses: psf/black@stable
 
