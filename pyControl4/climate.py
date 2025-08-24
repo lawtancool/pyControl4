@@ -43,10 +43,18 @@ class C4Climate(C4Entity):
     async def getCoolSetpointF(self):
         """Returns the cooling setpoint temperature in Fahrenheit."""
         return await self.director.getItemVariableValue(self.item_id, "COOL_SETPOINT_F")
+    
+    async def getCoolSetpointC(self):
+        """Returns the cooling setpoint temperature in Celsius."""
+        return await self.director.getItemVariableValue(self.item_id, "COOL_SETPOINT_C")
 
     async def getHeatSetpointF(self):
         """Returns the heating setpoint temperature in Fahrenheit."""
         return await self.director.getItemVariableValue(self.item_id, "HEAT_SETPOINT_F")
+    
+    async def getHeatSetpointC(self):
+        """Returns the heating setpoint temperature in Celsius."""
+        return await self.director.getItemVariableValue(self.item_id, "HEAT_SETPOINT_C")
 
     # ------------------------
     # Sensor Readings
@@ -56,19 +64,19 @@ class C4Climate(C4Entity):
         """Returns the current humidity percentage."""
         return await self.director.getItemVariableValue(self.item_id, "HUMIDITY")
 
-    async def getCurrentTemperature(self):
+    async def getCurrentTemperatureF(self):
         """Returns the current ambient temperature in Fahrenheit."""
         return await self.director.getItemVariableValue(self.item_id, "TEMPERATURE_F")
+    
+    async def getCurrentTemperatureC(self):
+        """Returns the current ambient temperature in Celsius."""
+        return await self.director.getItemVariableValue(self.item_id, "TEMPERATURE_C")
 
     # ------------------------
     # Setters / Commands
     # ------------------------
 
-    async def setTemperature(self, temp):
-        """Sets the cooling setpoint temperature in Fahrenheit."""
-        await self.setCoolSetpoint(temp)  # Delegates to the proper method
-
-    async def setCoolSetpoint(self, temp):
+    async def setCoolSetpointF(self, temp):
         """Sets the cooling setpoint temperature in Fahrenheit."""
         await self.director.sendPostRequest(
             f"/api/v1/items/{self.item_id}/commands",
@@ -76,12 +84,28 @@ class C4Climate(C4Entity):
             {"FAHRENHEIT": temp},
         )
 
-    async def setHeatSetpoint(self, temp):
+    async def setCoolSetpointC(self, temp):
+        """Sets the cooling setpoint temperature in Celsius."""
+        await self.director.sendPostRequest(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SET_SETPOINT_COOL",
+            {"CELSIUS": temp},
+        )
+
+    async def setHeatSetpointF(self, temp):
         """Sets the heating setpoint temperature in Fahrenheit."""
         await self.director.sendPostRequest(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_SETPOINT_HEAT",
             {"FAHRENHEIT": temp},
+        )
+    
+    async def setHeatSetpointC(self, temp):
+        """Sets the heating setpoint temperature in Celsius."""
+        await self.director.sendPostRequest(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SET_SETPOINT_HEAT",
+            {"CELSIUS": temp},
         )
 
     async def setHvacMode(self, mode):
