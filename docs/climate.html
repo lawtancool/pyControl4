@@ -96,10 +96,18 @@ el.replaceWith(d);
     async def getCoolSetpointF(self):
         &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_F&#34;)
+    
+    async def getCoolSetpointC(self):
+        &#34;&#34;&#34;Returns the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_C&#34;)
 
     async def getHeatSetpointF(self):
         &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_F&#34;)
+    
+    async def getHeatSetpointC(self):
+        &#34;&#34;&#34;Returns the heating setpoint temperature in Celsius.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_C&#34;)
 
     # ------------------------
     # Sensor Readings
@@ -109,19 +117,19 @@ el.replaceWith(d);
         &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;HUMIDITY&#34;)
 
-    async def getCurrentTemperature(self):
+    async def getCurrentTemperatureF(self):
         &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)
+    
+    async def getCurrentTemperatureC(self):
+        &#34;&#34;&#34;Returns the current ambient temperature in Celsius.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_C&#34;)
 
     # ------------------------
     # Setters / Commands
     # ------------------------
 
-    async def setTemperature(self, temp):
-        &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        await self.setCoolSetpoint(temp)  # Delegates to the proper method
-
-    async def setCoolSetpoint(self, temp):
+    async def setCoolSetpointF(self, temp):
         &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
         await self.director.sendPostRequest(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
@@ -129,12 +137,28 @@ el.replaceWith(d);
             {&#34;FAHRENHEIT&#34;: temp},
         )
 
-    async def setHeatSetpoint(self, temp):
+    async def setCoolSetpointC(self, temp):
+        &#34;&#34;&#34;Sets the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_SETPOINT_COOL&#34;,
+            {&#34;CELSIUS&#34;: temp},
+        )
+
+    async def setHeatSetpointF(self, temp):
         &#34;&#34;&#34;Sets the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
         await self.director.sendPostRequest(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_SETPOINT_HEAT&#34;,
             {&#34;FAHRENHEIT&#34;: temp},
+        )
+    
+    async def setHeatSetpointC(self, temp):
+        &#34;&#34;&#34;Sets the heating setpoint temperature in Celsius.&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_SETPOINT_HEAT&#34;,
+            {&#34;CELSIUS&#34;: temp},
         )
 
     async def setHvacMode(self, mode):
@@ -171,6 +195,20 @@ el.replaceWith(d);
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="pyControl4.climate.C4Climate.getCoolSetpointC"><code class="name flex">
+<span>async def <span class="ident">getCoolSetpointC</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getCoolSetpointC(self):
+    &#34;&#34;&#34;Returns the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_C&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the cooling setpoint temperature in Celsius.</p></div>
+</dd>
 <dt id="pyControl4.climate.C4Climate.getCoolSetpointF"><code class="name flex">
 <span>async def <span class="ident">getCoolSetpointF</span></span>(<span>self)</span>
 </code></dt>
@@ -185,15 +223,29 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Returns the cooling setpoint temperature in Fahrenheit.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getCurrentTemperature"><code class="name flex">
-<span>async def <span class="ident">getCurrentTemperature</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.getCurrentTemperatureC"><code class="name flex">
+<span>async def <span class="ident">getCurrentTemperatureC</span></span>(<span>self)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getCurrentTemperature(self):
+<pre><code class="python">async def getCurrentTemperatureC(self):
+    &#34;&#34;&#34;Returns the current ambient temperature in Celsius.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_C&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the current ambient temperature in Celsius.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getCurrentTemperatureF"><code class="name flex">
+<span>async def <span class="ident">getCurrentTemperatureF</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getCurrentTemperatureF(self):
     &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
     return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)</code></pre>
 </details>
@@ -283,6 +335,20 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Returns the current HVAC state (e.g., on/off or active mode).</p></div>
 </dd>
+<dt id="pyControl4.climate.C4Climate.getHeatSetpointC"><code class="name flex">
+<span>async def <span class="ident">getHeatSetpointC</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHeatSetpointC(self):
+    &#34;&#34;&#34;Returns the heating setpoint temperature in Celsius.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_C&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the heating setpoint temperature in Celsius.</p></div>
+</dd>
 <dt id="pyControl4.climate.C4Climate.getHeatSetpointF"><code class="name flex">
 <span>async def <span class="ident">getHeatSetpointF</span></span>(<span>self)</span>
 </code></dt>
@@ -311,15 +377,33 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Returns the current humidity percentage.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setCoolSetpoint"><code class="name flex">
-<span>async def <span class="ident">setCoolSetpoint</span></span>(<span>self, temp)</span>
+<dt id="pyControl4.climate.C4Climate.setCoolSetpointC"><code class="name flex">
+<span>async def <span class="ident">setCoolSetpointC</span></span>(<span>self, temp)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setCoolSetpoint(self, temp):
+<pre><code class="python">async def setCoolSetpointC(self, temp):
+    &#34;&#34;&#34;Sets the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_SETPOINT_COOL&#34;,
+        {&#34;CELSIUS&#34;: temp},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the cooling setpoint temperature in Celsius.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setCoolSetpointF"><code class="name flex">
+<span>async def <span class="ident">setCoolSetpointF</span></span>(<span>self, temp)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setCoolSetpointF(self, temp):
     &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
     await self.director.sendPostRequest(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
@@ -347,15 +431,33 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Sets the fan operating mode (e.g., auto, on, circulate).</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setHeatSetpoint"><code class="name flex">
-<span>async def <span class="ident">setHeatSetpoint</span></span>(<span>self, temp)</span>
+<dt id="pyControl4.climate.C4Climate.setHeatSetpointC"><code class="name flex">
+<span>async def <span class="ident">setHeatSetpointC</span></span>(<span>self, temp)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setHeatSetpoint(self, temp):
+<pre><code class="python">async def setHeatSetpointC(self, temp):
+    &#34;&#34;&#34;Sets the heating setpoint temperature in Celsius.&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_SETPOINT_HEAT&#34;,
+        {&#34;CELSIUS&#34;: temp},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the heating setpoint temperature in Celsius.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.setHeatSetpointF"><code class="name flex">
+<span>async def <span class="ident">setHeatSetpointF</span></span>(<span>self, temp)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setHeatSetpointF(self, temp):
     &#34;&#34;&#34;Sets the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
     await self.director.sendPostRequest(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
@@ -401,20 +503,6 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Applies a predefined climate preset by name.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setTemperature"><code class="name flex">
-<span>async def <span class="ident">setTemperature</span></span>(<span>self, temp)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def setTemperature(self, temp):
-    &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    await self.setCoolSetpoint(temp)  # Delegates to the proper method</code></pre>
-</details>
-<div class="desc"><p>Sets the cooling setpoint temperature in Fahrenheit.</p></div>
-</dd>
 </dl>
 </dd>
 </dl>
@@ -435,22 +523,26 @@ el.replaceWith(d);
 <li>
 <h4><code><a title="pyControl4.climate.C4Climate" href="#pyControl4.climate.C4Climate">C4Climate</a></code></h4>
 <ul class="">
+<li><code><a title="pyControl4.climate.C4Climate.getCoolSetpointC" href="#pyControl4.climate.C4Climate.getCoolSetpointC">getCoolSetpointC</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getCoolSetpointF" href="#pyControl4.climate.C4Climate.getCoolSetpointF">getCoolSetpointF</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getCurrentTemperature" href="#pyControl4.climate.C4Climate.getCurrentTemperature">getCurrentTemperature</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getCurrentTemperatureC" href="#pyControl4.climate.C4Climate.getCurrentTemperatureC">getCurrentTemperatureC</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getCurrentTemperatureF" href="#pyControl4.climate.C4Climate.getCurrentTemperatureF">getCurrentTemperatureF</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getFANMode" href="#pyControl4.climate.C4Climate.getFANMode">getFANMode</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getFANModes" href="#pyControl4.climate.C4Climate.getFANModes">getFANModes</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getFANState" href="#pyControl4.climate.C4Climate.getFANState">getFANState</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHVACMode" href="#pyControl4.climate.C4Climate.getHVACMode">getHVACMode</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHVACModes" href="#pyControl4.climate.C4Climate.getHVACModes">getHVACModes</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHVACState" href="#pyControl4.climate.C4Climate.getHVACState">getHVACState</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointC" href="#pyControl4.climate.C4Climate.getHeatSetpointC">getHeatSetpointC</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointF" href="#pyControl4.climate.C4Climate.getHeatSetpointF">getHeatSetpointF</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHumidity" href="#pyControl4.climate.C4Climate.getHumidity">getHumidity</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setCoolSetpoint" href="#pyControl4.climate.C4Climate.setCoolSetpoint">setCoolSetpoint</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setCoolSetpointC" href="#pyControl4.climate.C4Climate.setCoolSetpointC">setCoolSetpointC</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setCoolSetpointF" href="#pyControl4.climate.C4Climate.setCoolSetpointF">setCoolSetpointF</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setFanMode" href="#pyControl4.climate.C4Climate.setFanMode">setFanMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setHeatSetpoint" href="#pyControl4.climate.C4Climate.setHeatSetpoint">setHeatSetpoint</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setHeatSetpointC" href="#pyControl4.climate.C4Climate.setHeatSetpointC">setHeatSetpointC</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setHeatSetpointF" href="#pyControl4.climate.C4Climate.setHeatSetpointF">setHeatSetpointF</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setHvacMode" href="#pyControl4.climate.C4Climate.setHvacMode">setHvacMode</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setPreset" href="#pyControl4.climate.C4Climate.setPreset">setPreset</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setTemperature" href="#pyControl4.climate.C4Climate.setTemperature">setTemperature</a></code></li>
 </ul>
 </li>
 </ul>
