@@ -89,6 +89,14 @@ el.replaceWith(d);
         &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODES_LIST&#34;)
 
+    async def getHoldMode(self):
+        &#34;&#34;&#34;Returns the currently active hold mode.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODE&#34;)
+
+    async def getHoldModes(self):
+        &#34;&#34;&#34;Returns a list of supported hold modes.&#34;&#34;&#34;
+        return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODES_LIST&#34;)
+
     # ------------------------
     # Setpoint Getters
     # ------------------------
@@ -96,7 +104,7 @@ el.replaceWith(d);
     async def getCoolSetpointF(self):
         &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_F&#34;)
-    
+
     async def getCoolSetpointC(self):
         &#34;&#34;&#34;Returns the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_C&#34;)
@@ -104,7 +112,7 @@ el.replaceWith(d);
     async def getHeatSetpointF(self):
         &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_F&#34;)
-    
+
     async def getHeatSetpointC(self):
         &#34;&#34;&#34;Returns the heating setpoint temperature in Celsius.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_C&#34;)
@@ -120,7 +128,7 @@ el.replaceWith(d);
     async def getCurrentTemperatureF(self):
         &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)
-    
+
     async def getCurrentTemperatureC(self):
         &#34;&#34;&#34;Returns the current ambient temperature in Celsius.&#34;&#34;&#34;
         return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_C&#34;)
@@ -152,7 +160,7 @@ el.replaceWith(d);
             &#34;SET_SETPOINT_HEAT&#34;,
             {&#34;FAHRENHEIT&#34;: temp},
         )
-    
+
     async def setHeatSetpointC(self, temp):
         &#34;&#34;&#34;Sets the heating setpoint temperature in Celsius.&#34;&#34;&#34;
         await self.director.sendPostRequest(
@@ -183,6 +191,14 @@ el.replaceWith(d);
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_PRESET&#34;,
             {&#34;NAME&#34;: preset},
+        )
+
+    async def setHoldMode(self, mode):
+        &#34;&#34;&#34;Sets the hold mode.&#34;&#34;&#34;
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_MODE_HOLD&#34;,
+            {&#34;MODE&#34;: mode},
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
@@ -363,6 +379,34 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Returns the heating setpoint temperature in Fahrenheit.</p></div>
 </dd>
+<dt id="pyControl4.climate.C4Climate.getHoldMode"><code class="name flex">
+<span>async def <span class="ident">getHoldMode</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHoldMode(self):
+    &#34;&#34;&#34;Returns the currently active hold mode.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the currently active hold mode.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.getHoldModes"><code class="name flex">
+<span>async def <span class="ident">getHoldModes</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def getHoldModes(self):
+    &#34;&#34;&#34;Returns a list of supported hold modes.&#34;&#34;&#34;
+    return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODES_LIST&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns a list of supported hold modes.</p></div>
+</dd>
 <dt id="pyControl4.climate.C4Climate.getHumidity"><code class="name flex">
 <span>async def <span class="ident">getHumidity</span></span>(<span>self)</span>
 </code></dt>
@@ -467,6 +511,24 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Sets the heating setpoint temperature in Fahrenheit.</p></div>
 </dd>
+<dt id="pyControl4.climate.C4Climate.setHoldMode"><code class="name flex">
+<span>async def <span class="ident">setHoldMode</span></span>(<span>self, mode)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setHoldMode(self, mode):
+    &#34;&#34;&#34;Sets the hold mode.&#34;&#34;&#34;
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_MODE_HOLD&#34;,
+        {&#34;MODE&#34;: mode},
+    )</code></pre>
+</details>
+<div class="desc"><p>Sets the hold mode.</p></div>
+</dd>
 <dt id="pyControl4.climate.C4Climate.setHvacMode"><code class="name flex">
 <span>async def <span class="ident">setHvacMode</span></span>(<span>self, mode)</span>
 </code></dt>
@@ -535,12 +597,15 @@ el.replaceWith(d);
 <li><code><a title="pyControl4.climate.C4Climate.getHVACState" href="#pyControl4.climate.C4Climate.getHVACState">getHVACState</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointC" href="#pyControl4.climate.C4Climate.getHeatSetpointC">getHeatSetpointC</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointF" href="#pyControl4.climate.C4Climate.getHeatSetpointF">getHeatSetpointF</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHoldMode" href="#pyControl4.climate.C4Climate.getHoldMode">getHoldMode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.getHoldModes" href="#pyControl4.climate.C4Climate.getHoldModes">getHoldModes</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.getHumidity" href="#pyControl4.climate.C4Climate.getHumidity">getHumidity</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setCoolSetpointC" href="#pyControl4.climate.C4Climate.setCoolSetpointC">setCoolSetpointC</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setCoolSetpointF" href="#pyControl4.climate.C4Climate.setCoolSetpointF">setCoolSetpointF</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setFanMode" href="#pyControl4.climate.C4Climate.setFanMode">setFanMode</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setHeatSetpointC" href="#pyControl4.climate.C4Climate.setHeatSetpointC">setHeatSetpointC</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setHeatSetpointF" href="#pyControl4.climate.C4Climate.setHeatSetpointF">setHeatSetpointF</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.setHoldMode" href="#pyControl4.climate.C4Climate.setHoldMode">setHoldMode</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setHvacMode" href="#pyControl4.climate.C4Climate.setHvacMode">setHvacMode</a></code></li>
 <li><code><a title="pyControl4.climate.C4Climate.setPreset" href="#pyControl4.climate.C4Climate.setPreset">setPreset</a></code></li>
 </ul>
