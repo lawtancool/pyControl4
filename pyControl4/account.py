@@ -64,14 +64,14 @@ class C4Account:
         }
         if self.session is None:
             async with aiohttp.ClientSession() as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.post(
                         AUTHENTICATION_ENDPOINT, json=dataDictionary
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.post(
                     AUTHENTICATION_ENDPOINT, json=dataDictionary
                 ) as resp:
@@ -94,12 +94,12 @@ class C4Account:
             raise
         if self.session is None:
             async with aiohttp.ClientSession() as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.get(uri, headers=headers) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.get(uri, headers=headers) as resp:
                     await checkResponseForError(await resp.text())
                     return await resp.text()
@@ -125,7 +125,7 @@ class C4Account:
         }
         if self.session is None:
             async with aiohttp.ClientSession() as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.post(
                         CONTROLLER_AUTHORIZATION_ENDPOINT,
                         headers=headers,
@@ -134,7 +134,7 @@ class C4Account:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.post(
                     CONTROLLER_AUTHORIZATION_ENDPOINT,
                     headers=headers,
