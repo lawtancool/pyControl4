@@ -50,14 +50,14 @@ class C4Director:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
             ) as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.get(
                         self.base_url + uri, headers=self.headers
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
@@ -86,14 +86,14 @@ class C4Director:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
             ) as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.post(
                         self.base_url + uri, headers=self.headers, json=dataDictionary
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
