@@ -44,7 +44,9 @@ class C4Light(C4Entity):
             {"LEVEL": level, "TIME": time},
         )
 
-    async def setColorXY(self, x: float, y: float, *, rate: int | None = None, mode: int = 0):
+    async def setColorXY(
+        self, x: float, y: float, *, rate: int | None = None, mode: int = 0
+    ):
         """
         Sends SET_COLOR_TARGET with xy and mode.
         - x, y: CIE 1931 coordinates (0..1 ~ typically)
@@ -80,7 +82,7 @@ class C4Light(C4Entity):
         x, y = self._cct_to_xy(kelvin)
         await self.setColorXY(x, y, rate=rate, mode=1)
 
-# ---------- Color Utilities ----------
+    # ---------- Color Utilities ----------
     @staticmethod
     def _hex_to_rgb(color: str) -> tuple[int, int, int]:
         s = color.strip()
@@ -126,14 +128,26 @@ class C4Light(C4Entity):
     def _cct_to_xy(kelvin: int) -> tuple[float, float]:
         """Approximation CIE 1931 xy for 1667K..25000K (classic formulas)."""
         K = float(kelvin)
-        if K < 1667: K = 1667.0
-        if K > 25000: K = 25000.0
+        if K < 1667:
+            K = 1667.0
+        if K > 25000:
+            K = 25000.0
 
         # x as a function of K
         if 1667 <= K <= 4000:
-            x = (-0.2661239 * 1e9) / (K ** 3) - (0.2343580 * 1e6) / (K ** 2) + (0.8776956 * 1e3) / K + 0.179910
+            x = (
+                (-0.2661239 * 1e9) / (K**3)
+                - (0.2343580 * 1e6) / (K**2)
+                + (0.8776956 * 1e3) / K
+                + 0.179910
+            )
         else:  # 4000..25000
-            x = (-3.0258469 * 1e9) / (K ** 3) + (2.1070379 * 1e6) / (K ** 2) + (0.2226347 * 1e3) / K + 0.240390
+            x = (
+                (-3.0258469 * 1e9) / (K**3)
+                + (2.1070379 * 1e6) / (K**2)
+                + (0.2226347 * 1e3) / K
+                + 0.240390
+            )
 
         # y as a function of x and K
         if 1667 <= K <= 2222:
@@ -144,5 +158,3 @@ class C4Light(C4Entity):
             y = 3.0817580 * x**3 - 5.87338670 * x**2 + 3.75112997 * x - 0.37001483
 
         return round(x, 4), round(y, 4)
-
-    

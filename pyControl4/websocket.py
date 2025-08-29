@@ -116,18 +116,20 @@ class C4Websocket:
         self.connect_callback = connect_callback
         self.disconnect_callback = disconnect_callback
 
-        self._item_callbacks = dict()  
+        self._item_callbacks = dict()
         # Initialize self._sio to None
         self._sio = None
 
     @property
     def item_callbacks(self):
         """Returns a dictionary of registered item ids (key) and their callbacks (value).
-        
+
         MODIFIED: Returns flattened dict for compatibility with existing code.
         """
-        return {item_id: callbacks[0] if callbacks else None 
-                for item_id, callbacks in self._item_callbacks.items()}
+        return {
+            item_id: callbacks[0] if callbacks else None
+            for item_id, callbacks in self._item_callbacks.items()
+        }
 
     def add_item_callback(self, item_id, callback):
         """Register a callback to receive updates about an item.
@@ -141,7 +143,7 @@ class C4Websocket:
 
         if item_id not in self._item_callbacks:
             self._item_callbacks[item_id] = []
-            
+
         # Avoid duplicates
         if callback not in self._item_callbacks[item_id]:
             self._item_callbacks[item_id].append(callback)
@@ -156,7 +158,7 @@ class C4Websocket:
         """
         if item_id not in self._item_callbacks:
             return
-            
+
         if callback is None:
             # Remove all callbacks for this item_id
             del self._item_callbacks[item_id]
@@ -168,7 +170,7 @@ class C4Websocket:
                 if not self._item_callbacks[item_id]:
                     del self._item_callbacks[item_id]
             except ValueError:
-                pass 
+                pass
 
     async def sio_connect(self, director_bearer_token):
         """Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
@@ -218,12 +220,12 @@ class C4Websocket:
         """Process an incoming event message."""
         _LOGGER.debug(message)
         try:
-            callbacks = self._item_callbacks[message["iddevice"]]  
+            callbacks = self._item_callbacks[message["iddevice"]]
         except KeyError:
             _LOGGER.debug("No Callback for device id {}".format(message["iddevice"]))
             return True
 
-        for callback in callbacks[:]:  
+        for callback in callbacks[:]:
             try:
                 if isinstance(message, list):
                     for m in message:
@@ -231,7 +233,9 @@ class C4Websocket:
                 else:
                     await callback(message["iddevice"], message)
             except Exception as exc:
-                _LOGGER.warning("Captured exception during callback: {}".format(str(exc)))
+                _LOGGER.warning(
+                    "Captured exception during callback: {}".format(str(exc))
+                )
 
     async def _execute_callback(self, callback, *args, **kwargs):
         """Callback with some data capturing any exceptions."""
