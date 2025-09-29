@@ -2,6 +2,7 @@
 
 import aiohttp
 import async_timeout
+from .compat import timeout_ctx
 import socketio_v4 as socketio
 import logging
 
@@ -60,7 +61,7 @@ class _C4DirectorNamespace(socketio.AsyncClientNamespace):
                 async with aiohttp.ClientSession(
                     connector=aiohttp.TCPConnector(verify_ssl=False)
                 ) as session:
-                    with async_timeout.timeout(10):
+                    async with timeout_ctx(10):
                         async with session.get(
                             self.url + self.uri,
                             params={"JWT": self.token, "SubscriptionClient": clientId},
@@ -71,7 +72,7 @@ class _C4DirectorNamespace(socketio.AsyncClientNamespace):
                             self.subscriptionId = data["subscriptionId"]
                             await self.emit("startSubscription", self.subscriptionId)
             else:
-                with async_timeout.timeout(10):
+                async with timeout_ctx(10):
                     async with self.session.get(
                         self.url + self.uri,
                         params={"JWT": self.token, "SubscriptionClient": clientId},
