@@ -141,7 +141,9 @@ class C4SecurityPanel(C4Entity):
         data = await self.director.getItemInfo(self.item_id)
         jsonDictionary = json.loads(data)
 
-        capabilities = jsonDictionary[0].get("capabilities", {}) if jsonDictionary else {}
+        capabilities = (
+            jsonDictionary[0].get("capabilities", {}) if jsonDictionary else {}
+        )
         if capabilities.get("has_fire"):
             types_list.append("Fire")
         if capabilities.get("has_medical"):
