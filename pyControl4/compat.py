@@ -37,5 +37,3 @@ def timeout_ctx(seconds: float):
         return cm
     # Fallback: wrap sync context manager for async `async with` usage
     return _AsyncifyContextManager(cm)
-
-
