@@ -2,6 +2,12 @@ from pyControl4.account import C4Account
 from pyControl4.director import C4Director
 from pyControl4.error_handling import checkResponseForError
 
+# The following historical imports are intentionally preserved as comments
+# to keep test usage examples discoverable without affecting runtime:
+# from pyControl4.light import C4Light
+# from pyControl4.alarm import C4SecurityPanel, C4ContactSensor
+# from login_info import *
+
 import asyncio
 import json
 import aiohttp
