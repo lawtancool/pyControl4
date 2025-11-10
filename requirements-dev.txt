@@ -1,5 +1,4 @@
 ﻿aiohttp
-async_timeout
 xmltodict
 python-socketio-v4
 websocket-client
