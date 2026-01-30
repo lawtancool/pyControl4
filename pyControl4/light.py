@@ -44,9 +44,8 @@ class C4Light(C4Entity):
             {"LEVEL": level, "TIME": time},
         )
 
-    async def setColorXY(
-        self, x: float, y: float, *, rate: int | None = None):
-        """ Sends SET_COLOR_TARGET with xy """
+    async def setColorXY(self, x: float, y: float, *, rate: int | None = None):
+        """Sends SET_COLOR_TARGET with xy"""
         params = {
             "LIGHT_COLOR_TARGET_X": float(x),
             "LIGHT_COLOR_TARGET_Y": float(y),
