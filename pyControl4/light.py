@@ -45,18 +45,12 @@ class C4Light(C4Entity):
         )
 
     async def setColorXY(
-        self, x: float, y: float, *, rate: int | None = None, mode: int = 0
-    ):
-        """
-        Sends SET_COLOR_TARGET with xy and mode.
-        - x, y: CIE 1931 coordinates (0..1 ~ typically)
-        - rate: ramp duration in milliseconds (Optional)
-        - mode: 0 = full color, 1 = CCT
-        """
+        self, x: float, y: float, *, rate: int | None = None):
+        """ Sends SET_COLOR_TARGET with xy """
         params = {
             "LIGHT_COLOR_TARGET_X": float(x),
             "LIGHT_COLOR_TARGET_Y": float(y),
-            "LIGHT_COLOR_TARGET_MODE": int(mode),
+            "LIGHT_COLOR_TARGET_MODE": 0,
         }
         if rate is not None:
             params["RATE"] = int(rate)
