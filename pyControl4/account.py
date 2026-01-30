@@ -6,7 +6,6 @@ import aiohttp
 import async_timeout
 import json
 import logging
-import datetime
 
 from .error_handling import checkResponseForError
 
