@@ -9,7 +9,7 @@ import asyncio
 import json
 import aiohttp
 
-ip = "192.168.2.40"
+ip = "192.168.1.25"
 
 # asyncio.run(
 #     checkResponseForError(
@@ -39,10 +39,10 @@ director_bearer_token = asyncio.run(
 # print(director_bearer_token)
 director = C4Director(ip, director_bearer_token["token"])
 
-# alarm = C4SecurityPanel(director, 460)
-# print(asyncio.run(alarm.getEmergencyTypes()))
+alarm = C4SecurityPanel(director, 460)
+print(asyncio.run(alarm.getEmergencyTypes()))
 
-print(asyncio.run(director.getItemSetup(293)))
+print(asyncio.run(director.getItemSetup(471)))
 
 # sensor = C4ContactSensor(director, 471)
 # print(asyncio.run(sensor.getContactState()))
@@ -54,8 +54,6 @@ print(asyncio.run(director.getItemSetup(293)))
 
 # print(asyncio.run(director.getAllItemVariableValue("LIGHT_LEVEL")))
 
-# light = C4Light(director, 789)
+# light = C4Light(director, 253)
 # asyncio.run(light.rampToLevel(10, 10000))
 # print(asyncio.run(light.getState()))
-# asyncio.run(light.setColorTemperature(4000, rate=1000))
-# asyncio.run(light.setColorRGB(255, 0, 0, rate=1000))

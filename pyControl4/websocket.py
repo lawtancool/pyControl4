@@ -122,10 +122,7 @@ class C4Websocket:
 
     @property
     def item_callbacks(self):
-        """Returns a dictionary of registered item ids (key) and their callbacks (value).
-
-        MODIFIED: Returns flattened dict for compatibility with existing code.
-        """
+        """Returns a dictionary of registered item ids (key) and their callbacks (value)."""
         return {
             item_id: callbacks[0] if callbacks else None
             for item_id, callbacks in self._item_callbacks.items()
@@ -133,8 +130,6 @@ class C4Websocket:
 
     def add_item_callback(self, item_id, callback):
         """Register a callback to receive updates about an item.
-        MODIFIED: Now supports multiple callbacks per item_id.
-
         Parameters:
             `item_id` - The Control4 item ID.
             `callback` - The callback to be called when an update is received for the provided item id.
@@ -150,8 +145,6 @@ class C4Websocket:
 
     def remove_item_callback(self, item_id, callback=None):
         """Unregister callback(s) for an item.
-        MODIFIED: Supports selective or complete removal.
-
         Parameters:
             `item_id` - The Control4 item ID.
             `callback` - (Optional) Specific callback to remove. If None, removes all callbacks for this item_id.
