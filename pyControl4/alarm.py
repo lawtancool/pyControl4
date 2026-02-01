@@ -152,19 +152,16 @@ class C4SecurityPanel(C4Entity):
 
         return types_list
 
-    async def triggerEmergency(self, usercode, type):
+    async def triggerEmergency(self, type):
         """Triggers an emergency of the specified type.
 
         Parameters:
-            `usercode` - PIN/code for disarming the system.
-
             `type` - Type of emergency: "Fire", "Medical", "Panic", or "Police"
         """
-        usercode = str(usercode)
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
-            "PARTITION_DISARM",
-            {"UserCode": usercode},
+            "EXECUTE_EMERGENCY",
+            {"EmergencyType": type},
         )
 
     async def sendKeyPress(self, key):
