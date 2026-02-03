@@ -86,40 +86,54 @@ el.replaceWith(d);
         self.connect_callback = connect_callback
         self.disconnect_callback = disconnect_callback
 
-        # Keep track of the callbacks registered for each item id
         self._item_callbacks = dict()
         # Initialize self._sio to None
         self._sio = None
 
     @property
     def item_callbacks(self):
-        &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).
-
-        item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.
-        &#34;&#34;&#34;
-        return self._item_callbacks
+        &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).&#34;&#34;&#34;
+        return {
+            item_id: callbacks[0] if callbacks else None
+            for item_id, callbacks in self._item_callbacks.items()
+        }
 
     def add_item_callback(self, item_id, callback):
         &#34;&#34;&#34;Register a callback to receive updates about an item.
-        If a callback is already registered for the item, it will be overwritten with the provided callback.
-
         Parameters:
             `item_id` - The Control4 item ID.
-
             `callback` - The callback to be called when an update is received for the provided item id.
         &#34;&#34;&#34;
-
         _LOGGER.debug(&#34;Subscribing to updates for item id: %s&#34;, item_id)
 
-        self._item_callbacks[item_id] = callback
+        if item_id not in self._item_callbacks:
+            self._item_callbacks[item_id] = []
 
-    def remove_item_callback(self, item_id):
-        &#34;&#34;&#34;Unregister callback for an item.
+        # Avoid duplicates
+        if callback not in self._item_callbacks[item_id]:
+            self._item_callbacks[item_id].append(callback)
 
+    def remove_item_callback(self, item_id, callback=None):
+        &#34;&#34;&#34;Unregister callback(s) for an item.
         Parameters:
             `item_id` - The Control4 item ID.
+            `callback` - (Optional) Specific callback to remove. If None, removes all callbacks for this item_id.
         &#34;&#34;&#34;
-        self._item_callbacks.pop(item_id)
+        if item_id not in self._item_callbacks:
+            return
+
+        if callback is None:
+            # Remove all callbacks for this item_id
+            del self._item_callbacks[item_id]
+        else:
+            # Remove a specific callback
+            try:
+                self._item_callbacks[item_id].remove(callback)
+                # If no more callbacks, remove the entry
+                if not self._item_callbacks[item_id]:
+                    del self._item_callbacks[item_id]
+            except ValueError:
+                pass
 
     async def sio_connect(self, director_bearer_token):
         &#34;&#34;&#34;Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
@@ -169,19 +183,25 @@ el.replaceWith(d);
         &#34;&#34;&#34;Process an incoming event message.&#34;&#34;&#34;
         _LOGGER.debug(message)
         try:
-            c = self._item_callbacks[message[&#34;iddevice&#34;]]
+            callbacks = self._item_callbacks[message[&#34;iddevice&#34;]]
         except KeyError:
             _LOGGER.debug(&#34;No Callback for device id {}&#34;.format(message[&#34;iddevice&#34;]))
             return True
 
-        if isinstance(message, list):
-            for m in message:
-                await c(message[&#34;iddevice&#34;], m)
-        else:
-            await c(message[&#34;iddevice&#34;], message)
+        for callback in callbacks[:]:
+            try:
+                if isinstance(message, list):
+                    for m in message:
+                        await callback(message[&#34;iddevice&#34;], m)
+                else:
+                    await callback(message[&#34;iddevice&#34;], message)
+            except Exception as exc:
+                _LOGGER.warning(
+                    &#34;Captured exception during callback: {}&#34;.format(str(exc))
+                )
 
     async def _execute_callback(self, callback, *args, **kwargs):
-        &#34;&#34;&#34;Callback with some data capturing any excpetions.&#34;&#34;&#34;
+        &#34;&#34;&#34;Callback with some data capturing any exceptions.&#34;&#34;&#34;
         try:
             self.sio.emit(&#34;ping&#34;)
             await callback(*args, **kwargs)
@@ -209,14 +229,13 @@ close its own <code>ClientSession</code>s as needed.</p>
 </summary>
 <pre><code class="python">@property
 def item_callbacks(self):
-    &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).
-
-    item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.
-    &#34;&#34;&#34;
-    return self._item_callbacks</code></pre>
+    &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks (value).&#34;&#34;&#34;
+    return {
+        item_id: callbacks[0] if callbacks else None
+        for item_id, callbacks in self._item_callbacks.items()
+    }</code></pre>
 </details>
-<div class="desc"><p>Returns a dictionary of registered item ids (key) and their callbacks (value).</p>
-<p>item_callbacks cannot be modified directly. Use add_item_callback() and remove_item_callback() instead.</p></div>
+<div class="desc"><p>Returns a dictionary of registered item ids (key) and their callbacks (value).</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -231,43 +250,58 @@ def item_callbacks(self):
 </summary>
 <pre><code class="python">def add_item_callback(self, item_id, callback):
     &#34;&#34;&#34;Register a callback to receive updates about an item.
-    If a callback is already registered for the item, it will be overwritten with the provided callback.
-
     Parameters:
         `item_id` - The Control4 item ID.
-
         `callback` - The callback to be called when an update is received for the provided item id.
     &#34;&#34;&#34;
-
     _LOGGER.debug(&#34;Subscribing to updates for item id: %s&#34;, item_id)
 
-    self._item_callbacks[item_id] = callback</code></pre>
+    if item_id not in self._item_callbacks:
+        self._item_callbacks[item_id] = []
+
+    # Avoid duplicates
+    if callback not in self._item_callbacks[item_id]:
+        self._item_callbacks[item_id].append(callback)</code></pre>
 </details>
-<div class="desc"><p>Register a callback to receive updates about an item.
-If a callback is already registered for the item, it will be overwritten with the provided callback.</p>
+<div class="desc"><p>Register a callback to receive updates about an item.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.</p>
-<p><code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
+<p><code>item_id</code> - The Control4 item ID.
+<code>callback</code> - The callback to be called when an update is received for the provided item id.</p></div>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.remove_item_callback"><code class="name flex">
-<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id)</span>
+<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id, callback=None)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def remove_item_callback(self, item_id):
-    &#34;&#34;&#34;Unregister callback for an item.
-
+<pre><code class="python">def remove_item_callback(self, item_id, callback=None):
+    &#34;&#34;&#34;Unregister callback(s) for an item.
     Parameters:
         `item_id` - The Control4 item ID.
+        `callback` - (Optional) Specific callback to remove. If None, removes all callbacks for this item_id.
     &#34;&#34;&#34;
-    self._item_callbacks.pop(item_id)</code></pre>
+    if item_id not in self._item_callbacks:
+        return
+
+    if callback is None:
+        # Remove all callbacks for this item_id
+        del self._item_callbacks[item_id]
+    else:
+        # Remove a specific callback
+        try:
+            self._item_callbacks[item_id].remove(callback)
+            # If no more callbacks, remove the entry
+            if not self._item_callbacks[item_id]:
+                del self._item_callbacks[item_id]
+        except ValueError:
+            pass</code></pre>
 </details>
-<div class="desc"><p>Unregister callback for an item.</p>
+<div class="desc"><p>Unregister callback(s) for an item.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.</p></div>
+<p><code>item_id</code> - The Control4 item ID.
+<code>callback</code> - (Optional) Specific callback to remove. If None, removes all callbacks for this item_id.</p></div>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.sio_connect"><code class="name flex">
 <span>async def <span class="ident">sio_connect</span></span>(<span>self, director_bearer_token)</span>

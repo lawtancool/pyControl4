@@ -95,6 +95,36 @@ el.replaceWith(d);
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
             &#34;RAMP_TO_LEVEL&#34;,
             {&#34;LEVEL&#34;: level, &#34;TIME&#34;: time},
+        )
+
+    async def setColorXY(self, x: float, y: float, *, rate: int | None = None):
+        &#34;&#34;&#34;Sends SET_COLOR_TARGET with xy&#34;&#34;&#34;
+        params = {
+            &#34;LIGHT_COLOR_TARGET_X&#34;: float(x),
+            &#34;LIGHT_COLOR_TARGET_Y&#34;: float(y),
+            &#34;LIGHT_COLOR_TARGET_MODE&#34;: 0,
+        }
+        if rate is not None:
+            params[&#34;RATE&#34;] = int(rate)
+
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_COLOR_TARGET&#34;,
+            params,
+        )
+
+    async def setColorTemperature(self, kelvin: int, *, rate: int | None = None):
+        params = {
+            &#34;LIGHT_COLOR_TARGET_COLOR_CORRELATED_TEMPERATURE&#34;: int(kelvin),
+            &#34;LIGHT_COLOR_TARGET_MODE&#34;: 1,
+        }
+        if rate is not None:
+            params[&#34;RATE&#34;] = int(rate)
+
+        await self.director.sendPostRequest(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+            &#34;SET_COLOR_TARGET&#34;,
+            params,
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
@@ -169,6 +199,56 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 <p><code>level</code> - (int) 0-100</p>
 <p><code>time</code> - (int) Duration in milliseconds</p></div>
 </dd>
+<dt id="pyControl4.light.C4Light.setColorTemperature"><code class="name flex">
+<span>async def <span class="ident">setColorTemperature</span></span>(<span>self, kelvin: int, *, rate: int | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setColorTemperature(self, kelvin: int, *, rate: int | None = None):
+    params = {
+        &#34;LIGHT_COLOR_TARGET_COLOR_CORRELATED_TEMPERATURE&#34;: int(kelvin),
+        &#34;LIGHT_COLOR_TARGET_MODE&#34;: 1,
+    }
+    if rate is not None:
+        params[&#34;RATE&#34;] = int(rate)
+
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_COLOR_TARGET&#34;,
+        params,
+    )</code></pre>
+</details>
+<div class="desc"></div>
+</dd>
+<dt id="pyControl4.light.C4Light.setColorXY"><code class="name flex">
+<span>async def <span class="ident">setColorXY</span></span>(<span>self, x: float, y: float, *, rate: int | None = None)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def setColorXY(self, x: float, y: float, *, rate: int | None = None):
+    &#34;&#34;&#34;Sends SET_COLOR_TARGET with xy&#34;&#34;&#34;
+    params = {
+        &#34;LIGHT_COLOR_TARGET_X&#34;: float(x),
+        &#34;LIGHT_COLOR_TARGET_Y&#34;: float(y),
+        &#34;LIGHT_COLOR_TARGET_MODE&#34;: 0,
+    }
+    if rate is not None:
+        params[&#34;RATE&#34;] = int(rate)
+
+    await self.director.sendPostRequest(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
+        &#34;SET_COLOR_TARGET&#34;,
+        params,
+    )</code></pre>
+</details>
+<div class="desc"><p>Sends SET_COLOR_TARGET with xy</p></div>
+</dd>
 <dt id="pyControl4.light.C4Light.setLevel"><code class="name flex">
 <span>async def <span class="ident">setLevel</span></span>(<span>self, level)</span>
 </code></dt>
@@ -214,10 +294,12 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 <ul>
 <li>
 <h4><code><a title="pyControl4.light.C4Light" href="#pyControl4.light.C4Light">C4Light</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="pyControl4.light.C4Light.getLevel" href="#pyControl4.light.C4Light.getLevel">getLevel</a></code></li>
 <li><code><a title="pyControl4.light.C4Light.getState" href="#pyControl4.light.C4Light.getState">getState</a></code></li>
 <li><code><a title="pyControl4.light.C4Light.rampToLevel" href="#pyControl4.light.C4Light.rampToLevel">rampToLevel</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.setColorTemperature" href="#pyControl4.light.C4Light.setColorTemperature">setColorTemperature</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.setColorXY" href="#pyControl4.light.C4Light.setColorXY">setColorXY</a></code></li>
 <li><code><a title="pyControl4.light.C4Light.setLevel" href="#pyControl4.light.C4Light.setLevel">setLevel</a></code></li>
 </ul>
 </li>

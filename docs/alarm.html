@@ -257,19 +257,16 @@ el.replaceWith(d);
 
         return types_list
 
-    async def triggerEmergency(self, usercode, type):
+    async def triggerEmergency(self, type):
         &#34;&#34;&#34;Triggers an emergency of the specified type.
 
         Parameters:
-            `usercode` - PIN/code for disarming the system.
-
             `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
         &#34;&#34;&#34;
-        usercode = str(usercode)
         await self.director.sendPostRequest(
             &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-            &#34;PARTITION_DISARM&#34;,
-            {&#34;UserCode&#34;: usercode},
+            &#34;EXECUTE_EMERGENCY&#34;,
+            {&#34;EmergencyType&#34;: type},
         )
 
     async def sendKeyPress(self, key):
@@ -625,31 +622,27 @@ el.replaceWith(d);
 <p><code>usercode</code> - PIN/code for disarming the system.</p></div>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.triggerEmergency"><code class="name flex">
-<span>async def <span class="ident">triggerEmergency</span></span>(<span>self, usercode, type)</span>
+<span>async def <span class="ident">triggerEmergency</span></span>(<span>self, type)</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def triggerEmergency(self, usercode, type):
+<pre><code class="python">async def triggerEmergency(self, type):
     &#34;&#34;&#34;Triggers an emergency of the specified type.
 
     Parameters:
-        `usercode` - PIN/code for disarming the system.
-
         `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
     &#34;&#34;&#34;
-    usercode = str(usercode)
     await self.director.sendPostRequest(
         &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
-        &#34;PARTITION_DISARM&#34;,
-        {&#34;UserCode&#34;: usercode},
+        &#34;EXECUTE_EMERGENCY&#34;,
+        {&#34;EmergencyType&#34;: type},
     )</code></pre>
 </details>
 <div class="desc"><p>Triggers an emergency of the specified type.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>usercode</code> - PIN/code for disarming the system.</p>
 <p><code>type</code> - Type of emergency: "Fire", "Medical", "Panic", or "Police"</p></div>
 </dd>
 </dl>
