@@ -211,12 +211,8 @@ getting details about items on the Director.</p>
             &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
         )
         if data == &#34;[]&#34;:
-            raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} \
-                    doesn&#39;t seem to exist for item {}.&#34;.format(
-                    var_name, item_id
-                )
-            )
+            raise ValueError(&#34;Empty response recieved from Director! The variable {} \
+                    doesn&#39;t seem to exist for item {}.&#34;.format(var_name, item_id))
         jsonDictionary = json.loads(data)
         return jsonDictionary[0][&#34;value&#34;]
 
@@ -234,12 +230,8 @@ getting details about items on the Director.</p>
             &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
         )
         if data == &#34;[]&#34;:
-            raise ValueError(
-                &#34;Empty response recieved from Director! The variable {} \
-                    doesn&#39;t seem to exist for any items.&#34;.format(
-                    var_name
-                )
-            )
+            raise ValueError(&#34;Empty response recieved from Director! The variable {} \
+                    doesn&#39;t seem to exist for any items.&#34;.format(var_name))
         jsonDictionary = json.loads(data)
         return jsonDictionary
 
@@ -402,12 +394,8 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
     )
     if data == &#34;[]&#34;:
-        raise ValueError(
-            &#34;Empty response recieved from Director! The variable {} \
-                doesn&#39;t seem to exist for any items.&#34;.format(
-                var_name
-            )
-        )
+        raise ValueError(&#34;Empty response recieved from Director! The variable {} \
+                doesn&#39;t seem to exist for any items.&#34;.format(var_name))
     jsonDictionary = json.loads(data)
     return jsonDictionary</code></pre>
 </details>
@@ -574,12 +562,8 @@ outlet_wireless_dimmer, voice-scene</p></div>
         &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
     )
     if data == &#34;[]&#34;:
-        raise ValueError(
-            &#34;Empty response recieved from Director! The variable {} \
-                doesn&#39;t seem to exist for item {}.&#34;.format(
-                var_name, item_id
-            )
-        )
+        raise ValueError(&#34;Empty response recieved from Director! The variable {} \
+                doesn&#39;t seem to exist for item {}.&#34;.format(var_name, item_id))
     jsonDictionary = json.loads(data)
     return jsonDictionary[0][&#34;value&#34;]</code></pre>
 </details>

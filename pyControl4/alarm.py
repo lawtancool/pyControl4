@@ -141,30 +141,30 @@ class C4SecurityPanel(C4Entity):
         data = await self.director.getItemInfo(self.item_id)
         jsonDictionary = json.loads(data)
 
-        if jsonDictionary[0]["capabilities"]["has_fire"]:
+        capabilities = (
+            jsonDictionary[0].get("capabilities", {}) if jsonDictionary else {}
+        )
+        if capabilities.get("has_fire"):
             types_list.append("Fire")
-        if jsonDictionary[0]["capabilities"]["has_medical"]:
+        if capabilities.get("has_medical"):
             types_list.append("Medical")
-        if jsonDictionary[0]["capabilities"]["has_panic"]:
+        if capabilities.get("has_panic"):
             types_list.append("Panic")
-        if jsonDictionary[0]["capabilities"]["has_police"]:
+        if capabilities.get("has_police"):
             types_list.append("Police")
 
         return types_list
 
-    async def triggerEmergency(self, usercode, type):
+    async def triggerEmergency(self, type):
         """Triggers an emergency of the specified type.
 
         Parameters:
-            `usercode` - PIN/code for disarming the system.
-
             `type` - Type of emergency: "Fire", "Medical", "Panic", or "Police"
         """
-        usercode = str(usercode)
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
-            "PARTITION_DISARM",
-            {"UserCode": usercode},
+            "EXECUTE_EMERGENCY",
+            {"EmergencyType": type},
         )
 
     async def sendKeyPress(self, key):
