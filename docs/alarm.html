@@ -246,13 +246,16 @@ el.replaceWith(d);
         data = await self.director.getItemInfo(self.item_id)
         jsonDictionary = json.loads(data)
 
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
+        capabilities = (
+            jsonDictionary[0].get(&#34;capabilities&#34;, {}) if jsonDictionary else {}
+        )
+        if capabilities.get(&#34;has_fire&#34;):
             types_list.append(&#34;Fire&#34;)
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
+        if capabilities.get(&#34;has_medical&#34;):
             types_list.append(&#34;Medical&#34;)
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
+        if capabilities.get(&#34;has_panic&#34;):
             types_list.append(&#34;Panic&#34;)
-        if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
+        if capabilities.get(&#34;has_police&#34;):
             types_list.append(&#34;Police&#34;)
 
         return types_list
@@ -440,13 +443,16 @@ el.replaceWith(d);
     data = await self.director.getItemInfo(self.item_id)
     jsonDictionary = json.loads(data)
 
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_fire&#34;]:
+    capabilities = (
+        jsonDictionary[0].get(&#34;capabilities&#34;, {}) if jsonDictionary else {}
+    )
+    if capabilities.get(&#34;has_fire&#34;):
         types_list.append(&#34;Fire&#34;)
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_medical&#34;]:
+    if capabilities.get(&#34;has_medical&#34;):
         types_list.append(&#34;Medical&#34;)
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_panic&#34;]:
+    if capabilities.get(&#34;has_panic&#34;):
         types_list.append(&#34;Panic&#34;)
-    if jsonDictionary[0][&#34;capabilities&#34;][&#34;has_police&#34;]:
+    if capabilities.get(&#34;has_police&#34;):
         types_list.append(&#34;Police&#34;)
 
     return types_list</code></pre>
