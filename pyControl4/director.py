@@ -3,7 +3,7 @@ getting details about items on the Director.
 """
 
 import aiohttp
-import async_timeout
+import asyncio
 import json
 
 from .error_handling import checkResponseForError
@@ -50,14 +50,14 @@ class C4Director:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
             ) as session:
-                async with async_timeout.timeout(10):
+                async with asyncio.timeout(10):
                     async with session.get(
                         self.base_url + uri, headers=self.headers
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
@@ -86,14 +86,14 @@ class C4Director:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
             ) as session:
-                async with async_timeout.timeout(10):
+                async with asyncio.timeout(10):
                     async with session.post(
                         self.base_url + uri, headers=self.headers, json=dataDictionary
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with self.session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:

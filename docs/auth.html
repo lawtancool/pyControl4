@@ -75,7 +75,7 @@ class C4Auth:
             }
         }
         async with aiohttp.ClientSession() as session:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with session.post(
                     AUTHENTICATION_ENDPOINT, json=dataDictionary
                 ) as resp:
@@ -96,7 +96,7 @@ class C4Auth:
             _LOGGER.error(msg)
             raise
         async with aiohttp.ClientSession() as session:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with session.get(uri, headers=headers) as resp:
                     return await resp.text()
 
@@ -121,7 +121,7 @@ class C4Auth:
             }
         }
         async with aiohttp.ClientSession() as session:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with session.post(
                     CONTROLLER_AUTHORIZATION_ENDPOINT,
                     headers=headers,
@@ -276,7 +276,7 @@ class C4Auth:
             }
         }
         async with aiohttp.ClientSession() as session:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with session.post(
                     AUTHENTICATION_ENDPOINT, json=dataDictionary
                 ) as resp:
@@ -297,7 +297,7 @@ class C4Auth:
             _LOGGER.error(msg)
             raise
         async with aiohttp.ClientSession() as session:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with session.get(uri, headers=headers) as resp:
                     return await resp.text()
 
@@ -322,7 +322,7 @@ class C4Auth:
             }
         }
         async with aiohttp.ClientSession() as session:
-            async with async_timeout.timeout(10):
+            async with asyncio.timeout(10):
                 async with session.post(
                     CONTROLLER_AUTHORIZATION_ENDPOINT,
                     headers=headers,
