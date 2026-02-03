@@ -43,3 +43,33 @@ class C4Light(C4Entity):
             "RAMP_TO_LEVEL",
             {"LEVEL": level, "TIME": time},
         )
+
+    async def setColorXY(self, x: float, y: float, *, rate: int | None = None):
+        """Sends SET_COLOR_TARGET with xy"""
+        params = {
+            "LIGHT_COLOR_TARGET_X": float(x),
+            "LIGHT_COLOR_TARGET_Y": float(y),
+            "LIGHT_COLOR_TARGET_MODE": 0,
+        }
+        if rate is not None:
+            params["RATE"] = int(rate)
+
+        await self.director.sendPostRequest(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SET_COLOR_TARGET",
+            params,
+        )
+
+    async def setColorTemperature(self, kelvin: int, *, rate: int | None = None):
+        params = {
+            "LIGHT_COLOR_TARGET_COLOR_CORRELATED_TEMPERATURE": int(kelvin),
+            "LIGHT_COLOR_TARGET_MODE": 1,
+        }
+        if rate is not None:
+            params["RATE"] = int(rate)
+
+        await self.director.sendPostRequest(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SET_COLOR_TARGET",
+            params,
+        )

@@ -50,14 +50,14 @@ class C4Director:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
             ) as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.get(
                         self.base_url + uri, headers=self.headers
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
@@ -86,14 +86,14 @@ class C4Director:
             async with aiohttp.ClientSession(
                 connector=aiohttp.TCPConnector(verify_ssl=False)
             ) as session:
-                with async_timeout.timeout(10):
+                async with async_timeout.timeout(10):
                     async with session.post(
                         self.base_url + uri, headers=self.headers, json=dataDictionary
                     ) as resp:
                         await checkResponseForError(await resp.text())
                         return await resp.text()
         else:
-            with async_timeout.timeout(10):
+            async with async_timeout.timeout(10):
                 async with self.session.post(
                     self.base_url + uri, headers=self.headers, json=dataDictionary
                 ) as resp:
@@ -162,12 +162,8 @@ class C4Director:
             "/api/v1/items/{}/variables?varnames={}".format(item_id, var_name)
         )
         if data == "[]":
-            raise ValueError(
-                "Empty response recieved from Director! The variable {} \
-                    doesn't seem to exist for item {}.".format(
-                    var_name, item_id
-                )
-            )
+            raise ValueError("Empty response recieved from Director! The variable {} \
+                    doesn't seem to exist for item {}.".format(var_name, item_id))
         jsonDictionary = json.loads(data)
         return jsonDictionary[0]["value"]
 
@@ -185,12 +181,8 @@ class C4Director:
             "/api/v1/items/variables?varnames={}".format(var_name)
         )
         if data == "[]":
-            raise ValueError(
-                "Empty response recieved from Director! The variable {} \
-                    doesn't seem to exist for any items.".format(
-                    var_name
-                )
-            )
+            raise ValueError("Empty response recieved from Director! The variable {} \
+                    doesn't seem to exist for any items.".format(var_name))
         jsonDictionary = json.loads(data)
         return jsonDictionary
 
