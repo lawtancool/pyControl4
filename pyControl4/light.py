@@ -9,11 +9,15 @@ class C4Light(C4Entity):
         Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
         """
         value = await self.director.getItemVariableValue(self.item_id, "LIGHT_LEVEL")
+        if value is None:
+            return None
         return int(value)
 
     async def getState(self):
         """Returns the power state of a dimmer or switch as a boolean (True=on, False=off)."""
         value = await self.director.getItemVariableValue(self.item_id, "LIGHT_STATE")
+        if value is None:
+            return None
         return bool(value)
 
     async def setLevel(self, level):

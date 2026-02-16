@@ -7,6 +7,8 @@ class C4Blind(C4Entity):
     async def getBatteryLevel(self):
         """Returns the battery of a blind. We currently don't know the range or meaning."""
         value = await self.director.getItemVariableValue(self.item_id, "Battery Level")
+        if value is None:
+            return None
         return int(value)
 
     async def getClosing(self):
@@ -14,18 +16,24 @@ class C4Blind(C4Entity):
         (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
         """
         value = await self.director.getItemVariableValue(self.item_id, "Closing")
+        if value is None:
+            return None
         return bool(value)
 
     async def getFullyClosed(self):
         """Returns an indication of whether the blind is fully closed as a boolean
         (True=fully closed, False=at least partially open)."""
         value = await self.director.getItemVariableValue(self.item_id, "Fully Closed")
+        if value is None:
+            return None
         return bool(value)
 
     async def getFullyOpen(self):
         """Returns an indication of whether the blind is fully open as a boolean
         (True=fully open, False=at least partially closed)."""
         value = await self.director.getItemVariableValue(self.item_id, "Fully Open")
+        if value is None:
+            return None
         return bool(value)
 
     async def getLevel(self):
@@ -33,12 +41,16 @@ class C4Blind(C4Entity):
         0 is fully closed and 100 is fully open.
         """
         value = await self.director.getItemVariableValue(self.item_id, "Level")
+        if value is None:
+            return None
         return int(value)
 
     async def getOpen(self):
         """Returns an indication of whether the blind is open as a boolean (True=open, False=closed).
         This is true even if the blind is only partially open."""
         value = await self.director.getItemVariableValue(self.item_id, "Open")
+        if value is None:
+            return None
         return bool(value)
 
     async def getOpening(self):
@@ -46,12 +58,16 @@ class C4Blind(C4Entity):
         (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
         """
         value = await self.director.getItemVariableValue(self.item_id, "Opening")
+        if value is None:
+            return None
         return bool(value)
 
     async def getStopped(self):
         """Returns an indication of whether the blind is stopped as a boolean
         (True=stopped, False=moving)."""
         value = await self.director.getItemVariableValue(self.item_id, "Stopped")
+        if value is None:
+            return None
         return bool(value)
 
     async def getTargetLevel(self):
@@ -60,6 +76,8 @@ class C4Blind(C4Entity):
         0 is fully closed and 100 is fully open.
         """
         value = await self.director.getItemVariableValue(self.item_id, "Target Level")
+        if value is None:
+            return None
         return int(value)
 
     async def open(self):

@@ -16,6 +16,8 @@ class C4Fan(C4Entity):
             bool: True if the fan is on, False otherwise.
         """
         value = await self.director.getItemVariableValue(self.item_id, "IS_ON")
+        if value is None:
+            return None
         return bool(value)
 
     async def getSpeed(self):
@@ -37,6 +39,8 @@ class C4Fan(C4Entity):
             int: Current fan speed (0–4).
         """
         value = await self.director.getItemVariableValue(self.item_id, "CURRENT_SPEED")
+        if value is None:
+            return None
         return int(value)
 
     # ------------------------

@@ -1,0 +1,60 @@
+"""Tests for handling of 'Undefined' variable values from the Control4 Director."""
+
+import json
+from unittest.mock import AsyncMock, patch
+
+import pytest
+
+from pyControl4.director import C4Director
+from pyControl4.light import C4Light
+from pyControl4.blind import C4Blind
+
+
+@pytest.fixture
+def director():
+    """Create a C4Director with a mocked session."""
+    return C4Director("192.168.1.1", "test-token")
+
+
+@pytest.mark.asyncio
+async def test_get_item_variable_value_undefined(director):
+    """Test that getItemVariableValue normalizes 'Undefined' to None."""
+    response = json.dumps([{"id": 123, "varName": "HUMIDITY", "value": "Undefined"}])
+    with patch.object(director, "sendGetRequest", new=AsyncMock(return_value=response)):
+        result = await director.getItemVariableValue(123, "HUMIDITY")
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_get_all_item_variable_value_undefined(director):
+    """Test that getAllItemVariableValue normalizes 'Undefined' to None in items."""
+    response = json.dumps([
+        {"id": 100, "varName": "HUMIDITY", "value": "Undefined"},
+        {"id": 100, "varName": "TEMPERATURE_F", "value": 72.5},
+        {"id": 200, "varName": "HUMIDITY", "value": 45},
+    ])
+    with patch.object(director, "sendGetRequest", new=AsyncMock(return_value=response)):
+        result = await director.getAllItemVariableValue("HUMIDITY,TEMPERATURE_F")
+    assert result[0]["value"] is None
+    assert result[1]["value"] == 72.5
+    assert result[2]["value"] == 45
+
+
+@pytest.mark.asyncio
+async def test_light_get_level_undefined(director):
+    """Test that int callers propagate None instead of crashing."""
+    light = C4Light(director, 100)
+    response = json.dumps([{"id": 100, "varName": "LIGHT_LEVEL", "value": "Undefined"}])
+    with patch.object(director, "sendGetRequest", new=AsyncMock(return_value=response)):
+        result = await light.getLevel()
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_blind_get_fully_open_undefined(director):
+    """Test that bool callers propagate None instead of a misleading value."""
+    blind = C4Blind(director, 200)
+    response = json.dumps([{"id": 200, "varName": "Fully Open", "value": "Undefined"}])
+    with patch.object(director, "sendGetRequest", new=AsyncMock(return_value=response)):
+        result = await blind.getFullyOpen()
+    assert result is None
