@@ -28,11 +28,13 @@ async def test_get_item_variable_value_undefined(director):
 @pytest.mark.asyncio
 async def test_get_all_item_variable_value_undefined(director):
     """Test that getAllItemVariableValue normalizes 'Undefined' to None in items."""
-    response = json.dumps([
-        {"id": 100, "varName": "HUMIDITY", "value": "Undefined"},
-        {"id": 100, "varName": "TEMPERATURE_F", "value": 72.5},
-        {"id": 200, "varName": "HUMIDITY", "value": 45},
-    ])
+    response = json.dumps(
+        [
+            {"id": 100, "varName": "HUMIDITY", "value": "Undefined"},
+            {"id": 100, "varName": "TEMPERATURE_F", "value": 72.5},
+            {"id": 200, "varName": "HUMIDITY", "value": 45},
+        ]
+    )
     with patch.object(director, "sendGetRequest", new=AsyncMock(return_value=response)):
         result = await director.getAllItemVariableValue("HUMIDITY,TEMPERATURE_F")
     assert result[0]["value"] is None
