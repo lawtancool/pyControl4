@@ -88,7 +88,10 @@ class C4Account:
         try:
             headers = {"Authorization": "Bearer {}".format(self.account_bearer_token)}
         except AttributeError:
-            msg = "The account bearer token is missing - was your username/password correct? "
+            msg = (
+                "The account bearer token is missing. "
+                "Is your username/password correct?"
+            )
             _LOGGER.error(msg)
             raise
         if self.session is None:
@@ -113,7 +116,10 @@ class C4Account:
         try:
             headers = {"Authorization": "Bearer {}".format(self.account_bearer_token)}
         except AttributeError:
-            msg = "The account bearer token is missing - was your username/password correct? "
+            msg = (
+                "The account bearer token is missing. "
+                "Is your username/password correct?"
+            )
             _LOGGER.error(msg)
             raise
         dataDictionary = {
@@ -150,7 +156,10 @@ class C4Account:
             self.account_bearer_token = jsonDictionary["authToken"]["token"]
             return self.account_bearer_token
         except KeyError:
-            msg = "Did not recieve an account bearer token. Is your username/password correct? "
+            msg = (
+                "Did not recieve an account bearer token. "
+                "Is your username/password correct?"
+            )
             _LOGGER.error(msg + data)
             raise
 
@@ -184,7 +193,7 @@ class C4Account:
                 'blockNotifications': False,
                 'controllerCommonName': 'control4_MODEL_MACADDRESS',
                 'controller': {
-                    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/controller'
+                    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/controller'  # noqa: E501
                 },
                 'created': '2017-08-26T18:33:31Z',
                 'dealer': {
@@ -196,7 +205,7 @@ class C4Account:
                 'id': 000000,
                 'lastCheckIn': '2020-06-13T21:52:34Z',
                 'licenses': {
-                    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/licenses'
+                    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/licenses'  # noqa: E501
                 },
                 'modified': '2020-06-13T21:52:34Z',
                 'name': 'Name',
@@ -206,7 +215,7 @@ class C4Account:
                 },
                 'type': 'Consumer',
                 'users': {
-                    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/users'
+                    'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/users'  # noqa: E501
                 }
             }
             ```
