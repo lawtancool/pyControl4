@@ -1,4 +1,6 @@
-"""Controls Control4 security panel and contact sensor (door, window, motion) devices."""
+"""Controls Control4 security panel and contact sensor (door, window, motion)
+devices.
+"""
 
 import json
 from pyControl4 import C4Entity
@@ -6,7 +8,9 @@ from pyControl4 import C4Entity
 
 class C4SecurityPanel(C4Entity):
     async def getArmState(self):
-        """Returns the arm state of the security panel as "DISARMED", "ARMED_HOME", or "ARMED_AWAY"."""
+        """Returns the arm state of the security panel as "DISARMED", "ARMED_HOME",
+        or "ARMED_AWAY".
+        """
         disarmed = await self.director.getItemVariableValue(
             self.item_id, "DISARMED_STATE"
         )
@@ -47,7 +51,8 @@ class C4SecurityPanel(C4Entity):
     async def getPartitionState(self):
         """Returns the partition state of the security panel.
 
-        Possible values include "DISARMED_NOT_READY", "DISARMED_READY", "ARMED_HOME", "ARMED_AWAY", "EXIT_DELAY", "ENTRY_DELAY"
+        Possible values include "DISARMED_NOT_READY", "DISARMED_READY", "ARMED_HOME",
+        "ARMED_AWAY", "EXIT_DELAY", "ENTRY_DELAY"
         """
         partition_state = await self.director.getItemVariableValue(
             self.item_id, "PARTITION_STATE"
@@ -55,14 +60,18 @@ class C4SecurityPanel(C4Entity):
         return partition_state
 
     async def getDelayTimeTotal(self):
-        """Returns the total exit delay time. Returns 0 if an exit delay is not currently running."""
+        """Returns the total exit delay time. Returns 0 if an exit delay is not
+        currently running.
+        """
         delay_time_total = await self.director.getItemVariableValue(
             self.item_id, "DELAY_TIME_TOTAL"
         )
         return delay_time_total
 
     async def getDelayTimeRemaining(self):
-        """Returns the remaining exit delay time. Returns 0 if an exit delay is not currently running."""
+        """Returns the remaining exit delay time. Returns 0 if an exit delay is
+        not currently running.
+        """
         delay_time_remaining = await self.director.getItemVariableValue(
             self.item_id, "DELAY_TIME_REMAINING"
         )
@@ -109,7 +118,8 @@ class C4SecurityPanel(C4Entity):
         Parameters:
             `usercode` - PIN/code for arming the system.
 
-            `mode` - Arm mode to use. This depends on what is supported by the security panel itself.
+            `mode` - Arm mode to use. This depends on what is supported by the
+                security panel itself.
         """
         usercode = str(usercode)
         await self.director.sendPostRequest(
@@ -168,7 +178,8 @@ class C4SecurityPanel(C4Entity):
         )
 
     async def sendKeyPress(self, key):
-        """Sends a single keypress to the security panel's virtual keypad (if supported).
+        """Sends a single keypress to the security panel's virtual keypad (if
+        supported).
 
         Parameters:
             `key` - Keypress to send. Only one key at a time.
@@ -186,7 +197,8 @@ class C4ContactSensor:
         """Creates a Control4 Contact Sensor object.
 
         Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the security panel is connected to.
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds
+                to the Control4 Director that the security panel is connected to.
 
             `item_id` - The Control4 item ID of the contact sensor.
         """
@@ -194,7 +206,9 @@ class C4ContactSensor:
         self.item_id = item_id
 
     async def getContactState(self):
-        """Returns `True` if contact is triggered (door/window is closed, motion is detected), otherwise returns `False`."""
+        """Returns `True` if contact is triggered (door/window is closed, motion is
+        detected), otherwise returns `False`.
+        """
         contact_state = await self.director.getItemVariableValue(
             self.item_id, "ContactState"
         )

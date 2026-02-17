@@ -33,8 +33,10 @@ class C4Account:
 
             `password` - Control4 account password.
 
-            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
-            If not provided, the library will open and close its own `ClientSession`s as needed.
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession`
+                object for all network requests. This session will not be closed
+                by the library. If not provided, the library will open and close
+                its own `ClientSession`s as needed.
         """
         self.username = username
         self.password = password
@@ -111,7 +113,8 @@ class C4Account:
         entire JSON response from the Control4 auth API.
 
         Parameters:
-            `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+            `controller_common_name`: Common name of the controller.
+                See `getAccountControllers()` for details.
         """
         try:
             headers = {"Authorization": "Bearer {}".format(self.account_bearer_token)}
@@ -164,7 +167,8 @@ class C4Account:
             raise
 
     async def getAccountControllers(self):
-        """Returns a dictionary of the information for all controllers registered to an account.
+        """Returns a dictionary of the information for all controllers registered
+        to an account.
 
         Returns:
             ```
@@ -183,7 +187,8 @@ class C4Account:
         """Returns a dictionary of the information of a specific controller.
 
         Parameters:
-            `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+            `controller_href` - The API `href` of the controller (get this from
+                the output of `getAccountControllers()`)
 
         Returns:
             ```
@@ -228,17 +233,20 @@ class C4Account:
         """Returns the OS version of a controller as a string.
 
         Parameters:
-            `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+            `controller_href` - The API `href` of the controller (get this from
+                the output of `getAccountControllers()`)
         """
         data = await self.__sendAccountGetRequest(controller_href + "/controller")
         jsonDictionary = json.loads(data)
         return jsonDictionary["osVersion"]
 
     async def getDirectorBearerToken(self, controller_common_name):
-        """Returns a dictionary with a director bearer token for making Control4 Director API requests, and its time valid in seconds (usually 86400 seconds)
+        """Returns a dictionary with a director bearer token for making Control4
+        Director API requests, and its time valid in seconds (usually 86400 seconds)
 
         Parameters:
-            `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+            `controller_common_name`: Common name of the controller.
+                See `getAccountControllers()` for details.
         """
         data = await self.__sendControllerAuthRequest(controller_common_name)
         jsonDictionary = json.loads(data)

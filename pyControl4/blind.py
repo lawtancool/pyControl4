@@ -5,13 +5,16 @@ from pyControl4 import C4Entity
 
 class C4Blind(C4Entity):
     async def getBatteryLevel(self):
-        """Returns the battery of a blind. We currently don't know the range or meaning."""
+        """Returns the battery of a blind. We currently don't know the range or
+        meaning.
+        """
         value = await self.director.getItemVariableValue(self.item_id, "Battery Level")
         return int(value)
 
     async def getClosing(self):
-        """Returns an indication of whether the blind is moving in the closed direction as a boolean
-        (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
+        """Returns an indication of whether the blind is moving in the closed direction
+        as a boolean (True=closing, False=opening). If the blind is stopped, reports
+        the direction it last moved.
         """
         value = await self.director.getItemVariableValue(self.item_id, "Closing")
         return bool(value)
@@ -36,14 +39,16 @@ class C4Blind(C4Entity):
         return int(value)
 
     async def getOpen(self):
-        """Returns an indication of whether the blind is open as a boolean (True=open, False=closed).
-        This is true even if the blind is only partially open."""
+        """Returns an indication of whether the blind is open as a boolean (True=open,
+        False=closed). This is true even if the blind is only partially open.
+        """
         value = await self.director.getItemVariableValue(self.item_id, "Open")
         return bool(value)
 
     async def getOpening(self):
-        """Returns an indication of whether the blind is moving in the open direction as a boolean
-        (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
+        """Returns an indication of whether the blind is moving in the open direction
+        as a boolean (True=opening, False=closing). If the blind is stopped, reports
+        the direction it last moved.
         """
         value = await self.director.getItemVariableValue(self.item_id, "Opening")
         return bool(value)
@@ -92,8 +97,9 @@ class C4Blind(C4Entity):
         )
 
     async def stop(self):
-        """Stops the blind if it is moving. Shortly after stopping, the target level will be
-        set to the level the blind had actually reached when it stopped."""
+        """Stops the blind if it is moving. Shortly after stopping, the target level
+        will be set to the level the blind had actually reached when it stopped.
+        """
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
             "STOP",
@@ -101,7 +107,9 @@ class C4Blind(C4Entity):
         )
 
     async def toggle(self):
-        """Toggles the blind between open and closed. Has no effect if the blind is partially open."""
+        """Toggles the blind between open and closed. Has no effect if the blind is
+        partially open.
+        """
         await self.director.sendPostRequest(
             "/api/v1/items/{}/commands".format(self.item_id),
             "TOGGLE",

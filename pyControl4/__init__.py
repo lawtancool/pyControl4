@@ -3,7 +3,8 @@ class C4Entity:
         """Creates a Control4 object.
 
         Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds to the Control4 Director that the device is connected to.
+            `C4Director` - A `pyControl4.director.C4Director` object that corresponds
+                to the Control4 Director that the device is connected to.
 
             `item_id` - The Control4 item ID.
         """
