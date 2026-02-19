@@ -1,4 +1,6 @@
-"""Handles Websocket connections to a Control4 Director, allowing for real-time updates using callbacks."""
+"""Handles Websocket connections to a Control4 Director, allowing for real-time
+updates using callbacks.
+"""
 
 import aiohttp
 import asyncio
@@ -106,9 +108,12 @@ class C4Websocket:
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
 
-            `connect_callback` - (Optional) A callback to be called when the Websocket connection is opened or reconnected after a network error.
+            `connect_callback` - (Optional) A callback to be called when the
+                Websocket connection is opened or reconnected after a network
+                error.
 
-            `disconnect_callback` - (Optional) A callback to be called when the Websocket connection is lost due to a network error.
+            `disconnect_callback` - (Optional) A callback to be called when
+                the Websocket connection is lost due to a network error.
         """
         self.base_url = "https://{}".format(ip)
         self.wss_url = "wss://{}".format(ip)
@@ -122,7 +127,9 @@ class C4Websocket:
 
     @property
     def item_callbacks(self):
-        """Returns a dictionary of registered item ids (key) and their callbacks (value)."""
+        """Returns a dictionary of registered item ids (key) and their callbacks
+        (value).
+        """
         return {
             item_id: callbacks[0] if callbacks else None
             for item_id, callbacks in self._item_callbacks.items()
@@ -132,7 +139,8 @@ class C4Websocket:
         """Register a callback to receive updates about an item.
         Parameters:
             `item_id` - The Control4 item ID.
-            `callback` - The callback to be called when an update is received for the provided item id.
+            `callback` - The callback to be called when an update is received
+                for the provided item id.
         """
         _LOGGER.debug("Subscribing to updates for item id: %s", item_id)
 
@@ -147,7 +155,8 @@ class C4Websocket:
         """Unregister callback(s) for an item.
         Parameters:
             `item_id` - The Control4 item ID.
-            `callback` - (Optional) Specific callback to remove. If None, removes all callbacks for this item_id.
+            `callback` - (Optional) Specific callback to remove. If None,
+                removes all callbacks for this item_id.
         """
         if item_id not in self._item_callbacks:
             return
@@ -166,13 +175,20 @@ class C4Websocket:
                 pass
 
     async def sio_connect(self, director_bearer_token):
-        """Start WebSockets connection and listen, using the provided director_bearer_token to authenticate with the Control4 Director.
-        If a connection already exists, it will be disconnected and a new connection will be created.
+        """Start WebSockets connection and listen, using the provided
+        director_bearer_token to authenticate with the Control4 Director. If a
+        connection already exists, it will be disconnected and a new connection
+        will be created.
 
-        This function should be called using a new token every 86400 seconds (the expiry time of the director tokens), otherwise the Control4 Director will stop sending WebSocket messages.
+        This function should be called using a new token every 86400 seconds (the
+        expiry time of the director tokens), otherwise the Control4 Director will
+        stop sending WebSocket messages.
 
         Parameters:
-            `director_bearer_token` - The bearer token used to authenticate with the Director. See `pyControl4.account.C4Account.getDirectorBearerToken` for how to get this.
+            `director_bearer_token` - The bearer token used to authenticate
+                with the Director. See
+                `pyControl4.account.C4Account.getDirectorBearerToken`
+                for how to get this.
         """
         # Disconnect previous sio object
         await self.sio_disconnect()
