@@ -1,5 +1,7 @@
 """Controls Control4 Room devices."""
 
+from typing import Optional
+
 from pyControl4 import C4Entity
 
 
@@ -8,14 +10,18 @@ class C4Room(C4Entity):
     A media-oriented view of a Control4 Room, supporting items of type="room"
     """
 
-    async def isRoomHidden(self) -> bool:
+    async def isRoomHidden(self) -> Optional[bool]:
         """Returns True if the room is hidden from the end-user"""
         value = await self.director.getItemVariableValue(self.item_id, "ROOM_HIDDEN")
+        if value is None:
+            return None
         return int(value) != 0
 
-    async def isOn(self) -> bool:
+    async def isOn(self) -> Optional[bool]:
         """Returns True/False if the room is "ON" from the director's perspective"""
         value = await self.director.getItemVariableValue(self.item_id, "POWER_STATE")
+        if value is None:
+            return None
         return int(value) != 0
 
     async def setRoomOff(self):
@@ -45,14 +51,18 @@ class C4Room(C4Entity):
         """Sets the current audio and video source for the room"""
         await self._setSource(source_id, audio_only=False)
 
-    async def getVolume(self) -> int:
+    async def getVolume(self) -> Optional[int]:
         """Returns the current volume for the room from 0-100"""
         value = await self.director.getItemVariableValue(self.item_id, "CURRENT_VOLUME")
+        if value is None:
+            return None
         return int(value)
 
-    async def isMuted(self) -> bool:
+    async def isMuted(self) -> Optional[bool]:
         """Returns True if the room is muted"""
         value = await self.director.getItemVariableValue(self.item_id, "IS_MUTED")
+        if value is None:
+            return None
         return int(value) != 0
 
     async def setMuteOn(self):
