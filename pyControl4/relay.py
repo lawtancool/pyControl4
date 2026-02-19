@@ -20,9 +20,10 @@ class C4Relay(C4Entity):
             I think this is just used to verify that the relay is functional,
             not 100% sure though.
         """
-        return bool(
-            await self.director.getItemVariableValue(self.item_id, "StateVerified")
-        )
+        value = await self.director.getItemVariableValue(self.item_id, "StateVerified")
+        if value is None:
+            return None
+        return bool(value)
 
     async def open(self):
         """Set the relay to its open state.
