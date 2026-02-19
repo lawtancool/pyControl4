@@ -162,12 +162,8 @@ class C4Director:
             "/api/v1/items/{}/variables?varnames={}".format(item_id, var_name)
         )
         if data == "[]":
-            raise ValueError(
-                "Empty response recieved from Director! The variable {} \
-                    doesn't seem to exist for item {}.".format(
-                    var_name, item_id
-                )
-            )
+            raise ValueError("Empty response recieved from Director! The variable {} \
+                    doesn't seem to exist for item {}.".format(var_name, item_id))
         jsonDictionary = json.loads(data)
         value = jsonDictionary[0]["value"]
         if value == "Undefined":
@@ -188,12 +184,8 @@ class C4Director:
             "/api/v1/items/variables?varnames={}".format(var_name)
         )
         if data == "[]":
-            raise ValueError(
-                "Empty response recieved from Director! The variable {} \
-                    doesn't seem to exist for any items.".format(
-                    var_name
-                )
-            )
+            raise ValueError("Empty response recieved from Director! The variable {} \
+                    doesn't seem to exist for any items.".format(var_name))
         jsonDictionary = json.loads(data)
         for item in jsonDictionary:
             if item.get("value") == "Undefined":
