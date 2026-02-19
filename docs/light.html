@@ -67,7 +67,9 @@ el.replaceWith(d);
         return int(value)
 
     async def getState(self):
-        &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
+        &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on,
+        False=off).
+        &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
         if value is None:
             return None
@@ -133,7 +135,8 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds to the Control4 Director that the device is connected to.</p>
+<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -170,13 +173,16 @@ Will cause an error if called on a non-dimmer switch. Use <code>getState()</code
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getState(self):
-    &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
+    &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on,
+    False=off).
+    &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
 </details>
-<div class="desc"><p>Returns the power state of a dimmer or switch as a boolean (True=on, False=off).</p></div>
+<div class="desc"><p>Returns the power state of a dimmer or switch as a boolean (True=on,
+False=off).</p></div>
 </dd>
 <dt id="pyControl4.light.C4Light.rampToLevel"><code class="name flex">
 <span>async def <span class="ident">rampToLevel</span></span>(<span>self, level, time)</span>

@@ -72,8 +72,10 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
 
             `password` - Control4 account password.
 
-            `session` - (Optional) Allows the use of an `aiohttp.ClientSession` object for all network requests. This session will not be closed by the library.
-            If not provided, the library will open and close its own `ClientSession`s as needed.
+            `session` - (Optional) Allows the use of an `aiohttp.ClientSession`
+                object for all network requests. This session will not be closed
+                by the library. If not provided, the library will open and close
+                its own `ClientSession`s as needed.
         &#34;&#34;&#34;
         self.username = username
         self.password = password
@@ -127,7 +129,10 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         try:
             headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(self.account_bearer_token)}
         except AttributeError:
-            msg = &#34;The account bearer token is missing - was your username/password correct? &#34;
+            msg = (
+                &#34;The account bearer token is missing. &#34;
+                &#34;Is your username/password correct?&#34;
+            )
             _LOGGER.error(msg)
             raise
         if self.session is None:
@@ -147,12 +152,16 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         entire JSON response from the Control4 auth API.
 
         Parameters:
-            `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+            `controller_common_name`: Common name of the controller.
+                See `getAccountControllers()` for details.
         &#34;&#34;&#34;
         try:
             headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(self.account_bearer_token)}
         except AttributeError:
-            msg = &#34;The account bearer token is missing - was your username/password correct? &#34;
+            msg = (
+                &#34;The account bearer token is missing. &#34;
+                &#34;Is your username/password correct?&#34;
+            )
             _LOGGER.error(msg)
             raise
         dataDictionary = {
@@ -189,12 +198,16 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
             self.account_bearer_token = jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
             return self.account_bearer_token
         except KeyError:
-            msg = &#34;Did not recieve an account bearer token. Is your username/password correct? &#34;
+            msg = (
+                &#34;Did not recieve an account bearer token. &#34;
+                &#34;Is your username/password correct?&#34;
+            )
             _LOGGER.error(msg + data)
             raise
 
     async def getAccountControllers(self):
-        &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
+        &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered
+        to an account.
 
         Returns:
             ```
@@ -213,7 +226,8 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
         Parameters:
-            `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+            `controller_href` - The API `href` of the controller (get this from
+                the output of `getAccountControllers()`)
 
         Returns:
             ```
@@ -223,7 +237,7 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
                 &#39;blockNotifications&#39;: False,
                 &#39;controllerCommonName&#39;: &#39;control4_MODEL_MACADDRESS&#39;,
                 &#39;controller&#39;: {
-                    &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/controller&#39;
+                    &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/controller&#39;  # noqa: E501
                 },
                 &#39;created&#39;: &#39;2017-08-26T18:33:31Z&#39;,
                 &#39;dealer&#39;: {
@@ -235,7 +249,7 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
                 &#39;id&#39;: 000000,
                 &#39;lastCheckIn&#39;: &#39;2020-06-13T21:52:34Z&#39;,
                 &#39;licenses&#39;: {
-                    &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/licenses&#39;
+                    &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/licenses&#39;  # noqa: E501
                 },
                 &#39;modified&#39;: &#39;2020-06-13T21:52:34Z&#39;,
                 &#39;name&#39;: &#39;Name&#39;,
@@ -245,7 +259,7 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
                 },
                 &#39;type&#39;: &#39;Consumer&#39;,
                 &#39;users&#39;: {
-                    &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/users&#39;
+                    &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/users&#39;  # noqa: E501
                 }
             }
             ```
@@ -258,17 +272,20 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         &#34;&#34;&#34;Returns the OS version of a controller as a string.
 
         Parameters:
-            `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+            `controller_href` - The API `href` of the controller (get this from
+                the output of `getAccountControllers()`)
         &#34;&#34;&#34;
         data = await self.__sendAccountGetRequest(controller_href + &#34;/controller&#34;)
         jsonDictionary = json.loads(data)
         return jsonDictionary[&#34;osVersion&#34;]
 
     async def getDirectorBearerToken(self, controller_common_name):
-        &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its time valid in seconds (usually 86400 seconds)
+        &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4
+        Director API requests, and its time valid in seconds (usually 86400 seconds)
 
         Parameters:
-            `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+            `controller_common_name`: Common name of the controller.
+                See `getAccountControllers()` for details.
         &#34;&#34;&#34;
         data = await self.__sendControllerAuthRequest(controller_common_name)
         jsonDictionary = json.loads(data)
@@ -281,8 +298,10 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
 <h2 id="parameters">Parameters</h2>
 <p><code>username</code> - Control4 account username/email.</p>
 <p><code>password</code> - Control4 account password.</p>
-<p><code>session</code> - (Optional) Allows the use of an <code>aiohttp.ClientSession</code> object for all network requests. This session will not be closed by the library.
-If not provided, the library will open and close its own <code>ClientSession</code>s as needed.</p></div>
+<p><code>session</code> - (Optional) Allows the use of an <code>aiohttp.ClientSession</code>
+object for all network requests. This session will not be closed
+by the library. If not provided, the library will open and close
+its own <code>ClientSession</code>s as needed.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.account.C4Account.getAccountBearerToken"><code class="name flex">
@@ -301,7 +320,10 @@ If not provided, the library will open and close its own <code>ClientSession</co
         self.account_bearer_token = jsonDictionary[&#34;authToken&#34;][&#34;token&#34;]
         return self.account_bearer_token
     except KeyError:
-        msg = &#34;Did not recieve an account bearer token. Is your username/password correct? &#34;
+        msg = (
+            &#34;Did not recieve an account bearer token. &#34;
+            &#34;Is your username/password correct?&#34;
+        )
         _LOGGER.error(msg + data)
         raise</code></pre>
 </details>
@@ -316,7 +338,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getAccountControllers(self):
-    &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered to an account.
+    &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered
+    to an account.
 
     Returns:
         ```
@@ -331,7 +354,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
     jsonDictionary = json.loads(data)
     return jsonDictionary[&#34;account&#34;]</code></pre>
 </details>
-<div class="desc"><p>Returns a dictionary of the information for all controllers registered to an account.</p>
+<div class="desc"><p>Returns a dictionary of the information for all controllers registered
+to an account.</p>
 <h2 id="returns">Returns</h2>
 <pre><code>{
     &quot;controllerCommonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
@@ -352,7 +376,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
     &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
     Parameters:
-        `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+        `controller_href` - The API `href` of the controller (get this from
+            the output of `getAccountControllers()`)
 
     Returns:
         ```
@@ -362,7 +387,7 @@ If not provided, the library will open and close its own <code>ClientSession</co
             &#39;blockNotifications&#39;: False,
             &#39;controllerCommonName&#39;: &#39;control4_MODEL_MACADDRESS&#39;,
             &#39;controller&#39;: {
-                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/controller&#39;
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/controller&#39;  # noqa: E501
             },
             &#39;created&#39;: &#39;2017-08-26T18:33:31Z&#39;,
             &#39;dealer&#39;: {
@@ -374,7 +399,7 @@ If not provided, the library will open and close its own <code>ClientSession</co
             &#39;id&#39;: 000000,
             &#39;lastCheckIn&#39;: &#39;2020-06-13T21:52:34Z&#39;,
             &#39;licenses&#39;: {
-                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/licenses&#39;
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/licenses&#39;  # noqa: E501
             },
             &#39;modified&#39;: &#39;2020-06-13T21:52:34Z&#39;,
             &#39;name&#39;: &#39;Name&#39;,
@@ -384,7 +409,7 @@ If not provided, the library will open and close its own <code>ClientSession</co
             },
             &#39;type&#39;: &#39;Consumer&#39;,
             &#39;users&#39;: {
-                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/users&#39;
+                &#39;href&#39;: &#39;https://apis.control4.com/account/v3/rest/accounts/000000/users&#39;  # noqa: E501
             }
         }
         ```
@@ -395,7 +420,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 </details>
 <div class="desc"><p>Returns a dictionary of the information of a specific controller.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from the output of <code>getAccountControllers()</code>)</p>
+<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from
+the output of <code>getAccountControllers()</code>)</p>
 <h2 id="returns">Returns</h2>
 <pre><code>{
     'allowsPatching': True,
@@ -403,7 +429,7 @@ If not provided, the library will open and close its own <code>ClientSession</co
     'blockNotifications': False,
     'controllerCommonName': 'control4_MODEL_MACADDRESS',
     'controller': {
-        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/controller'
+        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/controller'  # noqa: E501
     },
     'created': '2017-08-26T18:33:31Z',
     'dealer': {
@@ -415,7 +441,7 @@ If not provided, the library will open and close its own <code>ClientSession</co
     'id': 000000,
     'lastCheckIn': '2020-06-13T21:52:34Z',
     'licenses': {
-        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/licenses'
+        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/licenses'  # noqa: E501
     },
     'modified': '2020-06-13T21:52:34Z',
     'name': 'Name',
@@ -425,7 +451,7 @@ If not provided, the library will open and close its own <code>ClientSession</co
     },
     'type': 'Consumer',
     'users': {
-        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/users'
+        'href': 'https://apis.control4.com/account/v3/rest/accounts/000000/users'  # noqa: E501
     }
 }
 </code></pre></div>
@@ -442,7 +468,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
     &#34;&#34;&#34;Returns the OS version of a controller as a string.
 
     Parameters:
-        `controller_href` - The API `href` of the controller (get this from the output of `getAccountControllers()`)
+        `controller_href` - The API `href` of the controller (get this from
+            the output of `getAccountControllers()`)
     &#34;&#34;&#34;
     data = await self.__sendAccountGetRequest(controller_href + &#34;/controller&#34;)
     jsonDictionary = json.loads(data)
@@ -450,7 +477,8 @@ If not provided, the library will open and close its own <code>ClientSession</co
 </details>
 <div class="desc"><p>Returns the OS version of a controller as a string.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from the output of <code>getAccountControllers()</code>)</p></div>
+<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from
+the output of <code>getAccountControllers()</code>)</p></div>
 </dd>
 <dt id="pyControl4.account.C4Account.getDirectorBearerToken"><code class="name flex">
 <span>async def <span class="ident">getDirectorBearerToken</span></span>(<span>self, controller_common_name)</span>
@@ -461,10 +489,12 @@ If not provided, the library will open and close its own <code>ClientSession</co
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">async def getDirectorBearerToken(self, controller_common_name):
-    &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4 Director API requests, and its time valid in seconds (usually 86400 seconds)
+    &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4
+    Director API requests, and its time valid in seconds (usually 86400 seconds)
 
     Parameters:
-        `controller_common_name`: Common name of the controller. See `getAccountControllers()` for details.
+        `controller_common_name`: Common name of the controller.
+            See `getAccountControllers()` for details.
     &#34;&#34;&#34;
     data = await self.__sendControllerAuthRequest(controller_common_name)
     jsonDictionary = json.loads(data)
@@ -473,9 +503,11 @@ If not provided, the library will open and close its own <code>ClientSession</co
         &#34;validSeconds&#34;: jsonDictionary[&#34;authToken&#34;][&#34;validSeconds&#34;],
     }</code></pre>
 </details>
-<div class="desc"><p>Returns a dictionary with a director bearer token for making Control4 Director API requests, and its time valid in seconds (usually 86400 seconds)</p>
+<div class="desc"><p>Returns a dictionary with a director bearer token for making Control4
+Director API requests, and its time valid in seconds (usually 86400 seconds)</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>controller_common_name</code>: Common name of the controller. See <code>getAccountControllers()</code> for details.</p></div>
+<p><code>controller_common_name</code>: Common name of the controller.
+See <code>getAccountControllers()</code> for details.</p></div>
 </dd>
 </dl>
 </dd>
