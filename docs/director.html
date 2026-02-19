@@ -214,7 +214,10 @@ getting details about items on the Director.</p>
             raise ValueError(&#34;Empty response recieved from Director! The variable {} \
                     doesn&#39;t seem to exist for item {}.&#34;.format(var_name, item_id))
         jsonDictionary = json.loads(data)
-        return jsonDictionary[0][&#34;value&#34;]
+        value = jsonDictionary[0][&#34;value&#34;]
+        if value == &#34;Undefined&#34;:
+            return None
+        return value
 
     async def getAllItemVariableValue(self, var_name):
         &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
@@ -233,6 +236,9 @@ getting details about items on the Director.</p>
             raise ValueError(&#34;Empty response recieved from Director! The variable {} \
                     doesn&#39;t seem to exist for any items.&#34;.format(var_name))
         jsonDictionary = json.loads(data)
+        for item in jsonDictionary:
+            if item.get(&#34;value&#34;) == &#34;Undefined&#34;:
+                item[&#34;value&#34;] = None
         return jsonDictionary
 
     async def getItemCommands(self, item_id):
@@ -397,6 +403,9 @@ close its own <code>ClientSession</code>s as needed.</p></div>
         raise ValueError(&#34;Empty response recieved from Director! The variable {} \
                 doesn&#39;t seem to exist for any items.&#34;.format(var_name))
     jsonDictionary = json.loads(data)
+    for item in jsonDictionary:
+        if item.get(&#34;value&#34;) == &#34;Undefined&#34;:
+            item[&#34;value&#34;] = None
     return jsonDictionary</code></pre>
 </details>
 <div class="desc"><p>Returns a dictionary with the values of the specified variable
@@ -565,7 +574,10 @@ outlet_wireless_dimmer, voice-scene</p></div>
         raise ValueError(&#34;Empty response recieved from Director! The variable {} \
                 doesn&#39;t seem to exist for item {}.&#34;.format(var_name, item_id))
     jsonDictionary = json.loads(data)
-    return jsonDictionary[0][&#34;value&#34;]</code></pre>
+    value = jsonDictionary[0][&#34;value&#34;]
+    if value == &#34;Undefined&#34;:
+        return None
+    return value</code></pre>
 </details>
 <div class="desc"><p>Returns the value of the specified variable for the
 specified item as a string.</p>

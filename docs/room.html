@@ -61,14 +61,18 @@ el.replaceWith(d);
     A media-oriented view of a Control4 Room, supporting items of type=&#34;room&#34;
     &#34;&#34;&#34;
 
-    async def isRoomHidden(self) -&gt; bool:
+    async def isRoomHidden(self) -&gt; Optional[bool]:
         &#34;&#34;&#34;Returns True if the room is hidden from the end-user&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;ROOM_HIDDEN&#34;)
+        if value is None:
+            return None
         return int(value) != 0
 
-    async def isOn(self) -&gt; bool:
+    async def isOn(self) -&gt; Optional[bool]:
         &#34;&#34;&#34;Returns True/False if the room is &#34;ON&#34; from the director&#39;s perspective&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;POWER_STATE&#34;)
+        if value is None:
+            return None
         return int(value) != 0
 
     async def setRoomOff(self):
@@ -98,14 +102,18 @@ el.replaceWith(d);
         &#34;&#34;&#34;Sets the current audio and video source for the room&#34;&#34;&#34;
         await self._setSource(source_id, audio_only=False)
 
-    async def getVolume(self) -&gt; int:
+    async def getVolume(self) -&gt; Optional[int]:
         &#34;&#34;&#34;Returns the current volume for the room from 0-100&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_VOLUME&#34;)
+        if value is None:
+            return None
         return int(value)
 
-    async def isMuted(self) -&gt; bool:
+    async def isMuted(self) -&gt; Optional[bool]:
         &#34;&#34;&#34;Returns True if the room is muted&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;IS_MUTED&#34;)
+        if value is None:
+            return None
         return int(value) != 0
 
     async def setMuteOn(self):
@@ -270,61 +278,69 @@ not necessarily all devices <em>playable</em> in the room.
 See C4Director.getUiConfiguration for a more accurate list</p></div>
 </dd>
 <dt id="pyControl4.room.C4Room.getVolume"><code class="name flex">
-<span>async def <span class="ident">getVolume</span></span>(<span>self) ‑> int</span>
+<span>async def <span class="ident">getVolume</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getVolume(self) -&gt; int:
+<pre><code class="python">async def getVolume(self) -&gt; Optional[int]:
     &#34;&#34;&#34;Returns the current volume for the room from 0-100&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_VOLUME&#34;)
+    if value is None:
+        return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current volume for the room from 0-100</p></div>
 </dd>
 <dt id="pyControl4.room.C4Room.isMuted"><code class="name flex">
-<span>async def <span class="ident">isMuted</span></span>(<span>self) ‑> bool</span>
+<span>async def <span class="ident">isMuted</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def isMuted(self) -&gt; bool:
+<pre><code class="python">async def isMuted(self) -&gt; Optional[bool]:
     &#34;&#34;&#34;Returns True if the room is muted&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;IS_MUTED&#34;)
+    if value is None:
+        return None
     return int(value) != 0</code></pre>
 </details>
 <div class="desc"><p>Returns True if the room is muted</p></div>
 </dd>
 <dt id="pyControl4.room.C4Room.isOn"><code class="name flex">
-<span>async def <span class="ident">isOn</span></span>(<span>self) ‑> bool</span>
+<span>async def <span class="ident">isOn</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def isOn(self) -&gt; bool:
+<pre><code class="python">async def isOn(self) -&gt; Optional[bool]:
     &#34;&#34;&#34;Returns True/False if the room is &#34;ON&#34; from the director&#39;s perspective&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;POWER_STATE&#34;)
+    if value is None:
+        return None
     return int(value) != 0</code></pre>
 </details>
 <div class="desc"><p>Returns True/False if the room is "ON" from the director's perspective</p></div>
 </dd>
 <dt id="pyControl4.room.C4Room.isRoomHidden"><code class="name flex">
-<span>async def <span class="ident">isRoomHidden</span></span>(<span>self) ‑> bool</span>
+<span>async def <span class="ident">isRoomHidden</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def isRoomHidden(self) -&gt; bool:
+<pre><code class="python">async def isRoomHidden(self) -&gt; Optional[bool]:
     &#34;&#34;&#34;Returns True if the room is hidden from the end-user&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;ROOM_HIDDEN&#34;)
+    if value is None:
+        return None
     return int(value) != 0</code></pre>
 </details>
 <div class="desc"><p>Returns True if the room is hidden from the end-user</p></div>

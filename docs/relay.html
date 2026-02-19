@@ -73,9 +73,10 @@ el.replaceWith(d);
             I think this is just used to verify that the relay is functional,
             not 100% sure though.
         &#34;&#34;&#34;
-        return bool(
-            await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
-        )
+        value = await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
+        if value is None:
+            return None
+        return bool(value)
 
     async def open(self):
         &#34;&#34;&#34;Set the relay to its open state.
@@ -216,9 +217,10 @@ For relays in general, <code>0</code> probably means open and <code>1</code> pro
         I think this is just used to verify that the relay is functional,
         not 100% sure though.
     &#34;&#34;&#34;
-    return bool(
-        await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
-    )</code></pre>
+    value = await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
+    if value is None:
+        return None
+    return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns True if Relay is functional.</p>
 <h2 id="notes">Notes</h2>
