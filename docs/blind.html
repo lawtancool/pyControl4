@@ -60,6 +60,8 @@ el.replaceWith(d);
     async def getBatteryLevel(self):
         &#34;&#34;&#34;Returns the battery of a blind. We currently don&#39;t know the range or meaning.&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Battery Level&#34;)
+        if value is None:
+            return None
         return int(value)
 
     async def getClosing(self):
@@ -67,18 +69,24 @@ el.replaceWith(d);
         (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def getFullyClosed(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is fully closed as a boolean
         (True=fully closed, False=at least partially open).&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Closed&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def getFullyOpen(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is fully open as a boolean
         (True=fully open, False=at least partially closed).&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Open&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def getLevel(self):
@@ -86,12 +94,16 @@ el.replaceWith(d);
         0 is fully closed and 100 is fully open.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Level&#34;)
+        if value is None:
+            return None
         return int(value)
 
     async def getOpen(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is open as a boolean (True=open, False=closed).
         This is true even if the blind is only partially open.&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Open&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def getOpening(self):
@@ -99,12 +111,16 @@ el.replaceWith(d);
         (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def getStopped(self):
         &#34;&#34;&#34;Returns an indication of whether the blind is stopped as a boolean
         (True=stopped, False=moving).&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Stopped&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def getTargetLevel(self):
@@ -113,6 +129,8 @@ el.replaceWith(d);
         0 is fully closed and 100 is fully open.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;Target Level&#34;)
+        if value is None:
+            return None
         return int(value)
 
     async def open(self):
@@ -200,6 +218,8 @@ el.replaceWith(d);
 <pre><code class="python">async def getBatteryLevel(self):
     &#34;&#34;&#34;Returns the battery of a blind. We currently don&#39;t know the range or meaning.&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Battery Level&#34;)
+    if value is None:
+        return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the battery of a blind. We currently don't know the range or meaning.</p></div>
@@ -217,6 +237,8 @@ el.replaceWith(d);
     (True=closing, False=opening). If the blind is stopped, reports the direction it last moved.
     &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns an indication of whether the blind is moving in the closed direction as a boolean
@@ -234,6 +256,8 @@ el.replaceWith(d);
     &#34;&#34;&#34;Returns an indication of whether the blind is fully closed as a boolean
     (True=fully closed, False=at least partially open).&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Closed&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns an indication of whether the blind is fully closed as a boolean
@@ -251,6 +275,8 @@ el.replaceWith(d);
     &#34;&#34;&#34;Returns an indication of whether the blind is fully open as a boolean
     (True=fully open, False=at least partially closed).&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Open&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns an indication of whether the blind is fully open as a boolean
@@ -269,6 +295,8 @@ el.replaceWith(d);
     0 is fully closed and 100 is fully open.
     &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Level&#34;)
+    if value is None:
+        return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the level (current position) of a blind as an int 0-100.
@@ -286,6 +314,8 @@ el.replaceWith(d);
     &#34;&#34;&#34;Returns an indication of whether the blind is open as a boolean (True=open, False=closed).
     This is true even if the blind is only partially open.&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Open&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns an indication of whether the blind is open as a boolean (True=open, False=closed).
@@ -304,6 +334,8 @@ This is true even if the blind is only partially open.</p></div>
     (True=opening, False=closing). If the blind is stopped, reports the direction it last moved.
     &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns an indication of whether the blind is moving in the open direction as a boolean
@@ -321,6 +353,8 @@ This is true even if the blind is only partially open.</p></div>
     &#34;&#34;&#34;Returns an indication of whether the blind is stopped as a boolean
     (True=stopped, False=moving).&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Stopped&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns an indication of whether the blind is stopped as a boolean
@@ -340,6 +374,8 @@ This is true even if the blind is only partially open.</p></div>
     0 is fully closed and 100 is fully open.
     &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;Target Level&#34;)
+    if value is None:
+        return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the target level (desired position) of a blind as an int 0-100.

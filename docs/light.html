@@ -62,11 +62,15 @@ el.replaceWith(d);
         Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
         &#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
+        if value is None:
+            return None
         return int(value)
 
     async def getState(self):
         &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
         value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
+        if value is None:
+            return None
         return bool(value)
 
     async def setLevel(self, level):
@@ -150,6 +154,8 @@ el.replaceWith(d);
     Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
     &#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
+    if value is None:
+        return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the level of a dimming-capable light as an int 0-100.
@@ -166,6 +172,8 @@ Will cause an error if called on a non-dimmer switch. Use <code>getState()</code
 <pre><code class="python">async def getState(self):
     &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on, False=off).&#34;&#34;&#34;
     value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
+    if value is None:
+        return None
     return bool(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the power state of a dimmer or switch as a boolean (True=on, False=off).</p></div>

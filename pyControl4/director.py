@@ -165,7 +165,10 @@ class C4Director:
             raise ValueError("Empty response recieved from Director! The variable {} \
                     doesn't seem to exist for item {}.".format(var_name, item_id))
         jsonDictionary = json.loads(data)
-        return jsonDictionary[0]["value"]
+        value = jsonDictionary[0]["value"]
+        if value == "Undefined":
+            return None
+        return value
 
     async def getAllItemVariableValue(self, var_name):
         """Returns a dictionary with the values of the specified variable
@@ -184,6 +187,9 @@ class C4Director:
             raise ValueError("Empty response recieved from Director! The variable {} \
                     doesn't seem to exist for any items.".format(var_name))
         jsonDictionary = json.loads(data)
+        for item in jsonDictionary:
+            if item.get("value") == "Undefined":
+                item["value"] = None
         return jsonDictionary
 
     async def getItemCommands(self, item_id):
