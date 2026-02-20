@@ -71,12 +71,16 @@ updates using callbacks.</p>
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `session` - (Optional) Allows the use of an
+            `session_no_verify_ssl` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+                        This session is also passed to the underlying
+                        socketio/engineio client to avoid blocking
+                        `ssl.create_default_context()` calls inside
+                        the event loop.
 
             `connect_callback` - (Optional) A callback to be called when the
                 Websocket connection is opened or reconnected after a network
@@ -163,7 +167,18 @@ updates using callbacks.</p>
         # Disconnect previous sio object
         await self.sio_disconnect()
 
-        self._sio = socketio.AsyncClient(ssl_verify=False)
+        if self.session is not None:
+            # Create a new session using the caller&#39;s connector so engineio
+            # can safely close it in _reset() without affecting the caller&#39;s
+            # session.
+            http_session = aiohttp.ClientSession(
+                connector=self.session.connector, connector_owner=False
+            )
+            self._sio = socketio.AsyncClient(
+                ssl_verify=False, http_session=http_session
+            )
+        else:
+            self._sio = socketio.AsyncClient(ssl_verify=False)
         self._sio.register_namespace(
             _C4DirectorNamespace(
                 token=director_bearer_token,
@@ -227,12 +242,16 @@ updates using callbacks.</p>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
-<p><code>session</code> - (Optional) Allows the use of an
+<p><code>session_no_verify_ssl</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
 session will not be closed by the library.
 If not provided, the library will open and
-close its own <code>ClientSession</code>s as needed.</p>
+close its own <code>ClientSession</code>s as needed.
+This session is also passed to the underlying
+socketio/engineio client to avoid blocking
+<code>ssl.create_default_context()</code> calls inside
+the event loop.</p>
 <p><code>connect_callback</code> - (Optional) A callback to be called when the
 Websocket connection is opened or reconnected after a network
 error.</p>
@@ -356,7 +375,18 @@ removes all callbacks for this item_id.</p></div>
     # Disconnect previous sio object
     await self.sio_disconnect()
 
-    self._sio = socketio.AsyncClient(ssl_verify=False)
+    if self.session is not None:
+        # Create a new session using the caller&#39;s connector so engineio
+        # can safely close it in _reset() without affecting the caller&#39;s
+        # session.
+        http_session = aiohttp.ClientSession(
+            connector=self.session.connector, connector_owner=False
+        )
+        self._sio = socketio.AsyncClient(
+            ssl_verify=False, http_session=http_session
+        )
+    else:
+        self._sio = socketio.AsyncClient(ssl_verify=False)
     self._sio.register_namespace(
         _C4DirectorNamespace(
             token=director_bearer_token,
