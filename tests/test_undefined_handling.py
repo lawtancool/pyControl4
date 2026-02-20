@@ -5,15 +5,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from pyControl4.director import C4Director
 from pyControl4.light import C4Light
 from pyControl4.blind import C4Blind
-
-
-@pytest.fixture
-def director():
-    """Create a C4Director with a mocked session."""
-    return C4Director("192.168.1.1", "test-token")
 
 
 @pytest.mark.asyncio
