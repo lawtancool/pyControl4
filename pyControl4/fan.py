@@ -35,7 +35,7 @@ class C4Fan(C4Entity):
 
         Note:
             Only valid for fan controllers. On non-dimmer switches,
-            use `getState()` instead.
+            use `get_state()` instead.
 
         Returns:
             int: Current fan speed (0–4).

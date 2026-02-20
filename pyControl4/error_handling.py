@@ -33,7 +33,7 @@ class BadToken(Unauthorized):
 
 class InvalidCategory(C4Exception):
     """Raised when an invalid category is provided when calling
-    `pyControl4.director.C4Director.getAllItemsByCategory`."""
+    `pyControl4.director.C4Director.get_all_items_by_category`."""
 
 
 ERROR_CODES = {"401": Unauthorized, "404": NotFound}

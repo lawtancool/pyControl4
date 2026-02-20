@@ -187,16 +187,16 @@ class C4SecurityPanel(C4Entity):
             return []
         return [t.strip() for t in arm_types_str.split(",") if t.strip()]
 
-    async def trigger_emergency(self, type: str) -> None:
+    async def trigger_emergency(self, emergency_type: str) -> None:
         """Triggers an emergency of the specified type.
 
         Parameters:
-            `type` - Type of emergency: "Fire", "Medical", "Panic", or "Police"
+            `emergency_type` - Type of emergency: "Fire", "Medical", "Panic", or "Police"
         """
         await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "EXECUTE_EMERGENCY",
-            {"EmergencyType": type},
+            {"EmergencyType": emergency_type},
         )
 
     async def send_key_press(self, key: str) -> None:

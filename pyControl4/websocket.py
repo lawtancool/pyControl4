@@ -192,7 +192,7 @@ class C4Websocket:
         Parameters:
             `director_bearer_token` - The bearer token used to authenticate
                 with the Director. See
-                `pyControl4.account.C4Account.getDirectorBearerToken`
+                `pyControl4.account.C4Account.get_director_bearer_token`
                 for how to get this.
         """
         # Disconnect previous sio object
