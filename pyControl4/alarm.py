@@ -5,6 +5,7 @@ devices.
 from __future__ import annotations
 
 from pyControl4 import C4Entity
+from pyControl4.director import C4Director
 
 
 class C4SecurityPanel(C4Entity):
@@ -214,7 +215,7 @@ class C4SecurityPanel(C4Entity):
 
 
 class C4ContactSensor:
-    def __init__(self, director, item_id):
+    def __init__(self, director: C4Director, item_id: int) -> None:
         """Creates a Control4 Contact Sensor object.
 
         Parameters:

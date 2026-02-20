@@ -87,7 +87,7 @@ class C4Account:
                     AUTHENTICATION_ENDPOINT, json=data_dict
                 ) as resp:
                     text = await resp.text()
-                    await check_response_for_error(text)
+                    check_response_for_error(text)
                     return text
 
     async def _send_account_get_request(self, uri: str) -> str:
@@ -111,7 +111,7 @@ class C4Account:
             async with asyncio.timeout(10):
                 async with session.get(uri, headers=headers) as resp:
                     text = await resp.text()
-                    await check_response_for_error(text)
+                    check_response_for_error(text)
                     return text
 
     async def _send_controller_auth_request(self, controller_common_name: str) -> str:
@@ -145,7 +145,7 @@ class C4Account:
                     json=data_dict,
                 ) as resp:
                     text = await resp.text()
-                    await check_response_for_error(text)
+                    check_response_for_error(text)
                     return text
 
     async def get_account_bearer_token(self) -> str:

@@ -72,7 +72,7 @@ class C4Director:
                     self.base_url + uri, headers=self.headers
                 ) as resp:
                     text = await resp.text()
-                    await check_response_for_error(text)
+                    check_response_for_error(text)
                     return text
 
     async def send_post_request(
@@ -101,7 +101,7 @@ class C4Director:
                     self.base_url + uri, headers=self.headers, json=data_dict
                 ) as resp:
                     text = await resp.text()
-                    await check_response_for_error(text)
+                    check_response_for_error(text)
                     return text
 
     async def get_all_items_by_category(self, category: str) -> list[dict]:

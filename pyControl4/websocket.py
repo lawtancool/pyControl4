@@ -76,7 +76,7 @@ class _C4DirectorNamespace(socketio.AsyncClientNamespace):
                         self.url + self.uri,
                         params={"JWT": self.token, "SubscriptionClient": client_id},
                     ) as resp:
-                        await check_response_for_error(await resp.text())
+                        check_response_for_error(await resp.text())
                         data = await resp.json()
                         subscription_id = data.get("subscriptionId")
                         if subscription_id is None:

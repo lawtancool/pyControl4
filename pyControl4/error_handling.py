@@ -47,7 +47,7 @@ DIRECTOR_ERRORS = {"Unauthorized": Unauthorized, "Invalid category": InvalidCate
 DIRECTOR_ERROR_DETAILS = {"Expired or invalid token": BadToken}
 
 
-async def _check_response_format(response_text: str) -> str:
+def _check_response_format(response_text: str) -> str:
     """Known Control4 authentication API error message formats:
     ```json
     {
@@ -144,13 +144,13 @@ def _raise_error(error_info: dict, response_text: str) -> None:
     raise C4Exception(response_text)
 
 
-async def check_response_for_error(response_text: str) -> None:
+def check_response_for_error(response_text: str) -> None:
     """Checks a string response from the Control4 API for error codes.
 
     Parameters:
         `response_text` - JSON or XML response from Control4, as a string.
     """
-    response_format = await _check_response_format(response_text)
+    response_format = _check_response_format(response_text)
 
     if response_format == "JSON":
         dictionary = json.loads(response_text)
