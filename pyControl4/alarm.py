@@ -7,7 +7,10 @@ from pyControl4 import C4Entity
 
 class C4SecurityPanel(C4Entity):
     async def get_arm_state(self) -> str | None:
-        """Returns the arm state of the security panel as "DISARMED", "ARMED_HOME",
+        """
+        NOTE: Prefer using `get_partition_state()`
+        and `get_armed_type()` over this method.
+        Returns the arm state of the security panel as "DISARMED", "ARMED_HOME",
         or "ARMED_AWAY".
         """
         disarmed = await self.director.get_item_variable_value(
@@ -19,12 +22,15 @@ class C4SecurityPanel(C4Entity):
         armed_away = await self.director.get_item_variable_value(
             self.item_id, "AWAY_STATE"
         )
-        if disarmed == 1:
-            return "DISARMED"
-        elif armed_home == 1:
-            return "ARMED_HOME"
-        elif armed_away == 1:
-            return "ARMED_AWAY"
+        try:
+            if disarmed is not None and int(disarmed) == 1:
+                return "DISARMED"
+            elif armed_home is not None and int(armed_home) == 1:
+                return "ARMED_HOME"
+            elif armed_away is not None and int(armed_away) == 1:
+                return "ARMED_AWAY"
+        except (ValueError, TypeError):
+            pass
         return None
 
     async def get_alarm_state(self) -> bool | None:
