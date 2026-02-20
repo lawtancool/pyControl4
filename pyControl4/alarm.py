@@ -206,16 +206,16 @@ class C4SecurityPanel(C4Entity):
 
 
 class C4ContactSensor:
-    def __init__(self, C4Director, item_id):
+    def __init__(self, director, item_id):
         """Creates a Control4 Contact Sensor object.
 
         Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds
-                to the Control4 Director that the security panel is connected to.
+            `director` - A `pyControl4.director.C4Director` object that corresponds
+                to the Control4 Director that the contact sensor is connected to.
 
             `item_id` - The Control4 item ID of the contact sensor.
         """
-        self.director = C4Director
+        self.director = director
         self.item_id = item_id
 
     async def get_contact_state(self) -> bool | None:

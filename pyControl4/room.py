@@ -146,7 +146,8 @@ class C4Room(C4Entity):
         Get the audio devices located in the room.
         Note that this is literally the devices in the room,
         not necessarily all devices _playable_ in the room.
-        See C4Director.get_ui_configuration for a more accurate list
+        See `pyControl4.director.C4Director.get_ui_configuration`
+        for a more accurate list
         """
         data = await self.director.send_get_request(
             f"/api/v1/locations/rooms/{self.item_id}/audio_devices"
@@ -160,7 +161,8 @@ class C4Room(C4Entity):
         Get the video devices located in the room.
         Note that this is literally the devices in the room,
         not necessarily all devices _playable_ in the room.
-        See C4Director.get_ui_configuration for a more accurate list
+        See `pyControl4.director.C4Director.get_ui_configuration`
+        for a more accurate list
         """
         data = await self.director.send_get_request(
             f"/api/v1/locations/rooms/{self.item_id}/video_devices"
