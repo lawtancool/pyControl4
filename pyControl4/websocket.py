@@ -5,6 +5,7 @@ updates using callbacks.
 from __future__ import annotations
 
 from typing import Any, Callable
+from types import MappingProxyType
 
 import aiohttp
 import asyncio
@@ -132,11 +133,12 @@ class C4Websocket:
         self._sio: socketio.AsyncClient | None = None
 
     @property
-    def item_callbacks(self) -> dict[int, list[Callable]]:
-        """Returns a dictionary of registered item ids (key) and their callbacks
-        (value).
+    def item_callbacks(self) -> MappingProxyType[int, list[Callable]]:
+        """Returns a read-only view of registered item ids (key) and their
+        callbacks (value). Use add_item_callback() or remove_item_callback()
+        to modify callbacks.
         """
-        return self._item_callbacks
+        return MappingProxyType(self._item_callbacks)
 
     def add_item_callback(self, item_id: int, callback: Callable) -> None:
         """Register a callback to receive updates about an item.

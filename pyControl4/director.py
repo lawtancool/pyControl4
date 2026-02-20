@@ -71,8 +71,9 @@ class C4Director:
                 async with session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
-                    await check_response_for_error(await resp.text())
-                    return await resp.text()
+                    text = await resp.text()
+                    await check_response_for_error(text)
+                    return text
 
     async def send_post_request(
         self, uri: str, command: str, params: dict, is_async: bool = True
@@ -99,8 +100,9 @@ class C4Director:
                 async with session.post(
                     self.base_url + uri, headers=self.headers, json=data_dict
                 ) as resp:
-                    await check_response_for_error(await resp.text())
-                    return await resp.text()
+                    text = await resp.text()
+                    await check_response_for_error(text)
+                    return text
 
     async def get_all_items_by_category(self, category: str) -> list[dict]:
         """Returns a list of items related to a particular category.
