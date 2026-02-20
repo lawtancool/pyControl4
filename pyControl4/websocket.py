@@ -107,7 +107,7 @@ class C4Websocket:
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `session` - (Optional) Allows the use of an
+            `session_no_verify_ssl` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
