@@ -284,7 +284,9 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
             _LOGGER.error(msg + &#34; Response: &#34; + data)
             raise
 
-    async def get_director_bearer_token(self, controller_common_name: str) -&gt; dict[str, Any]:
+    async def get_director_bearer_token(
+        self, controller_common_name: str
+    ) -&gt; dict[str, Any]:
         &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4
         Director API requests, and its time valid in seconds (usually 86400 seconds)
 
@@ -513,7 +515,9 @@ the output of <code>get_account_controllers()</code>)</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_director_bearer_token(self, controller_common_name: str) -&gt; dict[str, Any]:
+<pre><code class="python">async def get_director_bearer_token(
+    self, controller_common_name: str
+) -&gt; dict[str, Any]:
     &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4
     Director API requests, and its time valid in seconds (usually 86400 seconds)
 
