@@ -223,6 +223,7 @@ class C4Websocket:
     async def _callback(self, message: Any) -> None:
         if "status" in message:
             _LOGGER.debug(f'Subscription {message["status"]}')
+            return
         if isinstance(message, list):
             for m in message:
                 await self._process_message(m)
