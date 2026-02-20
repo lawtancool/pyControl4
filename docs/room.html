@@ -49,7 +49,7 @@ el.replaceWith(d);
 <dl>
 <dt id="pyControl4.room.C4Room"><code class="flex name class">
 <span>class <span class="ident">C4Room</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -61,161 +61,167 @@ el.replaceWith(d);
     A media-oriented view of a Control4 Room, supporting items of type=&#34;room&#34;
     &#34;&#34;&#34;
 
-    async def isRoomHidden(self) -&gt; Optional[bool]:
+    async def is_room_hidden(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns True if the room is hidden from the end-user&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;ROOM_HIDDEN&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;ROOM_HIDDEN&#34;)
         if value is None:
             return None
         return int(value) != 0
 
-    async def isOn(self) -&gt; Optional[bool]:
+    async def is_on(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns True/False if the room is &#34;ON&#34; from the director&#39;s perspective&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;POWER_STATE&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;POWER_STATE&#34;)
         if value is None:
             return None
         return int(value) != 0
 
-    async def setRoomOff(self):
+    async def set_room_off(self) -&gt; None:
         &#34;&#34;&#34;Turn the room &#34;OFF&#34; &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;ROOM_OFF&#34;,
             {},
         )
 
-    async def _setSource(self, source_id: int, audio_only: bool):
+    async def _set_source(self, source_id: int, audio_only: bool) -&gt; None:
         &#34;&#34;&#34;
         Sets the room source, turning on the room if necessary.
         If audio_only, only the current audio device is changed
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SELECT_AUDIO_DEVICE&#34; if audio_only else &#34;SELECT_VIDEO_DEVICE&#34;,
             {&#34;deviceid&#34;: source_id},
         )
 
-    async def setAudioSource(self, source_id: int):
+    async def set_audio_source(self, source_id: int) -&gt; None:
         &#34;&#34;&#34;Sets the current audio source for the room&#34;&#34;&#34;
-        await self._setSource(source_id, audio_only=True)
+        await self._set_source(source_id, audio_only=True)
 
-    async def setVideoAndAudioSource(self, source_id: int):
+    async def set_video_and_audio_source(self, source_id: int) -&gt; None:
         &#34;&#34;&#34;Sets the current audio and video source for the room&#34;&#34;&#34;
-        await self._setSource(source_id, audio_only=False)
+        await self._set_source(source_id, audio_only=False)
 
-    async def getVolume(self) -&gt; Optional[int]:
+    async def get_volume(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the current volume for the room from 0-100&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_VOLUME&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;CURRENT_VOLUME&#34;
+        )
         if value is None:
             return None
         return int(value)
 
-    async def isMuted(self) -&gt; Optional[bool]:
+    async def is_muted(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns True if the room is muted&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;IS_MUTED&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;IS_MUTED&#34;)
         if value is None:
             return None
         return int(value) != 0
 
-    async def setMuteOn(self):
+    async def set_mute_on(self) -&gt; None:
         &#34;&#34;&#34;Mute the room&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;MUTE_ON&#34;,
             {},
         )
 
-    async def setMuteOff(self):
+    async def set_mute_off(self) -&gt; None:
         &#34;&#34;&#34;Unmute the room&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;MUTE_OFF&#34;,
             {},
         )
 
-    async def toggleMute(self):
+    async def toggle_mute(self) -&gt; None:
         &#34;&#34;&#34;Toggle the current mute state for the room&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;MUTE_TOGGLE&#34;,
             {},
         )
 
-    async def setVolume(self, volume: int):
+    async def set_volume(self, volume: int) -&gt; None:
         &#34;&#34;&#34;Set the room volume, 0-100&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_VOLUME_LEVEL&#34;,
             {&#34;LEVEL&#34;: volume},
         )
 
-    async def setIncrementVolume(self):
-        &#34;&#34;&#34;Decrease volume by 1&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    async def set_increment_volume(self) -&gt; None:
+        &#34;&#34;&#34;Increase volume by 1&#34;&#34;&#34;
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;PULSE_VOL_UP&#34;,
             {},
         )
 
-    async def setDecrementVolume(self):
+    async def set_decrement_volume(self) -&gt; None:
         &#34;&#34;&#34;Decrease volume by 1&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;PULSE_VOL_DOWN&#34;,
             {},
         )
 
-    async def setPlay(self):
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    async def set_play(self) -&gt; None:
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;PLAY&#34;,
             {},
         )
 
-    async def setPause(self):
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    async def set_pause(self) -&gt; None:
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;PAUSE&#34;,
             {},
         )
 
-    async def setStop(self):
+    async def set_stop(self) -&gt; None:
         &#34;&#34;&#34;Stops the currently playing media but does not turn off the room&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;STOP&#34;,
             {},
         )
 
-    async def getAudioDevices(self):
+    async def get_audio_devices(self) -&gt; dict:
         &#34;&#34;&#34;
         Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
         Get the audio devices located in the room.
         Note that this is literally the devices in the room,
         not necessarily all devices _playable_ in the room.
-        See C4Director.getUiConfiguration for a more accurate list
+        See `pyControl4.director.C4Director.get_ui_configuration`
+        for a more accurate list
         &#34;&#34;&#34;
-        await self.director.sendGetRequest(
-            &#34;/api/v1/locations/rooms/{}/audio_devices&#34;.format(self.item_id)
+        data = await self.director.send_get_request(
+            f&#34;/api/v1/locations/rooms/{self.item_id}/audio_devices&#34;
         )
+        return json.loads(data)
 
-    async def getVideoDevices(self):
+    async def get_video_devices(self) -&gt; dict:
         &#34;&#34;&#34;
         Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
         Get the video devices located in the room.
         Note that this is literally the devices in the room,
         not necessarily all devices _playable_ in the room.
-        See C4Director.getUiConfiguration for a more accurate list
+        See `pyControl4.director.C4Director.get_ui_configuration`
+        for a more accurate list
         &#34;&#34;&#34;
-        await self.director.sendGetRequest(
-            &#34;/api/v1/locations/rooms/{}/video_devices&#34;.format(self.item_id)
-        )</code></pre>
+        data = await self.director.send_get_request(
+            f&#34;/api/v1/locations/rooms/{self.item_id}/video_devices&#34;
+        )
+        return json.loads(data)</code></pre>
 </details>
 <div class="desc"><p>A media-oriented view of a Control4 Room, supporting items of type="room"</p>
 <p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -224,328 +230,336 @@ to the Control4 Director that the device is connected to.</p>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.room.C4Room.getAudioDevices"><code class="name flex">
-<span>async def <span class="ident">getAudioDevices</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.get_audio_devices"><code class="name flex">
+<span>async def <span class="ident">get_audio_devices</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAudioDevices(self):
+<pre><code class="python">async def get_audio_devices(self) -&gt; dict:
     &#34;&#34;&#34;
     Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
     Get the audio devices located in the room.
     Note that this is literally the devices in the room,
     not necessarily all devices _playable_ in the room.
-    See C4Director.getUiConfiguration for a more accurate list
+    See `pyControl4.director.C4Director.get_ui_configuration`
+    for a more accurate list
     &#34;&#34;&#34;
-    await self.director.sendGetRequest(
-        &#34;/api/v1/locations/rooms/{}/audio_devices&#34;.format(self.item_id)
-    )</code></pre>
+    data = await self.director.send_get_request(
+        f&#34;/api/v1/locations/rooms/{self.item_id}/audio_devices&#34;
+    )
+    return json.loads(data)</code></pre>
 </details>
 <div class="desc"><p>Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions</p>
 <p>Get the audio devices located in the room.
 Note that this is literally the devices in the room,
 not necessarily all devices <em>playable</em> in the room.
-See C4Director.getUiConfiguration for a more accurate list</p></div>
+See <code><a title="pyControl4.director.C4Director.get_ui_configuration" href="director.html#pyControl4.director.C4Director.get_ui_configuration">C4Director.get_ui_configuration()</a></code>
+for a more accurate list</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.getVideoDevices"><code class="name flex">
-<span>async def <span class="ident">getVideoDevices</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.get_video_devices"><code class="name flex">
+<span>async def <span class="ident">get_video_devices</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getVideoDevices(self):
+<pre><code class="python">async def get_video_devices(self) -&gt; dict:
     &#34;&#34;&#34;
     Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
     Get the video devices located in the room.
     Note that this is literally the devices in the room,
     not necessarily all devices _playable_ in the room.
-    See C4Director.getUiConfiguration for a more accurate list
+    See `pyControl4.director.C4Director.get_ui_configuration`
+    for a more accurate list
     &#34;&#34;&#34;
-    await self.director.sendGetRequest(
-        &#34;/api/v1/locations/rooms/{}/video_devices&#34;.format(self.item_id)
-    )</code></pre>
+    data = await self.director.send_get_request(
+        f&#34;/api/v1/locations/rooms/{self.item_id}/video_devices&#34;
+    )
+    return json.loads(data)</code></pre>
 </details>
 <div class="desc"><p>Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions</p>
 <p>Get the video devices located in the room.
 Note that this is literally the devices in the room,
 not necessarily all devices <em>playable</em> in the room.
-See C4Director.getUiConfiguration for a more accurate list</p></div>
+See <code><a title="pyControl4.director.C4Director.get_ui_configuration" href="director.html#pyControl4.director.C4Director.get_ui_configuration">C4Director.get_ui_configuration()</a></code>
+for a more accurate list</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.getVolume"><code class="name flex">
-<span>async def <span class="ident">getVolume</span></span>(<span>self) ‑> int | None</span>
+<dt id="pyControl4.room.C4Room.get_volume"><code class="name flex">
+<span>async def <span class="ident">get_volume</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getVolume(self) -&gt; Optional[int]:
+<pre><code class="python">async def get_volume(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the current volume for the room from 0-100&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_VOLUME&#34;)
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;CURRENT_VOLUME&#34;
+    )
     if value is None:
         return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current volume for the room from 0-100</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.isMuted"><code class="name flex">
-<span>async def <span class="ident">isMuted</span></span>(<span>self) ‑> bool | None</span>
+<dt id="pyControl4.room.C4Room.is_muted"><code class="name flex">
+<span>async def <span class="ident">is_muted</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def isMuted(self) -&gt; Optional[bool]:
+<pre><code class="python">async def is_muted(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns True if the room is muted&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;IS_MUTED&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;IS_MUTED&#34;)
     if value is None:
         return None
     return int(value) != 0</code></pre>
 </details>
 <div class="desc"><p>Returns True if the room is muted</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.isOn"><code class="name flex">
-<span>async def <span class="ident">isOn</span></span>(<span>self) ‑> bool | None</span>
+<dt id="pyControl4.room.C4Room.is_on"><code class="name flex">
+<span>async def <span class="ident">is_on</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def isOn(self) -&gt; Optional[bool]:
+<pre><code class="python">async def is_on(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns True/False if the room is &#34;ON&#34; from the director&#39;s perspective&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;POWER_STATE&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;POWER_STATE&#34;)
     if value is None:
         return None
     return int(value) != 0</code></pre>
 </details>
 <div class="desc"><p>Returns True/False if the room is "ON" from the director's perspective</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.isRoomHidden"><code class="name flex">
-<span>async def <span class="ident">isRoomHidden</span></span>(<span>self) ‑> bool | None</span>
+<dt id="pyControl4.room.C4Room.is_room_hidden"><code class="name flex">
+<span>async def <span class="ident">is_room_hidden</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def isRoomHidden(self) -&gt; Optional[bool]:
+<pre><code class="python">async def is_room_hidden(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns True if the room is hidden from the end-user&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;ROOM_HIDDEN&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;ROOM_HIDDEN&#34;)
     if value is None:
         return None
     return int(value) != 0</code></pre>
 </details>
 <div class="desc"><p>Returns True if the room is hidden from the end-user</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setAudioSource"><code class="name flex">
-<span>async def <span class="ident">setAudioSource</span></span>(<span>self, source_id: int)</span>
+<dt id="pyControl4.room.C4Room.set_audio_source"><code class="name flex">
+<span>async def <span class="ident">set_audio_source</span></span>(<span>self, source_id: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setAudioSource(self, source_id: int):
+<pre><code class="python">async def set_audio_source(self, source_id: int) -&gt; None:
     &#34;&#34;&#34;Sets the current audio source for the room&#34;&#34;&#34;
-    await self._setSource(source_id, audio_only=True)</code></pre>
+    await self._set_source(source_id, audio_only=True)</code></pre>
 </details>
 <div class="desc"><p>Sets the current audio source for the room</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setDecrementVolume"><code class="name flex">
-<span>async def <span class="ident">setDecrementVolume</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_decrement_volume"><code class="name flex">
+<span>async def <span class="ident">set_decrement_volume</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setDecrementVolume(self):
+<pre><code class="python">async def set_decrement_volume(self) -&gt; None:
     &#34;&#34;&#34;Decrease volume by 1&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;PULSE_VOL_DOWN&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Decrease volume by 1</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setIncrementVolume"><code class="name flex">
-<span>async def <span class="ident">setIncrementVolume</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_increment_volume"><code class="name flex">
+<span>async def <span class="ident">set_increment_volume</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setIncrementVolume(self):
-    &#34;&#34;&#34;Decrease volume by 1&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+<pre><code class="python">async def set_increment_volume(self) -&gt; None:
+    &#34;&#34;&#34;Increase volume by 1&#34;&#34;&#34;
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;PULSE_VOL_UP&#34;,
         {},
     )</code></pre>
 </details>
-<div class="desc"><p>Decrease volume by 1</p></div>
+<div class="desc"><p>Increase volume by 1</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setMuteOff"><code class="name flex">
-<span>async def <span class="ident">setMuteOff</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_mute_off"><code class="name flex">
+<span>async def <span class="ident">set_mute_off</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setMuteOff(self):
+<pre><code class="python">async def set_mute_off(self) -&gt; None:
     &#34;&#34;&#34;Unmute the room&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;MUTE_OFF&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Unmute the room</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setMuteOn"><code class="name flex">
-<span>async def <span class="ident">setMuteOn</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_mute_on"><code class="name flex">
+<span>async def <span class="ident">set_mute_on</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setMuteOn(self):
+<pre><code class="python">async def set_mute_on(self) -&gt; None:
     &#34;&#34;&#34;Mute the room&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;MUTE_ON&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Mute the room</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setPause"><code class="name flex">
-<span>async def <span class="ident">setPause</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_pause"><code class="name flex">
+<span>async def <span class="ident">set_pause</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setPause(self):
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+<pre><code class="python">async def set_pause(self) -&gt; None:
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;PAUSE&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setPlay"><code class="name flex">
-<span>async def <span class="ident">setPlay</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_play"><code class="name flex">
+<span>async def <span class="ident">set_play</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setPlay(self):
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+<pre><code class="python">async def set_play(self) -&gt; None:
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;PLAY&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setRoomOff"><code class="name flex">
-<span>async def <span class="ident">setRoomOff</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_room_off"><code class="name flex">
+<span>async def <span class="ident">set_room_off</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setRoomOff(self):
+<pre><code class="python">async def set_room_off(self) -&gt; None:
     &#34;&#34;&#34;Turn the room &#34;OFF&#34; &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;ROOM_OFF&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Turn the room "OFF"</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setStop"><code class="name flex">
-<span>async def <span class="ident">setStop</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.set_stop"><code class="name flex">
+<span>async def <span class="ident">set_stop</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setStop(self):
+<pre><code class="python">async def set_stop(self) -&gt; None:
     &#34;&#34;&#34;Stops the currently playing media but does not turn off the room&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;STOP&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Stops the currently playing media but does not turn off the room</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setVideoAndAudioSource"><code class="name flex">
-<span>async def <span class="ident">setVideoAndAudioSource</span></span>(<span>self, source_id: int)</span>
+<dt id="pyControl4.room.C4Room.set_video_and_audio_source"><code class="name flex">
+<span>async def <span class="ident">set_video_and_audio_source</span></span>(<span>self, source_id: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setVideoAndAudioSource(self, source_id: int):
+<pre><code class="python">async def set_video_and_audio_source(self, source_id: int) -&gt; None:
     &#34;&#34;&#34;Sets the current audio and video source for the room&#34;&#34;&#34;
-    await self._setSource(source_id, audio_only=False)</code></pre>
+    await self._set_source(source_id, audio_only=False)</code></pre>
 </details>
 <div class="desc"><p>Sets the current audio and video source for the room</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.setVolume"><code class="name flex">
-<span>async def <span class="ident">setVolume</span></span>(<span>self, volume: int)</span>
+<dt id="pyControl4.room.C4Room.set_volume"><code class="name flex">
+<span>async def <span class="ident">set_volume</span></span>(<span>self, volume: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setVolume(self, volume: int):
+<pre><code class="python">async def set_volume(self, volume: int) -&gt; None:
     &#34;&#34;&#34;Set the room volume, 0-100&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_VOLUME_LEVEL&#34;,
         {&#34;LEVEL&#34;: volume},
     )</code></pre>
 </details>
 <div class="desc"><p>Set the room volume, 0-100</p></div>
 </dd>
-<dt id="pyControl4.room.C4Room.toggleMute"><code class="name flex">
-<span>async def <span class="ident">toggleMute</span></span>(<span>self)</span>
+<dt id="pyControl4.room.C4Room.toggle_mute"><code class="name flex">
+<span>async def <span class="ident">toggle_mute</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def toggleMute(self):
+<pre><code class="python">async def toggle_mute(self) -&gt; None:
     &#34;&#34;&#34;Toggle the current mute state for the room&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;MUTE_TOGGLE&#34;,
         {},
     )</code></pre>
@@ -572,24 +586,24 @@ See C4Director.getUiConfiguration for a more accurate list</p></div>
 <li>
 <h4><code><a title="pyControl4.room.C4Room" href="#pyControl4.room.C4Room">C4Room</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.room.C4Room.getAudioDevices" href="#pyControl4.room.C4Room.getAudioDevices">getAudioDevices</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.getVideoDevices" href="#pyControl4.room.C4Room.getVideoDevices">getVideoDevices</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.getVolume" href="#pyControl4.room.C4Room.getVolume">getVolume</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.isMuted" href="#pyControl4.room.C4Room.isMuted">isMuted</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.isOn" href="#pyControl4.room.C4Room.isOn">isOn</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.isRoomHidden" href="#pyControl4.room.C4Room.isRoomHidden">isRoomHidden</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setAudioSource" href="#pyControl4.room.C4Room.setAudioSource">setAudioSource</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setDecrementVolume" href="#pyControl4.room.C4Room.setDecrementVolume">setDecrementVolume</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setIncrementVolume" href="#pyControl4.room.C4Room.setIncrementVolume">setIncrementVolume</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setMuteOff" href="#pyControl4.room.C4Room.setMuteOff">setMuteOff</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setMuteOn" href="#pyControl4.room.C4Room.setMuteOn">setMuteOn</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setPause" href="#pyControl4.room.C4Room.setPause">setPause</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setPlay" href="#pyControl4.room.C4Room.setPlay">setPlay</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setRoomOff" href="#pyControl4.room.C4Room.setRoomOff">setRoomOff</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setStop" href="#pyControl4.room.C4Room.setStop">setStop</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setVideoAndAudioSource" href="#pyControl4.room.C4Room.setVideoAndAudioSource">setVideoAndAudioSource</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.setVolume" href="#pyControl4.room.C4Room.setVolume">setVolume</a></code></li>
-<li><code><a title="pyControl4.room.C4Room.toggleMute" href="#pyControl4.room.C4Room.toggleMute">toggleMute</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.get_audio_devices" href="#pyControl4.room.C4Room.get_audio_devices">get_audio_devices</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.get_video_devices" href="#pyControl4.room.C4Room.get_video_devices">get_video_devices</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.get_volume" href="#pyControl4.room.C4Room.get_volume">get_volume</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.is_muted" href="#pyControl4.room.C4Room.is_muted">is_muted</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.is_on" href="#pyControl4.room.C4Room.is_on">is_on</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.is_room_hidden" href="#pyControl4.room.C4Room.is_room_hidden">is_room_hidden</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_audio_source" href="#pyControl4.room.C4Room.set_audio_source">set_audio_source</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_decrement_volume" href="#pyControl4.room.C4Room.set_decrement_volume">set_decrement_volume</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_increment_volume" href="#pyControl4.room.C4Room.set_increment_volume">set_increment_volume</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_mute_off" href="#pyControl4.room.C4Room.set_mute_off">set_mute_off</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_mute_on" href="#pyControl4.room.C4Room.set_mute_on">set_mute_on</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_pause" href="#pyControl4.room.C4Room.set_pause">set_pause</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_play" href="#pyControl4.room.C4Room.set_play">set_play</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_room_off" href="#pyControl4.room.C4Room.set_room_off">set_room_off</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_stop" href="#pyControl4.room.C4Room.set_stop">set_stop</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_video_and_audio_source" href="#pyControl4.room.C4Room.set_video_and_audio_source">set_video_and_audio_source</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.set_volume" href="#pyControl4.room.C4Room.set_volume">set_volume</a></code></li>
+<li><code><a title="pyControl4.room.C4Room.toggle_mute" href="#pyControl4.room.C4Room.toggle_mute">toggle_mute</a></code></li>
 </ul>
 </li>
 </ul>

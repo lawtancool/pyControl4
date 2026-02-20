@@ -51,7 +51,7 @@ devices.</p>
 <dl>
 <dt id="pyControl4.alarm.C4ContactSensor"><code class="flex name class">
 <span>class <span class="ident">C4ContactSensor</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -59,49 +59,53 @@ devices.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4ContactSensor:
-    def __init__(self, C4Director, item_id):
+    def __init__(self, director: C4Director, item_id: int) -&gt; None:
         &#34;&#34;&#34;Creates a Control4 Contact Sensor object.
 
         Parameters:
-            `C4Director` - A `pyControl4.director.C4Director` object that corresponds
-                to the Control4 Director that the security panel is connected to.
+            `director` - A `pyControl4.director.C4Director` object that corresponds
+                to the Control4 Director that the contact sensor is connected to.
 
             `item_id` - The Control4 item ID of the contact sensor.
         &#34;&#34;&#34;
-        self.director = C4Director
+        self.director = director
         self.item_id = item_id
 
-    async def getContactState(self):
+    async def get_contact_state(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is
         detected), otherwise returns `False`.
         &#34;&#34;&#34;
-        contact_state = await self.director.getItemVariableValue(
+        contact_state = await self.director.get_item_variable_value(
             self.item_id, &#34;ContactState&#34;
         )
+        if contact_state is None:
+            return None
         return bool(contact_state)</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 Contact Sensor object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
-to the Control4 Director that the security panel is connected to.</p>
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+to the Control4 Director that the contact sensor is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID of the contact sensor.</p></div>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.alarm.C4ContactSensor.getContactState"><code class="name flex">
-<span>async def <span class="ident">getContactState</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4ContactSensor.get_contact_state"><code class="name flex">
+<span>async def <span class="ident">get_contact_state</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getContactState(self):
+<pre><code class="python">async def get_contact_state(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns `True` if contact is triggered (door/window is closed, motion is
     detected), otherwise returns `False`.
     &#34;&#34;&#34;
-    contact_state = await self.director.getItemVariableValue(
+    contact_state = await self.director.get_item_variable_value(
         self.item_id, &#34;ContactState&#34;
     )
+    if contact_state is None:
+        return None
     return bool(contact_state)</code></pre>
 </details>
 <div class="desc"><p>Returns <code>True</code> if contact is triggered (door/window is closed, motion is
@@ -111,7 +115,7 @@ detected), otherwise returns <code>False</code>.</p></div>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel"><code class="flex name class">
 <span>class <span class="ident">C4SecurityPanel</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -119,112 +123,121 @@ detected), otherwise returns <code>False</code>.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4SecurityPanel(C4Entity):
-    async def getArmState(self):
-        &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;,
+    async def get_arm_state(self) -&gt; str | None:
+        &#34;&#34;&#34;
+        NOTE: Prefer using `get_partition_state()`
+        and `get_armed_type()` over this method.
+        Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;,
         or &#34;ARMED_AWAY&#34;.
         &#34;&#34;&#34;
-        disarmed = await self.director.getItemVariableValue(
+        disarmed = await self.director.get_item_variable_value(
             self.item_id, &#34;DISARMED_STATE&#34;
         )
-        armed_home = await self.director.getItemVariableValue(
+        armed_home = await self.director.get_item_variable_value(
             self.item_id, &#34;HOME_STATE&#34;
         )
-        armed_away = await self.director.getItemVariableValue(
+        armed_away = await self.director.get_item_variable_value(
             self.item_id, &#34;AWAY_STATE&#34;
         )
-        if disarmed == 1:
-            return &#34;DISARMED&#34;
-        elif armed_home == 1:
-            return &#34;ARMED_HOME&#34;
-        elif armed_away == 1:
-            return &#34;ARMED_AWAY&#34;
+        try:
+            if disarmed is not None and int(disarmed) == 1:
+                return &#34;DISARMED&#34;
+            elif armed_home is not None and int(armed_home) == 1:
+                return &#34;ARMED_HOME&#34;
+            elif armed_away is not None and int(armed_away) == 1:
+                return &#34;ARMED_AWAY&#34;
+        except (ValueError, TypeError):
+            pass
+        return None
 
-    async def getAlarmState(self):
+    async def get_alarm_state(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
-        alarm_state = await self.director.getItemVariableValue(
+        alarm_state = await self.director.get_item_variable_value(
             self.item_id, &#34;ALARM_STATE&#34;
         )
+        if alarm_state is None:
+            return None
         return bool(alarm_state)
 
-    async def getDisplayText(self):
+    async def get_display_text(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
-        display_text = await self.director.getItemVariableValue(
+        display_text = await self.director.get_item_variable_value(
             self.item_id, &#34;DISPLAY_TEXT&#34;
         )
         return display_text
 
-    async def getTroubleText(self):
+    async def get_trouble_text(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
-        trouble_text = await self.director.getItemVariableValue(
+        trouble_text = await self.director.get_item_variable_value(
             self.item_id, &#34;TROUBLE_TEXT&#34;
         )
         return trouble_text
 
-    async def getPartitionState(self):
+    async def get_partition_state(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the partition state of the security panel.
 
         Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;,
         &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
         &#34;&#34;&#34;
-        partition_state = await self.director.getItemVariableValue(
+        partition_state = await self.director.get_item_variable_value(
             self.item_id, &#34;PARTITION_STATE&#34;
         )
         return partition_state
 
-    async def getDelayTimeTotal(self):
+    async def get_delay_time_total(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not
         currently running.
         &#34;&#34;&#34;
-        delay_time_total = await self.director.getItemVariableValue(
+        delay_time_total = await self.director.get_item_variable_value(
             self.item_id, &#34;DELAY_TIME_TOTAL&#34;
         )
-        return delay_time_total
+        return int(delay_time_total) if delay_time_total is not None else None
 
-    async def getDelayTimeRemaining(self):
+    async def get_delay_time_remaining(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is
         not currently running.
         &#34;&#34;&#34;
-        delay_time_remaining = await self.director.getItemVariableValue(
+        delay_time_remaining = await self.director.get_item_variable_value(
             self.item_id, &#34;DELAY_TIME_REMAINING&#34;
         )
-        return delay_time_remaining
+        return int(delay_time_remaining) if delay_time_remaining is not None else None
 
-    async def getOpenZoneCount(self):
+    async def get_open_zone_count(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
-        open_zone_count = await self.director.getItemVariableValue(
+        open_zone_count = await self.director.get_item_variable_value(
             self.item_id, &#34;OPEN_ZONE_COUNT&#34;
         )
-        return open_zone_count
+        return int(open_zone_count) if open_zone_count is not None else None
 
-    async def getAlarmType(self):
+    async def get_alarm_type(self) -&gt; str | None:
         &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
-        alarm_type = await self.director.getItemVariableValue(
+        alarm_type = await self.director.get_item_variable_value(
             self.item_id, &#34;ALARM_TYPE&#34;
         )
         return alarm_type
 
-    async def getArmedType(self):
+    async def get_armed_type(self) -&gt; str | None:
         &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
-        armed_type = await self.director.getItemVariableValue(
+        armed_type = await self.director.get_item_variable_value(
             self.item_id, &#34;ARMED_TYPE&#34;
         )
         return armed_type
 
-    async def getLastEmergency(self):
+    async def get_last_emergency(self) -&gt; str | None:
         &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
-        last_emergency = await self.director.getItemVariableValue(
+        last_emergency = await self.director.get_item_variable_value(
             self.item_id, &#34;LAST_EMERGENCY&#34;
         )
         return last_emergency
 
-    async def getLastArmFailure(self):
+    async def get_last_arm_failure(self) -&gt; str | None:
         &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
-        last_arm_failed = await self.director.getItemVariableValue(
+        last_arm_failed = await self.director.get_item_variable_value(
             self.item_id, &#34;LAST_ARM_FAILED&#34;
         )
         return last_arm_failed
 
-    async def setArm(self, usercode, mode: str):
+    async def set_arm(self, usercode: str, mode: str) -&gt; None:
         &#34;&#34;&#34;Arms the security panel with the specified mode.
 
         Parameters:
@@ -234,38 +247,37 @@ detected), otherwise returns <code>False</code>.</p></div>
                 security panel itself.
         &#34;&#34;&#34;
         usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;PARTITION_ARM&#34;,
             {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
         )
 
-    async def setDisarm(self, usercode):
+    async def set_disarm(self, usercode: str) -&gt; None:
         &#34;&#34;&#34;Disarms the security panel.
 
         Parameters:
             `usercode` - PIN/code for disarming the system.
         &#34;&#34;&#34;
         usercode = str(usercode)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;PARTITION_DISARM&#34;,
             {&#34;UserCode&#34;: usercode},
         )
 
-    async def getEmergencyTypes(self):
+    async def get_emergency_types(self) -&gt; list[str]:
         &#34;&#34;&#34;Returns the available emergency types as a list.
 
         Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
         &#34;&#34;&#34;
-        types_list = []
+        types_list: list[str] = []
 
-        data = await self.director.getItemInfo(self.item_id)
-        jsonDictionary = json.loads(data)
+        data = await self.director.get_item_info(self.item_id)
+        if not data or not isinstance(data, list) or len(data) == 0:
+            return types_list
 
-        capabilities = (
-            jsonDictionary[0].get(&#34;capabilities&#34;, {}) if jsonDictionary else {}
-        )
+        capabilities = data[0].get(&#34;capabilities&#34;, {})
         if capabilities.get(&#34;has_fire&#34;):
             types_list.append(&#34;Fire&#34;)
         if capabilities.get(&#34;has_medical&#34;):
@@ -277,19 +289,32 @@ detected), otherwise returns <code>False</code>.</p></div>
 
         return types_list
 
-    async def triggerEmergency(self, type):
+    async def get_arm_types(self) -&gt; list[str]:
+        &#34;&#34;&#34;Returns the available arm types as a list.&#34;&#34;&#34;
+        data = await self.director.get_item_info(self.item_id)
+        if not data or not isinstance(data, list) or len(data) == 0:
+            return []
+
+        capabilities = data[0].get(&#34;capabilities&#34;, {})
+        arm_types_str = capabilities.get(&#34;arm_types&#34;, &#34;&#34;)
+        if not arm_types_str:
+            return []
+        return [t.strip() for t in arm_types_str.split(&#34;,&#34;) if t.strip()]
+
+    async def trigger_emergency(self, emergency_type: str) -&gt; None:
         &#34;&#34;&#34;Triggers an emergency of the specified type.
 
         Parameters:
-            `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
+            `emergency_type` - Type of emergency:
+            &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;EXECUTE_EMERGENCY&#34;,
-            {&#34;EmergencyType&#34;: type},
+            {&#34;EmergencyType&#34;: emergency_type},
         )
 
-    async def sendKeyPress(self, key):
+    async def send_key_press(self, key: str) -&gt; None:
         &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if
         supported).
 
@@ -297,15 +322,15 @@ detected), otherwise returns <code>False</code>.</p></div>
             `key` - Keypress to send. Only one key at a time.
         &#34;&#34;&#34;
         key = str(key)
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;KEY_PRESS&#34;,
             {&#34;KeyName&#34;: key},
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -314,166 +339,198 @@ to the Control4 Director that the device is connected to.</p>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.alarm.C4SecurityPanel.getAlarmState"><code class="name flex">
-<span>async def <span class="ident">getAlarmState</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_alarm_state"><code class="name flex">
+<span>async def <span class="ident">get_alarm_state</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAlarmState(self):
+<pre><code class="python">async def get_alarm_state(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns `True` if alarm is triggered, otherwise returns `False`.&#34;&#34;&#34;
-    alarm_state = await self.director.getItemVariableValue(
+    alarm_state = await self.director.get_item_variable_value(
         self.item_id, &#34;ALARM_STATE&#34;
     )
+    if alarm_state is None:
+        return None
     return bool(alarm_state)</code></pre>
 </details>
 <div class="desc"><p>Returns <code>True</code> if alarm is triggered, otherwise returns <code>False</code>.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getAlarmType"><code class="name flex">
-<span>async def <span class="ident">getAlarmType</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_alarm_type"><code class="name flex">
+<span>async def <span class="ident">get_alarm_type</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAlarmType(self):
+<pre><code class="python">async def get_alarm_type(self) -&gt; str | None:
     &#34;&#34;&#34;Returns details about the current alarm type.&#34;&#34;&#34;
-    alarm_type = await self.director.getItemVariableValue(
+    alarm_type = await self.director.get_item_variable_value(
         self.item_id, &#34;ALARM_TYPE&#34;
     )
     return alarm_type</code></pre>
 </details>
 <div class="desc"><p>Returns details about the current alarm type.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getArmState"><code class="name flex">
-<span>async def <span class="ident">getArmState</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_arm_state"><code class="name flex">
+<span>async def <span class="ident">get_arm_state</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getArmState(self):
-    &#34;&#34;&#34;Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;,
+<pre><code class="python">async def get_arm_state(self) -&gt; str | None:
+    &#34;&#34;&#34;
+    NOTE: Prefer using `get_partition_state()`
+    and `get_armed_type()` over this method.
+    Returns the arm state of the security panel as &#34;DISARMED&#34;, &#34;ARMED_HOME&#34;,
     or &#34;ARMED_AWAY&#34;.
     &#34;&#34;&#34;
-    disarmed = await self.director.getItemVariableValue(
+    disarmed = await self.director.get_item_variable_value(
         self.item_id, &#34;DISARMED_STATE&#34;
     )
-    armed_home = await self.director.getItemVariableValue(
+    armed_home = await self.director.get_item_variable_value(
         self.item_id, &#34;HOME_STATE&#34;
     )
-    armed_away = await self.director.getItemVariableValue(
+    armed_away = await self.director.get_item_variable_value(
         self.item_id, &#34;AWAY_STATE&#34;
     )
-    if disarmed == 1:
-        return &#34;DISARMED&#34;
-    elif armed_home == 1:
-        return &#34;ARMED_HOME&#34;
-    elif armed_away == 1:
-        return &#34;ARMED_AWAY&#34;</code></pre>
+    try:
+        if disarmed is not None and int(disarmed) == 1:
+            return &#34;DISARMED&#34;
+        elif armed_home is not None and int(armed_home) == 1:
+            return &#34;ARMED_HOME&#34;
+        elif armed_away is not None and int(armed_away) == 1:
+            return &#34;ARMED_AWAY&#34;
+    except (ValueError, TypeError):
+        pass
+    return None</code></pre>
 </details>
-<div class="desc"><p>Returns the arm state of the security panel as "DISARMED", "ARMED_HOME",
+<div class="desc"><p>NOTE: Prefer using <code>get_partition_state()</code>
+and <code>get_armed_type()</code> over this method.
+Returns the arm state of the security panel as "DISARMED", "ARMED_HOME",
 or "ARMED_AWAY".</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getArmedType"><code class="name flex">
-<span>async def <span class="ident">getArmedType</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_arm_types"><code class="name flex">
+<span>async def <span class="ident">get_arm_types</span></span>(<span>self) ‑> list[str]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getArmedType(self):
+<pre><code class="python">async def get_arm_types(self) -&gt; list[str]:
+    &#34;&#34;&#34;Returns the available arm types as a list.&#34;&#34;&#34;
+    data = await self.director.get_item_info(self.item_id)
+    if not data or not isinstance(data, list) or len(data) == 0:
+        return []
+
+    capabilities = data[0].get(&#34;capabilities&#34;, {})
+    arm_types_str = capabilities.get(&#34;arm_types&#34;, &#34;&#34;)
+    if not arm_types_str:
+        return []
+    return [t.strip() for t in arm_types_str.split(&#34;,&#34;) if t.strip()]</code></pre>
+</details>
+<div class="desc"><p>Returns the available arm types as a list.</p></div>
+</dd>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_armed_type"><code class="name flex">
+<span>async def <span class="ident">get_armed_type</span></span>(<span>self) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def get_armed_type(self) -&gt; str | None:
     &#34;&#34;&#34;Returns details about the current arm type.&#34;&#34;&#34;
-    armed_type = await self.director.getItemVariableValue(
+    armed_type = await self.director.get_item_variable_value(
         self.item_id, &#34;ARMED_TYPE&#34;
     )
     return armed_type</code></pre>
 </details>
 <div class="desc"><p>Returns details about the current arm type.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getDelayTimeRemaining"><code class="name flex">
-<span>async def <span class="ident">getDelayTimeRemaining</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_delay_time_remaining"><code class="name flex">
+<span>async def <span class="ident">get_delay_time_remaining</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getDelayTimeRemaining(self):
+<pre><code class="python">async def get_delay_time_remaining(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the remaining exit delay time. Returns 0 if an exit delay is
     not currently running.
     &#34;&#34;&#34;
-    delay_time_remaining = await self.director.getItemVariableValue(
+    delay_time_remaining = await self.director.get_item_variable_value(
         self.item_id, &#34;DELAY_TIME_REMAINING&#34;
     )
-    return delay_time_remaining</code></pre>
+    return int(delay_time_remaining) if delay_time_remaining is not None else None</code></pre>
 </details>
 <div class="desc"><p>Returns the remaining exit delay time. Returns 0 if an exit delay is
 not currently running.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getDelayTimeTotal"><code class="name flex">
-<span>async def <span class="ident">getDelayTimeTotal</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_delay_time_total"><code class="name flex">
+<span>async def <span class="ident">get_delay_time_total</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getDelayTimeTotal(self):
+<pre><code class="python">async def get_delay_time_total(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the total exit delay time. Returns 0 if an exit delay is not
     currently running.
     &#34;&#34;&#34;
-    delay_time_total = await self.director.getItemVariableValue(
+    delay_time_total = await self.director.get_item_variable_value(
         self.item_id, &#34;DELAY_TIME_TOTAL&#34;
     )
-    return delay_time_total</code></pre>
+    return int(delay_time_total) if delay_time_total is not None else None</code></pre>
 </details>
 <div class="desc"><p>Returns the total exit delay time. Returns 0 if an exit delay is not
 currently running.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getDisplayText"><code class="name flex">
-<span>async def <span class="ident">getDisplayText</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_display_text"><code class="name flex">
+<span>async def <span class="ident">get_display_text</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getDisplayText(self):
+<pre><code class="python">async def get_display_text(self) -&gt; str | None:
     &#34;&#34;&#34;Returns the display text of the security panel.&#34;&#34;&#34;
-    display_text = await self.director.getItemVariableValue(
+    display_text = await self.director.get_item_variable_value(
         self.item_id, &#34;DISPLAY_TEXT&#34;
     )
     return display_text</code></pre>
 </details>
 <div class="desc"><p>Returns the display text of the security panel.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getEmergencyTypes"><code class="name flex">
-<span>async def <span class="ident">getEmergencyTypes</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_emergency_types"><code class="name flex">
+<span>async def <span class="ident">get_emergency_types</span></span>(<span>self) ‑> list[str]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getEmergencyTypes(self):
+<pre><code class="python">async def get_emergency_types(self) -&gt; list[str]:
     &#34;&#34;&#34;Returns the available emergency types as a list.
 
     Possible types are &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, and &#34;Police&#34;.
     &#34;&#34;&#34;
-    types_list = []
+    types_list: list[str] = []
 
-    data = await self.director.getItemInfo(self.item_id)
-    jsonDictionary = json.loads(data)
+    data = await self.director.get_item_info(self.item_id)
+    if not data or not isinstance(data, list) or len(data) == 0:
+        return types_list
 
-    capabilities = (
-        jsonDictionary[0].get(&#34;capabilities&#34;, {}) if jsonDictionary else {}
-    )
+    capabilities = data[0].get(&#34;capabilities&#34;, {})
     if capabilities.get(&#34;has_fire&#34;):
         types_list.append(&#34;Fire&#34;)
     if capabilities.get(&#34;has_medical&#34;):
@@ -488,72 +545,72 @@ currently running.</p></div>
 <div class="desc"><p>Returns the available emergency types as a list.</p>
 <p>Possible types are "Fire", "Medical", "Panic", and "Police".</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getLastArmFailure"><code class="name flex">
-<span>async def <span class="ident">getLastArmFailure</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_last_arm_failure"><code class="name flex">
+<span>async def <span class="ident">get_last_arm_failure</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getLastArmFailure(self):
+<pre><code class="python">async def get_last_arm_failure(self) -&gt; str | None:
     &#34;&#34;&#34;Returns details about the last arm failure.&#34;&#34;&#34;
-    last_arm_failed = await self.director.getItemVariableValue(
+    last_arm_failed = await self.director.get_item_variable_value(
         self.item_id, &#34;LAST_ARM_FAILED&#34;
     )
     return last_arm_failed</code></pre>
 </details>
 <div class="desc"><p>Returns details about the last arm failure.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getLastEmergency"><code class="name flex">
-<span>async def <span class="ident">getLastEmergency</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_last_emergency"><code class="name flex">
+<span>async def <span class="ident">get_last_emergency</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getLastEmergency(self):
+<pre><code class="python">async def get_last_emergency(self) -&gt; str | None:
     &#34;&#34;&#34;Returns details about the last emergency trigger.&#34;&#34;&#34;
-    last_emergency = await self.director.getItemVariableValue(
+    last_emergency = await self.director.get_item_variable_value(
         self.item_id, &#34;LAST_EMERGENCY&#34;
     )
     return last_emergency</code></pre>
 </details>
 <div class="desc"><p>Returns details about the last emergency trigger.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getOpenZoneCount"><code class="name flex">
-<span>async def <span class="ident">getOpenZoneCount</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_open_zone_count"><code class="name flex">
+<span>async def <span class="ident">get_open_zone_count</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getOpenZoneCount(self):
+<pre><code class="python">async def get_open_zone_count(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the number of open/unsecured zones.&#34;&#34;&#34;
-    open_zone_count = await self.director.getItemVariableValue(
+    open_zone_count = await self.director.get_item_variable_value(
         self.item_id, &#34;OPEN_ZONE_COUNT&#34;
     )
-    return open_zone_count</code></pre>
+    return int(open_zone_count) if open_zone_count is not None else None</code></pre>
 </details>
 <div class="desc"><p>Returns the number of open/unsecured zones.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getPartitionState"><code class="name flex">
-<span>async def <span class="ident">getPartitionState</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_partition_state"><code class="name flex">
+<span>async def <span class="ident">get_partition_state</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getPartitionState(self):
+<pre><code class="python">async def get_partition_state(self) -&gt; str | None:
     &#34;&#34;&#34;Returns the partition state of the security panel.
 
     Possible values include &#34;DISARMED_NOT_READY&#34;, &#34;DISARMED_READY&#34;, &#34;ARMED_HOME&#34;,
     &#34;ARMED_AWAY&#34;, &#34;EXIT_DELAY&#34;, &#34;ENTRY_DELAY&#34;
     &#34;&#34;&#34;
-    partition_state = await self.director.getItemVariableValue(
+    partition_state = await self.director.get_item_variable_value(
         self.item_id, &#34;PARTITION_STATE&#34;
     )
     return partition_state</code></pre>
@@ -562,32 +619,32 @@ currently running.</p></div>
 <p>Possible values include "DISARMED_NOT_READY", "DISARMED_READY", "ARMED_HOME",
 "ARMED_AWAY", "EXIT_DELAY", "ENTRY_DELAY"</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.getTroubleText"><code class="name flex">
-<span>async def <span class="ident">getTroubleText</span></span>(<span>self)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.get_trouble_text"><code class="name flex">
+<span>async def <span class="ident">get_trouble_text</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getTroubleText(self):
+<pre><code class="python">async def get_trouble_text(self) -&gt; str | None:
     &#34;&#34;&#34;Returns the trouble display text of the security panel.&#34;&#34;&#34;
-    trouble_text = await self.director.getItemVariableValue(
+    trouble_text = await self.director.get_item_variable_value(
         self.item_id, &#34;TROUBLE_TEXT&#34;
     )
     return trouble_text</code></pre>
 </details>
 <div class="desc"><p>Returns the trouble display text of the security panel.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.sendKeyPress"><code class="name flex">
-<span>async def <span class="ident">sendKeyPress</span></span>(<span>self, key)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.send_key_press"><code class="name flex">
+<span>async def <span class="ident">send_key_press</span></span>(<span>self, key: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sendKeyPress(self, key):
+<pre><code class="python">async def send_key_press(self, key: str) -&gt; None:
     &#34;&#34;&#34;Sends a single keypress to the security panel&#39;s virtual keypad (if
     supported).
 
@@ -595,8 +652,8 @@ currently running.</p></div>
         `key` - Keypress to send. Only one key at a time.
     &#34;&#34;&#34;
     key = str(key)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;KEY_PRESS&#34;,
         {&#34;KeyName&#34;: key},
     )</code></pre>
@@ -606,15 +663,15 @@ supported).</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>key</code> - Keypress to send. Only one key at a time.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.setArm"><code class="name flex">
-<span>async def <span class="ident">setArm</span></span>(<span>self, usercode, mode: str)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.set_arm"><code class="name flex">
+<span>async def <span class="ident">set_arm</span></span>(<span>self, usercode: str, mode: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setArm(self, usercode, mode: str):
+<pre><code class="python">async def set_arm(self, usercode: str, mode: str) -&gt; None:
     &#34;&#34;&#34;Arms the security panel with the specified mode.
 
     Parameters:
@@ -624,8 +681,8 @@ supported).</p>
             security panel itself.
     &#34;&#34;&#34;
     usercode = str(usercode)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;PARTITION_ARM&#34;,
         {&#34;ArmType&#34;: mode, &#34;UserCode&#34;: usercode},
     )</code></pre>
@@ -636,23 +693,23 @@ supported).</p>
 <p><code>mode</code> - Arm mode to use. This depends on what is supported by the
 security panel itself.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.setDisarm"><code class="name flex">
-<span>async def <span class="ident">setDisarm</span></span>(<span>self, usercode)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.set_disarm"><code class="name flex">
+<span>async def <span class="ident">set_disarm</span></span>(<span>self, usercode: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setDisarm(self, usercode):
+<pre><code class="python">async def set_disarm(self, usercode: str) -&gt; None:
     &#34;&#34;&#34;Disarms the security panel.
 
     Parameters:
         `usercode` - PIN/code for disarming the system.
     &#34;&#34;&#34;
     usercode = str(usercode)
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;PARTITION_DISARM&#34;,
         {&#34;UserCode&#34;: usercode},
     )</code></pre>
@@ -661,29 +718,31 @@ security panel itself.</p></div>
 <h2 id="parameters">Parameters</h2>
 <p><code>usercode</code> - PIN/code for disarming the system.</p></div>
 </dd>
-<dt id="pyControl4.alarm.C4SecurityPanel.triggerEmergency"><code class="name flex">
-<span>async def <span class="ident">triggerEmergency</span></span>(<span>self, type)</span>
+<dt id="pyControl4.alarm.C4SecurityPanel.trigger_emergency"><code class="name flex">
+<span>async def <span class="ident">trigger_emergency</span></span>(<span>self, emergency_type: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def triggerEmergency(self, type):
+<pre><code class="python">async def trigger_emergency(self, emergency_type: str) -&gt; None:
     &#34;&#34;&#34;Triggers an emergency of the specified type.
 
     Parameters:
-        `type` - Type of emergency: &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
+        `emergency_type` - Type of emergency:
+        &#34;Fire&#34;, &#34;Medical&#34;, &#34;Panic&#34;, or &#34;Police&#34;
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;EXECUTE_EMERGENCY&#34;,
-        {&#34;EmergencyType&#34;: type},
+        {&#34;EmergencyType&#34;: emergency_type},
     )</code></pre>
 </details>
 <div class="desc"><p>Triggers an emergency of the specified type.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>type</code> - Type of emergency: "Fire", "Medical", "Panic", or "Police"</p></div>
+<p><code>emergency_type</code> - Type of emergency:
+"Fire", "Medical", "Panic", or "Police"</p></div>
 </dd>
 </dl>
 </dd>
@@ -705,29 +764,30 @@ security panel itself.</p></div>
 <li>
 <h4><code><a title="pyControl4.alarm.C4ContactSensor" href="#pyControl4.alarm.C4ContactSensor">C4ContactSensor</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.alarm.C4ContactSensor.getContactState" href="#pyControl4.alarm.C4ContactSensor.getContactState">getContactState</a></code></li>
+<li><code><a title="pyControl4.alarm.C4ContactSensor.get_contact_state" href="#pyControl4.alarm.C4ContactSensor.get_contact_state">get_contact_state</a></code></li>
 </ul>
 </li>
 <li>
 <h4><code><a title="pyControl4.alarm.C4SecurityPanel" href="#pyControl4.alarm.C4SecurityPanel">C4SecurityPanel</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getAlarmState" href="#pyControl4.alarm.C4SecurityPanel.getAlarmState">getAlarmState</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getAlarmType" href="#pyControl4.alarm.C4SecurityPanel.getAlarmType">getAlarmType</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getArmState" href="#pyControl4.alarm.C4SecurityPanel.getArmState">getArmState</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getArmedType" href="#pyControl4.alarm.C4SecurityPanel.getArmedType">getArmedType</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getDelayTimeRemaining" href="#pyControl4.alarm.C4SecurityPanel.getDelayTimeRemaining">getDelayTimeRemaining</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getDelayTimeTotal" href="#pyControl4.alarm.C4SecurityPanel.getDelayTimeTotal">getDelayTimeTotal</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getDisplayText" href="#pyControl4.alarm.C4SecurityPanel.getDisplayText">getDisplayText</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getEmergencyTypes" href="#pyControl4.alarm.C4SecurityPanel.getEmergencyTypes">getEmergencyTypes</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getLastArmFailure" href="#pyControl4.alarm.C4SecurityPanel.getLastArmFailure">getLastArmFailure</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getLastEmergency" href="#pyControl4.alarm.C4SecurityPanel.getLastEmergency">getLastEmergency</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getOpenZoneCount" href="#pyControl4.alarm.C4SecurityPanel.getOpenZoneCount">getOpenZoneCount</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getPartitionState" href="#pyControl4.alarm.C4SecurityPanel.getPartitionState">getPartitionState</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.getTroubleText" href="#pyControl4.alarm.C4SecurityPanel.getTroubleText">getTroubleText</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.sendKeyPress" href="#pyControl4.alarm.C4SecurityPanel.sendKeyPress">sendKeyPress</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.setArm" href="#pyControl4.alarm.C4SecurityPanel.setArm">setArm</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.setDisarm" href="#pyControl4.alarm.C4SecurityPanel.setDisarm">setDisarm</a></code></li>
-<li><code><a title="pyControl4.alarm.C4SecurityPanel.triggerEmergency" href="#pyControl4.alarm.C4SecurityPanel.triggerEmergency">triggerEmergency</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_alarm_state" href="#pyControl4.alarm.C4SecurityPanel.get_alarm_state">get_alarm_state</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_alarm_type" href="#pyControl4.alarm.C4SecurityPanel.get_alarm_type">get_alarm_type</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_arm_state" href="#pyControl4.alarm.C4SecurityPanel.get_arm_state">get_arm_state</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_arm_types" href="#pyControl4.alarm.C4SecurityPanel.get_arm_types">get_arm_types</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_armed_type" href="#pyControl4.alarm.C4SecurityPanel.get_armed_type">get_armed_type</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_delay_time_remaining" href="#pyControl4.alarm.C4SecurityPanel.get_delay_time_remaining">get_delay_time_remaining</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_delay_time_total" href="#pyControl4.alarm.C4SecurityPanel.get_delay_time_total">get_delay_time_total</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_display_text" href="#pyControl4.alarm.C4SecurityPanel.get_display_text">get_display_text</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_emergency_types" href="#pyControl4.alarm.C4SecurityPanel.get_emergency_types">get_emergency_types</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_last_arm_failure" href="#pyControl4.alarm.C4SecurityPanel.get_last_arm_failure">get_last_arm_failure</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_last_emergency" href="#pyControl4.alarm.C4SecurityPanel.get_last_emergency">get_last_emergency</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_open_zone_count" href="#pyControl4.alarm.C4SecurityPanel.get_open_zone_count">get_open_zone_count</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_partition_state" href="#pyControl4.alarm.C4SecurityPanel.get_partition_state">get_partition_state</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.get_trouble_text" href="#pyControl4.alarm.C4SecurityPanel.get_trouble_text">get_trouble_text</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.send_key_press" href="#pyControl4.alarm.C4SecurityPanel.send_key_press">send_key_press</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.set_arm" href="#pyControl4.alarm.C4SecurityPanel.set_arm">set_arm</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.set_disarm" href="#pyControl4.alarm.C4SecurityPanel.set_disarm">set_disarm</a></code></li>
+<li><code><a title="pyControl4.alarm.C4SecurityPanel.trigger_emergency" href="#pyControl4.alarm.C4SecurityPanel.trigger_emergency">trigger_emergency</a></code></li>
 </ul>
 </li>
 </ul>

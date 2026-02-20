@@ -51,7 +51,7 @@ types of devices.</p>
 <dl>
 <dt id="pyControl4.relay.C4Relay"><code class="flex name class">
 <span>class <span class="ident">C4Relay</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -59,28 +59,33 @@ types of devices.</p>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4Relay(C4Entity):
-    async def getRelayState(self):
+    async def get_relay_state(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the current state of the relay.
 
         For locks, `0` means locked and `1` means unlocked.
         For relays in general, `0` probably means open and `1` probably means closed.
         &#34;&#34;&#34;
 
-        return await self.director.getItemVariableValue(self.item_id, &#34;RelayState&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;RelayState&#34;)
+        if value is None:
+            return None
+        return int(value)
 
-    async def getRelayStateVerified(self):
+    async def get_relay_state_verified(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns True if Relay is functional.
 
         Notes:
             I think this is just used to verify that the relay is functional,
             not 100% sure though.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;StateVerified&#34;
+        )
         if value is None:
             return None
         return bool(value)
 
-    async def open(self):
+    async def open(self) -&gt; None:
         &#34;&#34;&#34;Set the relay to its open state.
 
         Example description JSON for this command from the director:
@@ -93,13 +98,13 @@ types of devices.</p>
         ```
         &#34;&#34;&#34;
 
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;OPEN&#34;,
             {},
         )
 
-    async def close(self):
+    async def close(self) -&gt; None:
         &#34;&#34;&#34;Set the relay to its closed state.
 
         Example description JSON for this command from the director:
@@ -112,13 +117,13 @@ types of devices.</p>
         ```
         &#34;&#34;&#34;
 
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;CLOSE&#34;,
             {},
         )
 
-    async def toggle(self):
+    async def toggle(self) -&gt; None:
         &#34;&#34;&#34;Toggles the relay state.
 
         Example description JSON for this command from the director:
@@ -131,15 +136,15 @@ types of devices.</p>
         ```
         &#34;&#34;&#34;
 
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;TOGGLE&#34;,
             {},
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -149,14 +154,14 @@ to the Control4 Director that the device is connected to.</p>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.relay.C4Relay.close"><code class="name flex">
-<span>async def <span class="ident">close</span></span>(<span>self)</span>
+<span>async def <span class="ident">close</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def close(self):
+<pre><code class="python">async def close(self) -&gt; None:
     &#34;&#34;&#34;Set the relay to its closed state.
 
     Example description JSON for this command from the director:
@@ -169,8 +174,8 @@ to the Control4 Director that the device is connected to.</p>
     ```
     &#34;&#34;&#34;
 
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;CLOSE&#34;,
         {},
     )</code></pre>
@@ -184,43 +189,48 @@ to the Control4 Director that the device is connected to.</p>
 }
 </code></pre></div>
 </dd>
-<dt id="pyControl4.relay.C4Relay.getRelayState"><code class="name flex">
-<span>async def <span class="ident">getRelayState</span></span>(<span>self)</span>
+<dt id="pyControl4.relay.C4Relay.get_relay_state"><code class="name flex">
+<span>async def <span class="ident">get_relay_state</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getRelayState(self):
+<pre><code class="python">async def get_relay_state(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the current state of the relay.
 
     For locks, `0` means locked and `1` means unlocked.
     For relays in general, `0` probably means open and `1` probably means closed.
     &#34;&#34;&#34;
 
-    return await self.director.getItemVariableValue(self.item_id, &#34;RelayState&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(self.item_id, &#34;RelayState&#34;)
+    if value is None:
+        return None
+    return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current state of the relay.</p>
 <p>For locks, <code>0</code> means locked and <code>1</code> means unlocked.
 For relays in general, <code>0</code> probably means open and <code>1</code> probably means closed.</p></div>
 </dd>
-<dt id="pyControl4.relay.C4Relay.getRelayStateVerified"><code class="name flex">
-<span>async def <span class="ident">getRelayStateVerified</span></span>(<span>self)</span>
+<dt id="pyControl4.relay.C4Relay.get_relay_state_verified"><code class="name flex">
+<span>async def <span class="ident">get_relay_state_verified</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getRelayStateVerified(self):
+<pre><code class="python">async def get_relay_state_verified(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns True if Relay is functional.
 
     Notes:
         I think this is just used to verify that the relay is functional,
         not 100% sure though.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;StateVerified&#34;)
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;StateVerified&#34;
+    )
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -231,14 +241,14 @@ For relays in general, <code>0</code> probably means open and <code>1</code> pro
 not 100% sure though.</p></div>
 </dd>
 <dt id="pyControl4.relay.C4Relay.open"><code class="name flex">
-<span>async def <span class="ident">open</span></span>(<span>self)</span>
+<span>async def <span class="ident">open</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def open(self):
+<pre><code class="python">async def open(self) -&gt; None:
     &#34;&#34;&#34;Set the relay to its open state.
 
     Example description JSON for this command from the director:
@@ -251,8 +261,8 @@ not 100% sure though.</p></div>
     ```
     &#34;&#34;&#34;
 
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;OPEN&#34;,
         {},
     )</code></pre>
@@ -267,14 +277,14 @@ not 100% sure though.</p></div>
 </code></pre></div>
 </dd>
 <dt id="pyControl4.relay.C4Relay.toggle"><code class="name flex">
-<span>async def <span class="ident">toggle</span></span>(<span>self)</span>
+<span>async def <span class="ident">toggle</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def toggle(self):
+<pre><code class="python">async def toggle(self) -&gt; None:
     &#34;&#34;&#34;Toggles the relay state.
 
     Example description JSON for this command from the director:
@@ -287,8 +297,8 @@ not 100% sure though.</p></div>
     ```
     &#34;&#34;&#34;
 
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;TOGGLE&#34;,
         {},
     )</code></pre>
@@ -323,8 +333,8 @@ not 100% sure though.</p></div>
 <h4><code><a title="pyControl4.relay.C4Relay" href="#pyControl4.relay.C4Relay">C4Relay</a></code></h4>
 <ul class="">
 <li><code><a title="pyControl4.relay.C4Relay.close" href="#pyControl4.relay.C4Relay.close">close</a></code></li>
-<li><code><a title="pyControl4.relay.C4Relay.getRelayState" href="#pyControl4.relay.C4Relay.getRelayState">getRelayState</a></code></li>
-<li><code><a title="pyControl4.relay.C4Relay.getRelayStateVerified" href="#pyControl4.relay.C4Relay.getRelayStateVerified">getRelayStateVerified</a></code></li>
+<li><code><a title="pyControl4.relay.C4Relay.get_relay_state" href="#pyControl4.relay.C4Relay.get_relay_state">get_relay_state</a></code></li>
+<li><code><a title="pyControl4.relay.C4Relay.get_relay_state_verified" href="#pyControl4.relay.C4Relay.get_relay_state_verified">get_relay_state_verified</a></code></li>
 <li><code><a title="pyControl4.relay.C4Relay.open" href="#pyControl4.relay.C4Relay.open">open</a></code></li>
 <li><code><a title="pyControl4.relay.C4Relay.toggle" href="#pyControl4.relay.C4Relay.toggle">toggle</a></code></li>
 </ul>

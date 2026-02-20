@@ -49,7 +49,7 @@ el.replaceWith(d);
 <dl>
 <dt id="pyControl4.climate.C4Climate"><code class="flex name class">
 <span>class <span class="ident">C4Climate</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -61,141 +61,189 @@ el.replaceWith(d);
     # HVAC and Fan States
     # ------------------------
 
-    async def getHVACState(self):
+    async def get_hvac_state(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_STATE&#34;)
+        return await self.director.get_item_variable_value(self.item_id, &#34;HVAC_STATE&#34;)
 
-    async def getFANState(self):
-        &#34;&#34;&#34;Returns the current power state of the fan (True=on, False=off).&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;FAN_STATE&#34;)
+    async def get_fan_state(self) -&gt; str | None:
+        &#34;&#34;&#34;Returns the current power state of the fan (on, off).&#34;&#34;&#34;
+        return await self.director.get_item_variable_value(self.item_id, &#34;FAN_STATE&#34;)
 
     # ------------------------
     # Mode Getters
     # ------------------------
 
-    async def getHVACMode(self):
+    async def get_hvac_mode(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODE&#34;)
+        return await self.director.get_item_variable_value(self.item_id, &#34;HVAC_MODE&#34;)
 
-    async def getHVACModes(self):
+    async def get_hvac_modes(self) -&gt; list[str] | None:
         &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODES_LIST&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;HVAC_MODES_LIST&#34;
+        )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(&#34;,&#34;) if m.strip()]
 
-    async def getFANMode(self):
+    async def get_fan_mode(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the currently active fan mode.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODE&#34;)
+        return await self.director.get_item_variable_value(self.item_id, &#34;FAN_MODE&#34;)
 
-    async def getFANModes(self):
+    async def get_fan_modes(self) -&gt; list[str] | None:
         &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODES_LIST&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;FAN_MODES_LIST&#34;
+        )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(&#34;,&#34;) if m.strip()]
 
-    async def getHoldMode(self):
+    async def get_hold_mode(self) -&gt; str | None:
         &#34;&#34;&#34;Returns the currently active hold mode.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODE&#34;)
+        return await self.director.get_item_variable_value(self.item_id, &#34;HOLD_MODE&#34;)
 
-    async def getHoldModes(self):
+    async def get_hold_modes(self) -&gt; list[str] | None:
         &#34;&#34;&#34;Returns a list of supported hold modes.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODES_LIST&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;HOLD_MODES_LIST&#34;
+        )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(&#34;,&#34;) if m.strip()]
 
     # ------------------------
     # Setpoint Getters
     # ------------------------
 
-    async def getCoolSetpointF(self):
+    async def get_cool_setpoint_f(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_F&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;COOL_SETPOINT_F&#34;
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getCoolSetpointC(self):
+    async def get_cool_setpoint_c(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_C&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;COOL_SETPOINT_C&#34;
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getHeatSetpointF(self):
+    async def get_heat_setpoint_f(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_F&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;HEAT_SETPOINT_F&#34;
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getHeatSetpointC(self):
+    async def get_heat_setpoint_c(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the heating setpoint temperature in Celsius.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_C&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;HEAT_SETPOINT_C&#34;
+        )
+        if value is None:
+            return None
+        return float(value)
 
     # ------------------------
     # Sensor Readings
     # ------------------------
 
-    async def getHumidity(self):
+    async def get_humidity(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;HUMIDITY&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;HUMIDITY&#34;)
+        if value is None:
+            return None
+        return float(value)
 
-    async def getCurrentTemperatureF(self):
+    async def get_current_temperature_f(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;TEMPERATURE_F&#34;
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getCurrentTemperatureC(self):
+    async def get_current_temperature_c(self) -&gt; float | None:
         &#34;&#34;&#34;Returns the current ambient temperature in Celsius.&#34;&#34;&#34;
-        return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_C&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;TEMPERATURE_C&#34;
+        )
+        if value is None:
+            return None
+        return float(value)
 
     # ------------------------
     # Setters / Commands
     # ------------------------
 
-    async def setCoolSetpointF(self, temp):
+    async def set_cool_setpoint_f(self, temp: float) -&gt; None:
         &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_SETPOINT_COOL&#34;,
             {&#34;FAHRENHEIT&#34;: temp},
         )
 
-    async def setCoolSetpointC(self, temp):
+    async def set_cool_setpoint_c(self, temp: float) -&gt; None:
         &#34;&#34;&#34;Sets the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_SETPOINT_COOL&#34;,
             {&#34;CELSIUS&#34;: temp},
         )
 
-    async def setHeatSetpointF(self, temp):
+    async def set_heat_setpoint_f(self, temp: float) -&gt; None:
         &#34;&#34;&#34;Sets the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_SETPOINT_HEAT&#34;,
             {&#34;FAHRENHEIT&#34;: temp},
         )
 
-    async def setHeatSetpointC(self, temp):
+    async def set_heat_setpoint_c(self, temp: float) -&gt; None:
         &#34;&#34;&#34;Sets the heating setpoint temperature in Celsius.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_SETPOINT_HEAT&#34;,
             {&#34;CELSIUS&#34;: temp},
         )
 
-    async def setHvacMode(self, mode):
+    async def set_hvac_mode(self, mode: str) -&gt; None:
         &#34;&#34;&#34;Sets the HVAC operating mode (e.g., heat, cool, auto).&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_MODE_HVAC&#34;,
             {&#34;MODE&#34;: mode},
         )
 
-    async def setFanMode(self, mode):
+    async def set_fan_mode(self, mode: str) -&gt; None:
         &#34;&#34;&#34;Sets the fan operating mode (e.g., auto, on, circulate).&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_MODE_FAN&#34;,
             {&#34;MODE&#34;: mode},
         )
 
-    async def setPreset(self, preset):
+    async def set_preset(self, preset: str) -&gt; None:
         &#34;&#34;&#34;Applies a predefined climate preset by name.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_PRESET&#34;,
             {&#34;NAME&#34;: preset},
         )
 
-    async def setHoldMode(self, mode):
+    async def set_hold_mode(self, mode: str) -&gt; None:
         &#34;&#34;&#34;Sets the hold mode.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_MODE_HOLD&#34;,
             {&#34;MODE&#34;: mode},
@@ -203,7 +251,7 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -212,227 +260,275 @@ to the Control4 Director that the device is connected to.</p>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.climate.C4Climate.getCoolSetpointC"><code class="name flex">
-<span>async def <span class="ident">getCoolSetpointC</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_cool_setpoint_c"><code class="name flex">
+<span>async def <span class="ident">get_cool_setpoint_c</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getCoolSetpointC(self):
+<pre><code class="python">async def get_cool_setpoint_c(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_C&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;COOL_SETPOINT_C&#34;
+    )
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the cooling setpoint temperature in Celsius.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getCoolSetpointF"><code class="name flex">
-<span>async def <span class="ident">getCoolSetpointF</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_cool_setpoint_f"><code class="name flex">
+<span>async def <span class="ident">get_cool_setpoint_f</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getCoolSetpointF(self):
+<pre><code class="python">async def get_cool_setpoint_f(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;COOL_SETPOINT_F&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;COOL_SETPOINT_F&#34;
+    )
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the cooling setpoint temperature in Fahrenheit.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getCurrentTemperatureC"><code class="name flex">
-<span>async def <span class="ident">getCurrentTemperatureC</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_current_temperature_c"><code class="name flex">
+<span>async def <span class="ident">get_current_temperature_c</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getCurrentTemperatureC(self):
+<pre><code class="python">async def get_current_temperature_c(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the current ambient temperature in Celsius.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_C&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;TEMPERATURE_C&#34;
+    )
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current ambient temperature in Celsius.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getCurrentTemperatureF"><code class="name flex">
-<span>async def <span class="ident">getCurrentTemperatureF</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_current_temperature_f"><code class="name flex">
+<span>async def <span class="ident">get_current_temperature_f</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getCurrentTemperatureF(self):
+<pre><code class="python">async def get_current_temperature_f(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the current ambient temperature in Fahrenheit.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;TEMPERATURE_F&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;TEMPERATURE_F&#34;
+    )
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current ambient temperature in Fahrenheit.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getFANMode"><code class="name flex">
-<span>async def <span class="ident">getFANMode</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_fan_mode"><code class="name flex">
+<span>async def <span class="ident">get_fan_mode</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getFANMode(self):
+<pre><code class="python">async def get_fan_mode(self) -&gt; str | None:
     &#34;&#34;&#34;Returns the currently active fan mode.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODE&#34;)</code></pre>
+    return await self.director.get_item_variable_value(self.item_id, &#34;FAN_MODE&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the currently active fan mode.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getFANModes"><code class="name flex">
-<span>async def <span class="ident">getFANModes</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_fan_modes"><code class="name flex">
+<span>async def <span class="ident">get_fan_modes</span></span>(<span>self) ‑> list[str] | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getFANModes(self):
+<pre><code class="python">async def get_fan_modes(self) -&gt; list[str] | None:
     &#34;&#34;&#34;Returns a list of supported fan modes.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;FAN_MODES_LIST&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;FAN_MODES_LIST&#34;
+    )
+    if value is None:
+        return None
+    return [m.strip() for m in value.split(&#34;,&#34;) if m.strip()]</code></pre>
 </details>
 <div class="desc"><p>Returns a list of supported fan modes.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getFANState"><code class="name flex">
-<span>async def <span class="ident">getFANState</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_fan_state"><code class="name flex">
+<span>async def <span class="ident">get_fan_state</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getFANState(self):
-    &#34;&#34;&#34;Returns the current power state of the fan (True=on, False=off).&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;FAN_STATE&#34;)</code></pre>
+<pre><code class="python">async def get_fan_state(self) -&gt; str | None:
+    &#34;&#34;&#34;Returns the current power state of the fan (on, off).&#34;&#34;&#34;
+    return await self.director.get_item_variable_value(self.item_id, &#34;FAN_STATE&#34;)</code></pre>
 </details>
-<div class="desc"><p>Returns the current power state of the fan (True=on, False=off).</p></div>
+<div class="desc"><p>Returns the current power state of the fan (on, off).</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getHVACMode"><code class="name flex">
-<span>async def <span class="ident">getHVACMode</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_heat_setpoint_c"><code class="name flex">
+<span>async def <span class="ident">get_heat_setpoint_c</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getHVACMode(self):
-    &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODE&#34;)</code></pre>
-</details>
-<div class="desc"><p>Returns the currently active HVAC mode.</p></div>
-</dd>
-<dt id="pyControl4.climate.C4Climate.getHVACModes"><code class="name flex">
-<span>async def <span class="ident">getHVACModes</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getHVACModes(self):
-    &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_MODES_LIST&#34;)</code></pre>
-</details>
-<div class="desc"><p>Returns a list of supported HVAC modes.</p></div>
-</dd>
-<dt id="pyControl4.climate.C4Climate.getHVACState"><code class="name flex">
-<span>async def <span class="ident">getHVACState</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getHVACState(self):
-    &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HVAC_STATE&#34;)</code></pre>
-</details>
-<div class="desc"><p>Returns the current HVAC state (e.g., on/off or active mode).</p></div>
-</dd>
-<dt id="pyControl4.climate.C4Climate.getHeatSetpointC"><code class="name flex">
-<span>async def <span class="ident">getHeatSetpointC</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">async def getHeatSetpointC(self):
+<pre><code class="python">async def get_heat_setpoint_c(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the heating setpoint temperature in Celsius.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_C&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;HEAT_SETPOINT_C&#34;
+    )
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the heating setpoint temperature in Celsius.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getHeatSetpointF"><code class="name flex">
-<span>async def <span class="ident">getHeatSetpointF</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_heat_setpoint_f"><code class="name flex">
+<span>async def <span class="ident">get_heat_setpoint_f</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getHeatSetpointF(self):
+<pre><code class="python">async def get_heat_setpoint_f(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HEAT_SETPOINT_F&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;HEAT_SETPOINT_F&#34;
+    )
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the heating setpoint temperature in Fahrenheit.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getHoldMode"><code class="name flex">
-<span>async def <span class="ident">getHoldMode</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_hold_mode"><code class="name flex">
+<span>async def <span class="ident">get_hold_mode</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getHoldMode(self):
+<pre><code class="python">async def get_hold_mode(self) -&gt; str | None:
     &#34;&#34;&#34;Returns the currently active hold mode.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODE&#34;)</code></pre>
+    return await self.director.get_item_variable_value(self.item_id, &#34;HOLD_MODE&#34;)</code></pre>
 </details>
 <div class="desc"><p>Returns the currently active hold mode.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getHoldModes"><code class="name flex">
-<span>async def <span class="ident">getHoldModes</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_hold_modes"><code class="name flex">
+<span>async def <span class="ident">get_hold_modes</span></span>(<span>self) ‑> list[str] | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getHoldModes(self):
+<pre><code class="python">async def get_hold_modes(self) -&gt; list[str] | None:
     &#34;&#34;&#34;Returns a list of supported hold modes.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HOLD_MODES_LIST&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;HOLD_MODES_LIST&#34;
+    )
+    if value is None:
+        return None
+    return [m.strip() for m in value.split(&#34;,&#34;) if m.strip()]</code></pre>
 </details>
 <div class="desc"><p>Returns a list of supported hold modes.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.getHumidity"><code class="name flex">
-<span>async def <span class="ident">getHumidity</span></span>(<span>self)</span>
+<dt id="pyControl4.climate.C4Climate.get_humidity"><code class="name flex">
+<span>async def <span class="ident">get_humidity</span></span>(<span>self) ‑> float | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getHumidity(self):
+<pre><code class="python">async def get_humidity(self) -&gt; float | None:
     &#34;&#34;&#34;Returns the current humidity percentage.&#34;&#34;&#34;
-    return await self.director.getItemVariableValue(self.item_id, &#34;HUMIDITY&#34;)</code></pre>
+    value = await self.director.get_item_variable_value(self.item_id, &#34;HUMIDITY&#34;)
+    if value is None:
+        return None
+    return float(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the current humidity percentage.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setCoolSetpointC"><code class="name flex">
-<span>async def <span class="ident">setCoolSetpointC</span></span>(<span>self, temp)</span>
+<dt id="pyControl4.climate.C4Climate.get_hvac_mode"><code class="name flex">
+<span>async def <span class="ident">get_hvac_mode</span></span>(<span>self) ‑> str | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setCoolSetpointC(self, temp):
+<pre><code class="python">async def get_hvac_mode(self) -&gt; str | None:
+    &#34;&#34;&#34;Returns the currently active HVAC mode.&#34;&#34;&#34;
+    return await self.director.get_item_variable_value(self.item_id, &#34;HVAC_MODE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the currently active HVAC mode.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.get_hvac_modes"><code class="name flex">
+<span>async def <span class="ident">get_hvac_modes</span></span>(<span>self) ‑> list[str] | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def get_hvac_modes(self) -&gt; list[str] | None:
+    &#34;&#34;&#34;Returns a list of supported HVAC modes.&#34;&#34;&#34;
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;HVAC_MODES_LIST&#34;
+    )
+    if value is None:
+        return None
+    return [m.strip() for m in value.split(&#34;,&#34;) if m.strip()]</code></pre>
+</details>
+<div class="desc"><p>Returns a list of supported HVAC modes.</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.get_hvac_state"><code class="name flex">
+<span>async def <span class="ident">get_hvac_state</span></span>(<span>self) ‑> str | None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def get_hvac_state(self) -&gt; str | None:
+    &#34;&#34;&#34;Returns the current HVAC state (e.g., on/off or active mode).&#34;&#34;&#34;
+    return await self.director.get_item_variable_value(self.item_id, &#34;HVAC_STATE&#34;)</code></pre>
+</details>
+<div class="desc"><p>Returns the current HVAC state (e.g., on/off or active mode).</p></div>
+</dd>
+<dt id="pyControl4.climate.C4Climate.set_cool_setpoint_c"><code class="name flex">
+<span>async def <span class="ident">set_cool_setpoint_c</span></span>(<span>self, temp: float) ‑> None</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">async def set_cool_setpoint_c(self, temp: float) -&gt; None:
     &#34;&#34;&#34;Sets the cooling setpoint temperature in Celsius.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_SETPOINT_COOL&#34;,
         {&#34;CELSIUS&#34;: temp},
@@ -440,17 +536,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the cooling setpoint temperature in Celsius.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setCoolSetpointF"><code class="name flex">
-<span>async def <span class="ident">setCoolSetpointF</span></span>(<span>self, temp)</span>
+<dt id="pyControl4.climate.C4Climate.set_cool_setpoint_f"><code class="name flex">
+<span>async def <span class="ident">set_cool_setpoint_f</span></span>(<span>self, temp: float) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setCoolSetpointF(self, temp):
+<pre><code class="python">async def set_cool_setpoint_f(self, temp: float) -&gt; None:
     &#34;&#34;&#34;Sets the cooling setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_SETPOINT_COOL&#34;,
         {&#34;FAHRENHEIT&#34;: temp},
@@ -458,17 +554,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the cooling setpoint temperature in Fahrenheit.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setFanMode"><code class="name flex">
-<span>async def <span class="ident">setFanMode</span></span>(<span>self, mode)</span>
+<dt id="pyControl4.climate.C4Climate.set_fan_mode"><code class="name flex">
+<span>async def <span class="ident">set_fan_mode</span></span>(<span>self, mode: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setFanMode(self, mode):
+<pre><code class="python">async def set_fan_mode(self, mode: str) -&gt; None:
     &#34;&#34;&#34;Sets the fan operating mode (e.g., auto, on, circulate).&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_MODE_FAN&#34;,
         {&#34;MODE&#34;: mode},
@@ -476,17 +572,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the fan operating mode (e.g., auto, on, circulate).</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setHeatSetpointC"><code class="name flex">
-<span>async def <span class="ident">setHeatSetpointC</span></span>(<span>self, temp)</span>
+<dt id="pyControl4.climate.C4Climate.set_heat_setpoint_c"><code class="name flex">
+<span>async def <span class="ident">set_heat_setpoint_c</span></span>(<span>self, temp: float) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setHeatSetpointC(self, temp):
+<pre><code class="python">async def set_heat_setpoint_c(self, temp: float) -&gt; None:
     &#34;&#34;&#34;Sets the heating setpoint temperature in Celsius.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_SETPOINT_HEAT&#34;,
         {&#34;CELSIUS&#34;: temp},
@@ -494,17 +590,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the heating setpoint temperature in Celsius.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setHeatSetpointF"><code class="name flex">
-<span>async def <span class="ident">setHeatSetpointF</span></span>(<span>self, temp)</span>
+<dt id="pyControl4.climate.C4Climate.set_heat_setpoint_f"><code class="name flex">
+<span>async def <span class="ident">set_heat_setpoint_f</span></span>(<span>self, temp: float) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setHeatSetpointF(self, temp):
+<pre><code class="python">async def set_heat_setpoint_f(self, temp: float) -&gt; None:
     &#34;&#34;&#34;Sets the heating setpoint temperature in Fahrenheit.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_SETPOINT_HEAT&#34;,
         {&#34;FAHRENHEIT&#34;: temp},
@@ -512,17 +608,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the heating setpoint temperature in Fahrenheit.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setHoldMode"><code class="name flex">
-<span>async def <span class="ident">setHoldMode</span></span>(<span>self, mode)</span>
+<dt id="pyControl4.climate.C4Climate.set_hold_mode"><code class="name flex">
+<span>async def <span class="ident">set_hold_mode</span></span>(<span>self, mode: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setHoldMode(self, mode):
+<pre><code class="python">async def set_hold_mode(self, mode: str) -&gt; None:
     &#34;&#34;&#34;Sets the hold mode.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_MODE_HOLD&#34;,
         {&#34;MODE&#34;: mode},
@@ -530,17 +626,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the hold mode.</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setHvacMode"><code class="name flex">
-<span>async def <span class="ident">setHvacMode</span></span>(<span>self, mode)</span>
+<dt id="pyControl4.climate.C4Climate.set_hvac_mode"><code class="name flex">
+<span>async def <span class="ident">set_hvac_mode</span></span>(<span>self, mode: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setHvacMode(self, mode):
+<pre><code class="python">async def set_hvac_mode(self, mode: str) -&gt; None:
     &#34;&#34;&#34;Sets the HVAC operating mode (e.g., heat, cool, auto).&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_MODE_HVAC&#34;,
         {&#34;MODE&#34;: mode},
@@ -548,17 +644,17 @@ to the Control4 Director that the device is connected to.</p>
 </details>
 <div class="desc"><p>Sets the HVAC operating mode (e.g., heat, cool, auto).</p></div>
 </dd>
-<dt id="pyControl4.climate.C4Climate.setPreset"><code class="name flex">
-<span>async def <span class="ident">setPreset</span></span>(<span>self, preset)</span>
+<dt id="pyControl4.climate.C4Climate.set_preset"><code class="name flex">
+<span>async def <span class="ident">set_preset</span></span>(<span>self, preset: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setPreset(self, preset):
+<pre><code class="python">async def set_preset(self, preset: str) -&gt; None:
     &#34;&#34;&#34;Applies a predefined climate preset by name.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_PRESET&#34;,
         {&#34;NAME&#34;: preset},
@@ -586,29 +682,29 @@ to the Control4 Director that the device is connected to.</p>
 <li>
 <h4><code><a title="pyControl4.climate.C4Climate" href="#pyControl4.climate.C4Climate">C4Climate</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.climate.C4Climate.getCoolSetpointC" href="#pyControl4.climate.C4Climate.getCoolSetpointC">getCoolSetpointC</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getCoolSetpointF" href="#pyControl4.climate.C4Climate.getCoolSetpointF">getCoolSetpointF</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getCurrentTemperatureC" href="#pyControl4.climate.C4Climate.getCurrentTemperatureC">getCurrentTemperatureC</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getCurrentTemperatureF" href="#pyControl4.climate.C4Climate.getCurrentTemperatureF">getCurrentTemperatureF</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getFANMode" href="#pyControl4.climate.C4Climate.getFANMode">getFANMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getFANModes" href="#pyControl4.climate.C4Climate.getFANModes">getFANModes</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getFANState" href="#pyControl4.climate.C4Climate.getFANState">getFANState</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHVACMode" href="#pyControl4.climate.C4Climate.getHVACMode">getHVACMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHVACModes" href="#pyControl4.climate.C4Climate.getHVACModes">getHVACModes</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHVACState" href="#pyControl4.climate.C4Climate.getHVACState">getHVACState</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointC" href="#pyControl4.climate.C4Climate.getHeatSetpointC">getHeatSetpointC</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHeatSetpointF" href="#pyControl4.climate.C4Climate.getHeatSetpointF">getHeatSetpointF</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHoldMode" href="#pyControl4.climate.C4Climate.getHoldMode">getHoldMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHoldModes" href="#pyControl4.climate.C4Climate.getHoldModes">getHoldModes</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.getHumidity" href="#pyControl4.climate.C4Climate.getHumidity">getHumidity</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setCoolSetpointC" href="#pyControl4.climate.C4Climate.setCoolSetpointC">setCoolSetpointC</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setCoolSetpointF" href="#pyControl4.climate.C4Climate.setCoolSetpointF">setCoolSetpointF</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setFanMode" href="#pyControl4.climate.C4Climate.setFanMode">setFanMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setHeatSetpointC" href="#pyControl4.climate.C4Climate.setHeatSetpointC">setHeatSetpointC</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setHeatSetpointF" href="#pyControl4.climate.C4Climate.setHeatSetpointF">setHeatSetpointF</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setHoldMode" href="#pyControl4.climate.C4Climate.setHoldMode">setHoldMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setHvacMode" href="#pyControl4.climate.C4Climate.setHvacMode">setHvacMode</a></code></li>
-<li><code><a title="pyControl4.climate.C4Climate.setPreset" href="#pyControl4.climate.C4Climate.setPreset">setPreset</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_cool_setpoint_c" href="#pyControl4.climate.C4Climate.get_cool_setpoint_c">get_cool_setpoint_c</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_cool_setpoint_f" href="#pyControl4.climate.C4Climate.get_cool_setpoint_f">get_cool_setpoint_f</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_current_temperature_c" href="#pyControl4.climate.C4Climate.get_current_temperature_c">get_current_temperature_c</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_current_temperature_f" href="#pyControl4.climate.C4Climate.get_current_temperature_f">get_current_temperature_f</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_fan_mode" href="#pyControl4.climate.C4Climate.get_fan_mode">get_fan_mode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_fan_modes" href="#pyControl4.climate.C4Climate.get_fan_modes">get_fan_modes</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_fan_state" href="#pyControl4.climate.C4Climate.get_fan_state">get_fan_state</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_heat_setpoint_c" href="#pyControl4.climate.C4Climate.get_heat_setpoint_c">get_heat_setpoint_c</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_heat_setpoint_f" href="#pyControl4.climate.C4Climate.get_heat_setpoint_f">get_heat_setpoint_f</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_hold_mode" href="#pyControl4.climate.C4Climate.get_hold_mode">get_hold_mode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_hold_modes" href="#pyControl4.climate.C4Climate.get_hold_modes">get_hold_modes</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_humidity" href="#pyControl4.climate.C4Climate.get_humidity">get_humidity</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_hvac_mode" href="#pyControl4.climate.C4Climate.get_hvac_mode">get_hvac_mode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_hvac_modes" href="#pyControl4.climate.C4Climate.get_hvac_modes">get_hvac_modes</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.get_hvac_state" href="#pyControl4.climate.C4Climate.get_hvac_state">get_hvac_state</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_cool_setpoint_c" href="#pyControl4.climate.C4Climate.set_cool_setpoint_c">set_cool_setpoint_c</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_cool_setpoint_f" href="#pyControl4.climate.C4Climate.set_cool_setpoint_f">set_cool_setpoint_f</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_fan_mode" href="#pyControl4.climate.C4Climate.set_fan_mode">set_fan_mode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_heat_setpoint_c" href="#pyControl4.climate.C4Climate.set_heat_setpoint_c">set_heat_setpoint_c</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_heat_setpoint_f" href="#pyControl4.climate.C4Climate.set_heat_setpoint_f">set_heat_setpoint_f</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_hold_mode" href="#pyControl4.climate.C4Climate.set_hold_mode">set_hold_mode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_hvac_mode" href="#pyControl4.climate.C4Climate.set_hvac_mode">set_hvac_mode</a></code></li>
+<li><code><a title="pyControl4.climate.C4Climate.set_preset" href="#pyControl4.climate.C4Climate.set_preset">set_preset</a></code></li>
 </ul>
 </li>
 </ul>

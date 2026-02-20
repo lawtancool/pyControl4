@@ -49,7 +49,7 @@ el.replaceWith(d);
 <dl>
 <dt id="pyControl4.fan.C4Fan"><code class="flex name class">
 <span>class <span class="ident">C4Fan</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -61,19 +61,19 @@ el.replaceWith(d);
     # Fan State Getters
     # ------------------------
 
-    async def getState(self):
+    async def get_state(self) -&gt; bool | None:
         &#34;&#34;&#34;
         Returns the current power state of the fan.
 
         Returns:
             bool: True if the fan is on, False otherwise.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;IS_ON&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;IS_ON&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def getSpeed(self):
+    async def get_speed(self) -&gt; int | None:
         &#34;&#34;&#34;
         Returns the current speed of the fan controller.
 
@@ -86,12 +86,14 @@ el.replaceWith(d);
 
         Note:
             Only valid for fan controllers. On non-dimmer switches,
-            use `getState()` instead.
+            use `get_state()` instead.
 
         Returns:
             int: Current fan speed (0–4).
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_SPEED&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;CURRENT_SPEED&#34;
+        )
         if value is None:
             return None
         return int(value)
@@ -100,7 +102,7 @@ el.replaceWith(d);
     # Fan Control Setters
     # ------------------------
 
-    async def setSpeed(self, speed: int):
+    async def set_speed(self, speed: int) -&gt; None:
         &#34;&#34;&#34;
         Sets the fan speed or turns it off.
 
@@ -112,13 +114,13 @@ el.replaceWith(d);
                 3 - Medium High
                 4 - High
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_SPEED&#34;,
             {&#34;SPEED&#34;: speed},
         )
 
-    async def setPreset(self, preset: int):
+    async def set_preset(self, preset: int) -&gt; None:
         &#34;&#34;&#34;
         Sets the fan&#39;s preset speed — the speed used when the fan is
         turned on without specifying speed.
@@ -131,7 +133,7 @@ el.replaceWith(d);
                 3 - Medium High
                 4 - High
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;DESIGNATE_PRESET&#34;,
             {&#34;PRESET&#34;: preset},
@@ -139,7 +141,7 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -148,15 +150,15 @@ to the Control4 Director that the device is connected to.</p>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.fan.C4Fan.getSpeed"><code class="name flex">
-<span>async def <span class="ident">getSpeed</span></span>(<span>self)</span>
+<dt id="pyControl4.fan.C4Fan.get_speed"><code class="name flex">
+<span>async def <span class="ident">get_speed</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getSpeed(self):
+<pre><code class="python">async def get_speed(self) -&gt; int | None:
     &#34;&#34;&#34;
     Returns the current speed of the fan controller.
 
@@ -169,12 +171,14 @@ to the Control4 Director that the device is connected to.</p>
 
     Note:
         Only valid for fan controllers. On non-dimmer switches,
-        use `getState()` instead.
+        use `get_state()` instead.
 
     Returns:
         int: Current fan speed (0–4).
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;CURRENT_SPEED&#34;)
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;CURRENT_SPEED&#34;
+    )
     if value is None:
         return None
     return int(value)</code></pre>
@@ -188,29 +192,29 @@ to the Control4 Director that the device is connected to.</p>
 4 - High</p>
 <h2 id="note">Note</h2>
 <p>Only valid for fan controllers. On non-dimmer switches,
-use <code>getState()</code> instead.</p>
+use <code>get_state()</code> instead.</p>
 <h2 id="returns">Returns</h2>
 <dl>
 <dt><code>int</code></dt>
 <dd>Current fan speed (0–4).</dd>
 </dl></div>
 </dd>
-<dt id="pyControl4.fan.C4Fan.getState"><code class="name flex">
-<span>async def <span class="ident">getState</span></span>(<span>self)</span>
+<dt id="pyControl4.fan.C4Fan.get_state"><code class="name flex">
+<span>async def <span class="ident">get_state</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getState(self):
+<pre><code class="python">async def get_state(self) -&gt; bool | None:
     &#34;&#34;&#34;
     Returns the current power state of the fan.
 
     Returns:
         bool: True if the fan is on, False otherwise.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;IS_ON&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;IS_ON&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -222,15 +226,15 @@ use <code>getState()</code> instead.</p>
 <dd>True if the fan is on, False otherwise.</dd>
 </dl></div>
 </dd>
-<dt id="pyControl4.fan.C4Fan.setPreset"><code class="name flex">
-<span>async def <span class="ident">setPreset</span></span>(<span>self, preset: int)</span>
+<dt id="pyControl4.fan.C4Fan.set_preset"><code class="name flex">
+<span>async def <span class="ident">set_preset</span></span>(<span>self, preset: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setPreset(self, preset: int):
+<pre><code class="python">async def set_preset(self, preset: int) -&gt; None:
     &#34;&#34;&#34;
     Sets the fan&#39;s preset speed — the speed used when the fan is
     turned on without specifying speed.
@@ -243,7 +247,7 @@ use <code>getState()</code> instead.</p>
             3 - Medium High
             4 - High
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;DESIGNATE_PRESET&#34;,
         {&#34;PRESET&#34;: preset},
@@ -259,15 +263,15 @@ turned on without specifying speed.</p>
 3 - Medium High
 4 - High</p></div>
 </dd>
-<dt id="pyControl4.fan.C4Fan.setSpeed"><code class="name flex">
-<span>async def <span class="ident">setSpeed</span></span>(<span>self, speed: int)</span>
+<dt id="pyControl4.fan.C4Fan.set_speed"><code class="name flex">
+<span>async def <span class="ident">set_speed</span></span>(<span>self, speed: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setSpeed(self, speed: int):
+<pre><code class="python">async def set_speed(self, speed: int) -&gt; None:
     &#34;&#34;&#34;
     Sets the fan speed or turns it off.
 
@@ -279,7 +283,7 @@ turned on without specifying speed.</p>
             3 - Medium High
             4 - High
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_SPEED&#34;,
         {&#34;SPEED&#34;: speed},
@@ -314,10 +318,10 @@ turned on without specifying speed.</p>
 <li>
 <h4><code><a title="pyControl4.fan.C4Fan" href="#pyControl4.fan.C4Fan">C4Fan</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.fan.C4Fan.getSpeed" href="#pyControl4.fan.C4Fan.getSpeed">getSpeed</a></code></li>
-<li><code><a title="pyControl4.fan.C4Fan.getState" href="#pyControl4.fan.C4Fan.getState">getState</a></code></li>
-<li><code><a title="pyControl4.fan.C4Fan.setPreset" href="#pyControl4.fan.C4Fan.setPreset">setPreset</a></code></li>
-<li><code><a title="pyControl4.fan.C4Fan.setSpeed" href="#pyControl4.fan.C4Fan.setSpeed">setSpeed</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.get_speed" href="#pyControl4.fan.C4Fan.get_speed">get_speed</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.get_state" href="#pyControl4.fan.C4Fan.get_state">get_state</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.set_preset" href="#pyControl4.fan.C4Fan.set_preset">set_preset</a></code></li>
+<li><code><a title="pyControl4.fan.C4Fan.set_speed" href="#pyControl4.fan.C4Fan.set_speed">set_speed</a></code></li>
 </ul>
 </li>
 </ul>

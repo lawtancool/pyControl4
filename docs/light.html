@@ -49,7 +49,7 @@ el.replaceWith(d);
 <dl>
 <dt id="pyControl4.light.C4Light"><code class="flex name class">
 <span>class <span class="ident">C4Light</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -57,38 +57,38 @@ el.replaceWith(d);
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4Light(C4Entity):
-    async def getLevel(self):
+    async def get_level(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the level of a dimming-capable light as an int 0-100.
-        Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
+        Will cause an error if called on a non-dimmer switch. Use `get_state()` instead.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;LIGHT_LEVEL&#34;)
         if value is None:
             return None
         return int(value)
 
-    async def getState(self):
+    async def get_state(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on,
         False=off).
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;LIGHT_STATE&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def setLevel(self, level):
+    async def set_level(self, level: int) -&gt; None:
         &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch.
         Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
         Parameters:
             `level` - (int) 0-100
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_LEVEL&#34;,
             {&#34;LEVEL&#34;: level},
         )
 
-    async def rampToLevel(self, level, time):
+    async def ramp_to_level(self, level: int, time: int) -&gt; None:
         &#34;&#34;&#34;Ramps the light level of a dimmer over time.
         Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
@@ -97,13 +97,15 @@ el.replaceWith(d);
 
             `time` - (int) Duration in milliseconds
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;RAMP_TO_LEVEL&#34;,
             {&#34;LEVEL&#34;: level, &#34;TIME&#34;: time},
         )
 
-    async def setColorXY(self, x: float, y: float, *, rate: int | None = None):
+    async def set_color_xy(
+        self, x: float, y: float, *, rate: int | None = None
+    ) -&gt; None:
         &#34;&#34;&#34;Sends SET_COLOR_TARGET with xy&#34;&#34;&#34;
         params = {
             &#34;LIGHT_COLOR_TARGET_X&#34;: float(x),
@@ -113,13 +115,15 @@ el.replaceWith(d);
         if rate is not None:
             params[&#34;RATE&#34;] = int(rate)
 
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_COLOR_TARGET&#34;,
             params,
         )
 
-    async def setColorTemperature(self, kelvin: int, *, rate: int | None = None):
+    async def set_color_temperature(
+        self, kelvin: int, *, rate: int | None = None
+    ) -&gt; None:
         params = {
             &#34;LIGHT_COLOR_TARGET_COLOR_CORRELATED_TEMPERATURE&#34;: int(kelvin),
             &#34;LIGHT_COLOR_TARGET_MODE&#34;: 1,
@@ -127,7 +131,7 @@ el.replaceWith(d);
         if rate is not None:
             params[&#34;RATE&#34;] = int(rate)
 
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_COLOR_TARGET&#34;,
             params,
@@ -135,7 +139,7 @@ el.replaceWith(d);
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -144,39 +148,39 @@ to the Control4 Director that the device is connected to.</p>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.light.C4Light.getLevel"><code class="name flex">
-<span>async def <span class="ident">getLevel</span></span>(<span>self)</span>
+<dt id="pyControl4.light.C4Light.get_level"><code class="name flex">
+<span>async def <span class="ident">get_level</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getLevel(self):
+<pre><code class="python">async def get_level(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the level of a dimming-capable light as an int 0-100.
-    Will cause an error if called on a non-dimmer switch. Use `getState()` instead.
+    Will cause an error if called on a non-dimmer switch. Use `get_state()` instead.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_LEVEL&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;LIGHT_LEVEL&#34;)
     if value is None:
         return None
     return int(value)</code></pre>
 </details>
 <div class="desc"><p>Returns the level of a dimming-capable light as an int 0-100.
-Will cause an error if called on a non-dimmer switch. Use <code>getState()</code> instead.</p></div>
+Will cause an error if called on a non-dimmer switch. Use <code>get_state()</code> instead.</p></div>
 </dd>
-<dt id="pyControl4.light.C4Light.getState"><code class="name flex">
-<span>async def <span class="ident">getState</span></span>(<span>self)</span>
+<dt id="pyControl4.light.C4Light.get_state"><code class="name flex">
+<span>async def <span class="ident">get_state</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getState(self):
+<pre><code class="python">async def get_state(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns the power state of a dimmer or switch as a boolean (True=on,
     False=off).
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;LIGHT_STATE&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;LIGHT_STATE&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -184,15 +188,15 @@ Will cause an error if called on a non-dimmer switch. Use <code>getState()</code
 <div class="desc"><p>Returns the power state of a dimmer or switch as a boolean (True=on,
 False=off).</p></div>
 </dd>
-<dt id="pyControl4.light.C4Light.rampToLevel"><code class="name flex">
-<span>async def <span class="ident">rampToLevel</span></span>(<span>self, level, time)</span>
+<dt id="pyControl4.light.C4Light.ramp_to_level"><code class="name flex">
+<span>async def <span class="ident">ramp_to_level</span></span>(<span>self, level: int, time: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def rampToLevel(self, level, time):
+<pre><code class="python">async def ramp_to_level(self, level: int, time: int) -&gt; None:
     &#34;&#34;&#34;Ramps the light level of a dimmer over time.
     Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
@@ -201,8 +205,8 @@ False=off).</p></div>
 
         `time` - (int) Duration in milliseconds
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;RAMP_TO_LEVEL&#34;,
         {&#34;LEVEL&#34;: level, &#34;TIME&#34;: time},
     )</code></pre>
@@ -213,15 +217,17 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 <p><code>level</code> - (int) 0-100</p>
 <p><code>time</code> - (int) Duration in milliseconds</p></div>
 </dd>
-<dt id="pyControl4.light.C4Light.setColorTemperature"><code class="name flex">
-<span>async def <span class="ident">setColorTemperature</span></span>(<span>self, kelvin: int, *, rate: int | None = None)</span>
+<dt id="pyControl4.light.C4Light.set_color_temperature"><code class="name flex">
+<span>async def <span class="ident">set_color_temperature</span></span>(<span>self, kelvin: int, *, rate: int | None = None) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setColorTemperature(self, kelvin: int, *, rate: int | None = None):
+<pre><code class="python">async def set_color_temperature(
+    self, kelvin: int, *, rate: int | None = None
+) -&gt; None:
     params = {
         &#34;LIGHT_COLOR_TARGET_COLOR_CORRELATED_TEMPERATURE&#34;: int(kelvin),
         &#34;LIGHT_COLOR_TARGET_MODE&#34;: 1,
@@ -229,7 +235,7 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
     if rate is not None:
         params[&#34;RATE&#34;] = int(rate)
 
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_COLOR_TARGET&#34;,
         params,
@@ -237,15 +243,17 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 </details>
 <div class="desc"></div>
 </dd>
-<dt id="pyControl4.light.C4Light.setColorXY"><code class="name flex">
-<span>async def <span class="ident">setColorXY</span></span>(<span>self, x: float, y: float, *, rate: int | None = None)</span>
+<dt id="pyControl4.light.C4Light.set_color_xy"><code class="name flex">
+<span>async def <span class="ident">set_color_xy</span></span>(<span>self, x: float, y: float, *, rate: int | None = None) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setColorXY(self, x: float, y: float, *, rate: int | None = None):
+<pre><code class="python">async def set_color_xy(
+    self, x: float, y: float, *, rate: int | None = None
+) -&gt; None:
     &#34;&#34;&#34;Sends SET_COLOR_TARGET with xy&#34;&#34;&#34;
     params = {
         &#34;LIGHT_COLOR_TARGET_X&#34;: float(x),
@@ -255,7 +263,7 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
     if rate is not None:
         params[&#34;RATE&#34;] = int(rate)
 
-    await self.director.sendPostRequest(
+    await self.director.send_post_request(
         f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_COLOR_TARGET&#34;,
         params,
@@ -263,23 +271,23 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 </details>
 <div class="desc"><p>Sends SET_COLOR_TARGET with xy</p></div>
 </dd>
-<dt id="pyControl4.light.C4Light.setLevel"><code class="name flex">
-<span>async def <span class="ident">setLevel</span></span>(<span>self, level)</span>
+<dt id="pyControl4.light.C4Light.set_level"><code class="name flex">
+<span>async def <span class="ident">set_level</span></span>(<span>self, level: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setLevel(self, level):
+<pre><code class="python">async def set_level(self, level: int) -&gt; None:
     &#34;&#34;&#34;Sets the light level of a dimmer or turns on/off a switch.
     Any `level &gt; 0` will turn on a switch, and `level = 0` will turn off a switch.
 
     Parameters:
         `level` - (int) 0-100
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_LEVEL&#34;,
         {&#34;LEVEL&#34;: level},
     )</code></pre>
@@ -308,13 +316,13 @@ Any <code>level &gt; 0</code> will turn on a switch, and <code>level = 0</code> 
 <ul>
 <li>
 <h4><code><a title="pyControl4.light.C4Light" href="#pyControl4.light.C4Light">C4Light</a></code></h4>
-<ul class="two-column">
-<li><code><a title="pyControl4.light.C4Light.getLevel" href="#pyControl4.light.C4Light.getLevel">getLevel</a></code></li>
-<li><code><a title="pyControl4.light.C4Light.getState" href="#pyControl4.light.C4Light.getState">getState</a></code></li>
-<li><code><a title="pyControl4.light.C4Light.rampToLevel" href="#pyControl4.light.C4Light.rampToLevel">rampToLevel</a></code></li>
-<li><code><a title="pyControl4.light.C4Light.setColorTemperature" href="#pyControl4.light.C4Light.setColorTemperature">setColorTemperature</a></code></li>
-<li><code><a title="pyControl4.light.C4Light.setColorXY" href="#pyControl4.light.C4Light.setColorXY">setColorXY</a></code></li>
-<li><code><a title="pyControl4.light.C4Light.setLevel" href="#pyControl4.light.C4Light.setLevel">setLevel</a></code></li>
+<ul class="">
+<li><code><a title="pyControl4.light.C4Light.get_level" href="#pyControl4.light.C4Light.get_level">get_level</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.get_state" href="#pyControl4.light.C4Light.get_state">get_state</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.ramp_to_level" href="#pyControl4.light.C4Light.ramp_to_level">ramp_to_level</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.set_color_temperature" href="#pyControl4.light.C4Light.set_color_temperature">set_color_temperature</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.set_color_xy" href="#pyControl4.light.C4Light.set_color_xy">set_color_xy</a></code></li>
+<li><code><a title="pyControl4.light.C4Light.set_level" href="#pyControl4.light.C4Light.set_level">set_level</a></code></li>
 </ul>
 </li>
 </ul>

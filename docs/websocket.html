@@ -51,7 +51,7 @@ updates using callbacks.</p>
 <dl>
 <dt id="pyControl4.websocket.C4Websocket"><code class="flex name class">
 <span>class <span class="ident">C4Websocket</span></span>
-<span>(</span><span>ip,<br>session_no_verify_ssl: aiohttp.client.ClientSession = None,<br>connect_callback=None,<br>disconnect_callback=None)</span>
+<span>(</span><span>ip: str,<br>session_no_verify_ssl: aiohttp.ClientSession | None = None,<br>connect_callback: Callable | None = None,<br>disconnect_callback: Callable | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -61,10 +61,10 @@ updates using callbacks.</p>
 <pre><code class="python">class C4Websocket:
     def __init__(
         self,
-        ip,
-        session_no_verify_ssl: aiohttp.ClientSession = None,
-        connect_callback=None,
-        disconnect_callback=None,
+        ip: str,
+        session_no_verify_ssl: aiohttp.ClientSession | None = None,
+        connect_callback: Callable | None = None,
+        disconnect_callback: Callable | None = None,
     ):
         &#34;&#34;&#34;Creates a Control4 Websocket object.
 
@@ -89,27 +89,24 @@ updates using callbacks.</p>
             `disconnect_callback` - (Optional) A callback to be called when
                 the Websocket connection is lost due to a network error.
         &#34;&#34;&#34;
-        self.base_url = &#34;https://{}&#34;.format(ip)
-        self.wss_url = &#34;wss://{}&#34;.format(ip)
-        self.session = session_no_verify_ssl
-        self.connect_callback = connect_callback
-        self.disconnect_callback = disconnect_callback
+        self.base_url: str = f&#34;https://{ip}&#34;
+        self.wss_url: str = f&#34;wss://{ip}&#34;
+        self.session: aiohttp.ClientSession | None = session_no_verify_ssl
+        self.connect_callback: Callable | None = connect_callback
+        self.disconnect_callback: Callable | None = disconnect_callback
 
-        self._item_callbacks = dict()
-        # Initialize self._sio to None
-        self._sio = None
+        self._item_callbacks: dict[int, list[Callable]] = dict()
+        self._sio: socketio.AsyncClient | None = None
 
     @property
-    def item_callbacks(self):
-        &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks
-        (value).
+    def item_callbacks(self) -&gt; MappingProxyType[int, list[Callable]]:
+        &#34;&#34;&#34;Returns a read-only view of registered item ids (key) and their
+        callbacks (value). Use add_item_callback() or remove_item_callback()
+        to modify callbacks.
         &#34;&#34;&#34;
-        return {
-            item_id: callbacks[0] if callbacks else None
-            for item_id, callbacks in self._item_callbacks.items()
-        }
+        return MappingProxyType(self._item_callbacks)
 
-    def add_item_callback(self, item_id, callback):
+    def add_item_callback(self, item_id: int, callback: Callable) -&gt; None:
         &#34;&#34;&#34;Register a callback to receive updates about an item.
         Parameters:
             `item_id` - The Control4 item ID.
@@ -125,7 +122,9 @@ updates using callbacks.</p>
         if callback not in self._item_callbacks[item_id]:
             self._item_callbacks[item_id].append(callback)
 
-    def remove_item_callback(self, item_id, callback=None):
+    def remove_item_callback(
+        self, item_id: int, callback: Callable | None = None
+    ) -&gt; None:
         &#34;&#34;&#34;Unregister callback(s) for an item.
         Parameters:
             `item_id` - The Control4 item ID.
@@ -148,7 +147,7 @@ updates using callbacks.</p>
             except ValueError:
                 pass
 
-    async def sio_connect(self, director_bearer_token):
+    async def sio_connect(self, director_bearer_token: str) -&gt; None:
         &#34;&#34;&#34;Start WebSockets connection and listen, using the provided
         director_bearer_token to authenticate with the Control4 Director. If a
         connection already exists, it will be disconnected and a new connection
@@ -161,7 +160,7 @@ updates using callbacks.</p>
         Parameters:
             `director_bearer_token` - The bearer token used to authenticate
                 with the Director. See
-                `pyControl4.account.C4Account.getDirectorBearerToken`
+                `pyControl4.account.C4Account.get_director_bearer_token`
                 for how to get this.
         &#34;&#34;&#34;
         # Disconnect previous sio object
@@ -195,49 +194,43 @@ updates using callbacks.</p>
             headers={&#34;JWT&#34;: director_bearer_token},
         )
 
-    async def sio_disconnect(self):
+    async def sio_disconnect(self) -&gt; None:
         &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
         if isinstance(self._sio, socketio.AsyncClient):
             await self._sio.disconnect()
 
-    async def _callback(self, message):
+    async def _callback(self, message: Any) -&gt; None:
         if &#34;status&#34; in message:
             _LOGGER.debug(f&#39;Subscription {message[&#34;status&#34;]}&#39;)
-            return True
+            return
         if isinstance(message, list):
             for m in message:
                 await self._process_message(m)
         else:
             await self._process_message(message)
 
-    async def _process_message(self, message):
+    async def _process_message(self, message: Any) -&gt; None:
         &#34;&#34;&#34;Process an incoming event message.&#34;&#34;&#34;
         _LOGGER.debug(message)
-        try:
-            callbacks = self._item_callbacks[message[&#34;iddevice&#34;]]
-        except KeyError:
-            _LOGGER.debug(&#34;No Callback for device id {}&#34;.format(message[&#34;iddevice&#34;]))
-            return True
+        device_id = message.get(&#34;iddevice&#34;) if isinstance(message, dict) else None
+        if device_id is None:
+            _LOGGER.debug(&#34;Received message without iddevice field&#34;)
+            return
+
+        callbacks = self._item_callbacks.get(device_id, [])
+        if not callbacks:
+            _LOGGER.debug(f&#34;No Callback for device id {device_id}&#34;)
+            return
 
         for callback in callbacks[:]:
             try:
                 if isinstance(message, list):
                     for m in message:
-                        await callback(message[&#34;iddevice&#34;], m)
+                        await callback(device_id, m)
                 else:
-                    await callback(message[&#34;iddevice&#34;], message)
+                    await callback(device_id, message)
             except Exception as exc:
-                _LOGGER.warning(
-                    &#34;Captured exception during callback: {}&#34;.format(str(exc))
-                )
-
-    async def _execute_callback(self, callback, *args, **kwargs):
-        &#34;&#34;&#34;Callback with some data capturing any exceptions.&#34;&#34;&#34;
-        try:
-            self.sio.emit(&#34;ping&#34;)
-            await callback(*args, **kwargs)
-        except Exception as exc:
-            _LOGGER.warning(&#34;Captured exception during callback: {}&#34;.format(str(exc)))</code></pre>
+                _LOGGER.warning(f&#34;Captured exception during callback: {str(exc)}&#34;)</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
 <h2 id="parameters">Parameters</h2>
@@ -259,37 +252,36 @@ error.</p>
 the Websocket connection is lost due to a network error.</p></div>
 <h3>Instance variables</h3>
 <dl>
-<dt id="pyControl4.websocket.C4Websocket.item_callbacks"><code class="name">prop <span class="ident">item_callbacks</span></code></dt>
+<dt id="pyControl4.websocket.C4Websocket.item_callbacks"><code class="name">prop <span class="ident">item_callbacks</span> : MappingProxyType[int, list[Callable]]</code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
-def item_callbacks(self):
-    &#34;&#34;&#34;Returns a dictionary of registered item ids (key) and their callbacks
-    (value).
+def item_callbacks(self) -&gt; MappingProxyType[int, list[Callable]]:
+    &#34;&#34;&#34;Returns a read-only view of registered item ids (key) and their
+    callbacks (value). Use add_item_callback() or remove_item_callback()
+    to modify callbacks.
     &#34;&#34;&#34;
-    return {
-        item_id: callbacks[0] if callbacks else None
-        for item_id, callbacks in self._item_callbacks.items()
-    }</code></pre>
+    return MappingProxyType(self._item_callbacks)</code></pre>
 </details>
-<div class="desc"><p>Returns a dictionary of registered item ids (key) and their callbacks
-(value).</p></div>
+<div class="desc"><p>Returns a read-only view of registered item ids (key) and their
+callbacks (value). Use add_item_callback() or remove_item_callback()
+to modify callbacks.</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.websocket.C4Websocket.add_item_callback"><code class="name flex">
-<span>def <span class="ident">add_item_callback</span></span>(<span>self, item_id, callback)</span>
+<span>def <span class="ident">add_item_callback</span></span>(<span>self, item_id: int, callback: Callable) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_item_callback(self, item_id, callback):
+<pre><code class="python">def add_item_callback(self, item_id: int, callback: Callable) -&gt; None:
     &#34;&#34;&#34;Register a callback to receive updates about an item.
     Parameters:
         `item_id` - The Control4 item ID.
@@ -312,14 +304,16 @@ def item_callbacks(self):
 for the provided item id.</p></div>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.remove_item_callback"><code class="name flex">
-<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id, callback=None)</span>
+<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id: int, callback: Callable | None = None) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def remove_item_callback(self, item_id, callback=None):
+<pre><code class="python">def remove_item_callback(
+    self, item_id: int, callback: Callable | None = None
+) -&gt; None:
     &#34;&#34;&#34;Unregister callback(s) for an item.
     Parameters:
         `item_id` - The Control4 item ID.
@@ -349,14 +343,14 @@ for the provided item id.</p></div>
 removes all callbacks for this item_id.</p></div>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.sio_connect"><code class="name flex">
-<span>async def <span class="ident">sio_connect</span></span>(<span>self, director_bearer_token)</span>
+<span>async def <span class="ident">sio_connect</span></span>(<span>self, director_bearer_token: str) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sio_connect(self, director_bearer_token):
+<pre><code class="python">async def sio_connect(self, director_bearer_token: str) -&gt; None:
     &#34;&#34;&#34;Start WebSockets connection and listen, using the provided
     director_bearer_token to authenticate with the Control4 Director. If a
     connection already exists, it will be disconnected and a new connection
@@ -369,7 +363,7 @@ removes all callbacks for this item_id.</p></div>
     Parameters:
         `director_bearer_token` - The bearer token used to authenticate
             with the Director. See
-            `pyControl4.account.C4Account.getDirectorBearerToken`
+            `pyControl4.account.C4Account.get_director_bearer_token`
             for how to get this.
     &#34;&#34;&#34;
     # Disconnect previous sio object
@@ -413,18 +407,18 @@ stop sending WebSocket messages.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>director_bearer_token</code> - The bearer token used to authenticate
 with the Director. See
-<code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code>
+<code><a title="pyControl4.account.C4Account.get_director_bearer_token" href="account.html#pyControl4.account.C4Account.get_director_bearer_token">C4Account.get_director_bearer_token()</a></code>
 for how to get this.</p></div>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.sio_disconnect"><code class="name flex">
-<span>async def <span class="ident">sio_disconnect</span></span>(<span>self)</span>
+<span>async def <span class="ident">sio_disconnect</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sio_disconnect(self):
+<pre><code class="python">async def sio_disconnect(self) -&gt; None:
     &#34;&#34;&#34;Disconnects the WebSockets connection, if it has been created.&#34;&#34;&#34;
     if isinstance(self._sio, socketio.AsyncClient):
         await self._sio.disconnect()</code></pre>

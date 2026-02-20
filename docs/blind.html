@@ -49,7 +49,7 @@ el.replaceWith(d);
 <dl>
 <dt id="pyControl4.blind.C4Blind"><code class="flex name class">
 <span>class <span class="ident">C4Blind</span></span>
-<span>(</span><span>C4Director, item_id)</span>
+<span>(</span><span>director: C4Director, item_id: int)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -57,139 +57,145 @@ el.replaceWith(d);
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class C4Blind(C4Entity):
-    async def getBatteryLevel(self):
+    async def get_battery_level(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the battery of a blind. We currently don&#39;t know the range or
         meaning.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Battery Level&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;Battery Level&#34;
+        )
         if value is None:
             return None
         return int(value)
 
-    async def getClosing(self):
+    async def get_closing(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns an indication of whether the blind is moving in the closed direction
         as a boolean (True=closing, False=opening). If the blind is stopped, reports
         the direction it last moved.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;Closing&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def getFullyClosed(self):
+    async def get_fully_closed(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns an indication of whether the blind is fully closed as a boolean
         (True=fully closed, False=at least partially open).&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Closed&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;Fully Closed&#34;
+        )
         if value is None:
             return None
         return bool(value)
 
-    async def getFullyOpen(self):
+    async def get_fully_open(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns an indication of whether the blind is fully open as a boolean
         (True=fully open, False=at least partially closed).&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Open&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;Fully Open&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def getLevel(self):
+    async def get_level(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the level (current position) of a blind as an int 0-100.
         0 is fully closed and 100 is fully open.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Level&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;Level&#34;)
         if value is None:
             return None
         return int(value)
 
-    async def getOpen(self):
+    async def get_open(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns an indication of whether the blind is open as a boolean (True=open,
         False=closed). This is true even if the blind is only partially open.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Open&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;Open&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def getOpening(self):
+    async def get_opening(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns an indication of whether the blind is moving in the open direction
         as a boolean (True=opening, False=closing). If the blind is stopped, reports
         the direction it last moved.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;Opening&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def getStopped(self):
+    async def get_stopped(self) -&gt; bool | None:
         &#34;&#34;&#34;Returns an indication of whether the blind is stopped as a boolean
         (True=stopped, False=moving).&#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Stopped&#34;)
+        value = await self.director.get_item_variable_value(self.item_id, &#34;Stopped&#34;)
         if value is None:
             return None
         return bool(value)
 
-    async def getTargetLevel(self):
+    async def get_target_level(self) -&gt; int | None:
         &#34;&#34;&#34;Returns the target level (desired position) of a blind as an int 0-100.
          The blind will move if this is different from the current level.
         0 is fully closed and 100 is fully open.
         &#34;&#34;&#34;
-        value = await self.director.getItemVariableValue(self.item_id, &#34;Target Level&#34;)
+        value = await self.director.get_item_variable_value(
+            self.item_id, &#34;Target Level&#34;
+        )
         if value is None:
             return None
         return int(value)
 
-    async def open(self):
+    async def open(self) -&gt; None:
         &#34;&#34;&#34;Opens the blind completely.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_LEVEL_TARGET:LEVEL_TARGET_OPEN&#34;,
             {},
         )
 
-    async def close(self):
+    async def close(self) -&gt; None:
         &#34;&#34;&#34;Closes the blind completely.&#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_LEVEL_TARGET:LEVEL_TARGET_CLOSED&#34;,
             {},
         )
 
-    async def setLevelTarget(self, level):
+    async def set_level_target(self, level: int) -&gt; None:
         &#34;&#34;&#34;Sets the desired level of a blind; it will start moving towards that level.
         Level 0 is fully closed and level 100 is fully open.
 
         Parameters:
             `level` - (int) 0-100
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;SET_LEVEL_TARGET&#34;,
             {&#34;LEVEL_TARGET&#34;: level},
         )
 
-    async def stop(self):
+    async def stop(self) -&gt; None:
         &#34;&#34;&#34;Stops the blind if it is moving. Shortly after stopping, the target level
         will be set to the level the blind had actually reached when it stopped.
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;STOP&#34;,
             {},
         )
 
-    async def toggle(self):
+    async def toggle(self) -&gt; None:
         &#34;&#34;&#34;Toggles the blind between open and closed. Has no effect if the blind is
         partially open.
         &#34;&#34;&#34;
-        await self.director.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+        await self.director.send_post_request(
+            f&#34;/api/v1/items/{self.item_id}/commands&#34;,
             &#34;TOGGLE&#34;,
             {},
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
 <h2 id="parameters">Parameters</h2>
-<p><code>C4Director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -199,36 +205,38 @@ to the Control4 Director that the device is connected to.</p>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.blind.C4Blind.close"><code class="name flex">
-<span>async def <span class="ident">close</span></span>(<span>self)</span>
+<span>async def <span class="ident">close</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def close(self):
+<pre><code class="python">async def close(self) -&gt; None:
     &#34;&#34;&#34;Closes the blind completely.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_LEVEL_TARGET:LEVEL_TARGET_CLOSED&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Closes the blind completely.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getBatteryLevel"><code class="name flex">
-<span>async def <span class="ident">getBatteryLevel</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_battery_level"><code class="name flex">
+<span>async def <span class="ident">get_battery_level</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getBatteryLevel(self):
+<pre><code class="python">async def get_battery_level(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the battery of a blind. We currently don&#39;t know the range or
     meaning.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Battery Level&#34;)
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;Battery Level&#34;
+    )
     if value is None:
         return None
     return int(value)</code></pre>
@@ -236,20 +244,20 @@ to the Control4 Director that the device is connected to.</p>
 <div class="desc"><p>Returns the battery of a blind. We currently don't know the range or
 meaning.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getClosing"><code class="name flex">
-<span>async def <span class="ident">getClosing</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_closing"><code class="name flex">
+<span>async def <span class="ident">get_closing</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getClosing(self):
+<pre><code class="python">async def get_closing(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns an indication of whether the blind is moving in the closed direction
     as a boolean (True=closing, False=opening). If the blind is stopped, reports
     the direction it last moved.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Closing&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;Closing&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -258,18 +266,20 @@ meaning.</p></div>
 as a boolean (True=closing, False=opening). If the blind is stopped, reports
 the direction it last moved.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getFullyClosed"><code class="name flex">
-<span>async def <span class="ident">getFullyClosed</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_fully_closed"><code class="name flex">
+<span>async def <span class="ident">get_fully_closed</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getFullyClosed(self):
+<pre><code class="python">async def get_fully_closed(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns an indication of whether the blind is fully closed as a boolean
     (True=fully closed, False=at least partially open).&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Closed&#34;)
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;Fully Closed&#34;
+    )
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -277,18 +287,18 @@ the direction it last moved.</p></div>
 <div class="desc"><p>Returns an indication of whether the blind is fully closed as a boolean
 (True=fully closed, False=at least partially open).</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getFullyOpen"><code class="name flex">
-<span>async def <span class="ident">getFullyOpen</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_fully_open"><code class="name flex">
+<span>async def <span class="ident">get_fully_open</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getFullyOpen(self):
+<pre><code class="python">async def get_fully_open(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns an indication of whether the blind is fully open as a boolean
     (True=fully open, False=at least partially closed).&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Fully Open&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;Fully Open&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -296,19 +306,19 @@ the direction it last moved.</p></div>
 <div class="desc"><p>Returns an indication of whether the blind is fully open as a boolean
 (True=fully open, False=at least partially closed).</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getLevel"><code class="name flex">
-<span>async def <span class="ident">getLevel</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_level"><code class="name flex">
+<span>async def <span class="ident">get_level</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getLevel(self):
+<pre><code class="python">async def get_level(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the level (current position) of a blind as an int 0-100.
     0 is fully closed and 100 is fully open.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Level&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;Level&#34;)
     if value is None:
         return None
     return int(value)</code></pre>
@@ -316,19 +326,19 @@ the direction it last moved.</p></div>
 <div class="desc"><p>Returns the level (current position) of a blind as an int 0-100.
 0 is fully closed and 100 is fully open.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getOpen"><code class="name flex">
-<span>async def <span class="ident">getOpen</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_open"><code class="name flex">
+<span>async def <span class="ident">get_open</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getOpen(self):
+<pre><code class="python">async def get_open(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns an indication of whether the blind is open as a boolean (True=open,
     False=closed). This is true even if the blind is only partially open.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Open&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;Open&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -336,20 +346,20 @@ the direction it last moved.</p></div>
 <div class="desc"><p>Returns an indication of whether the blind is open as a boolean (True=open,
 False=closed). This is true even if the blind is only partially open.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getOpening"><code class="name flex">
-<span>async def <span class="ident">getOpening</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_opening"><code class="name flex">
+<span>async def <span class="ident">get_opening</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getOpening(self):
+<pre><code class="python">async def get_opening(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns an indication of whether the blind is moving in the open direction
     as a boolean (True=opening, False=closing). If the blind is stopped, reports
     the direction it last moved.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Opening&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;Opening&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -358,18 +368,18 @@ False=closed). This is true even if the blind is only partially open.</p></div>
 as a boolean (True=opening, False=closing). If the blind is stopped, reports
 the direction it last moved.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getStopped"><code class="name flex">
-<span>async def <span class="ident">getStopped</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_stopped"><code class="name flex">
+<span>async def <span class="ident">get_stopped</span></span>(<span>self) ‑> bool | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getStopped(self):
+<pre><code class="python">async def get_stopped(self) -&gt; bool | None:
     &#34;&#34;&#34;Returns an indication of whether the blind is stopped as a boolean
     (True=stopped, False=moving).&#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Stopped&#34;)
+    value = await self.director.get_item_variable_value(self.item_id, &#34;Stopped&#34;)
     if value is None:
         return None
     return bool(value)</code></pre>
@@ -377,20 +387,22 @@ the direction it last moved.</p></div>
 <div class="desc"><p>Returns an indication of whether the blind is stopped as a boolean
 (True=stopped, False=moving).</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.getTargetLevel"><code class="name flex">
-<span>async def <span class="ident">getTargetLevel</span></span>(<span>self)</span>
+<dt id="pyControl4.blind.C4Blind.get_target_level"><code class="name flex">
+<span>async def <span class="ident">get_target_level</span></span>(<span>self) ‑> int | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getTargetLevel(self):
+<pre><code class="python">async def get_target_level(self) -&gt; int | None:
     &#34;&#34;&#34;Returns the target level (desired position) of a blind as an int 0-100.
      The blind will move if this is different from the current level.
     0 is fully closed and 100 is fully open.
     &#34;&#34;&#34;
-    value = await self.director.getItemVariableValue(self.item_id, &#34;Target Level&#34;)
+    value = await self.director.get_item_variable_value(
+        self.item_id, &#34;Target Level&#34;
+    )
     if value is None:
         return None
     return int(value)</code></pre>
@@ -400,40 +412,40 @@ The blind will move if this is different from the current level.
 0 is fully closed and 100 is fully open.</p></div>
 </dd>
 <dt id="pyControl4.blind.C4Blind.open"><code class="name flex">
-<span>async def <span class="ident">open</span></span>(<span>self)</span>
+<span>async def <span class="ident">open</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def open(self):
+<pre><code class="python">async def open(self) -&gt; None:
     &#34;&#34;&#34;Opens the blind completely.&#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_LEVEL_TARGET:LEVEL_TARGET_OPEN&#34;,
         {},
     )</code></pre>
 </details>
 <div class="desc"><p>Opens the blind completely.</p></div>
 </dd>
-<dt id="pyControl4.blind.C4Blind.setLevelTarget"><code class="name flex">
-<span>async def <span class="ident">setLevelTarget</span></span>(<span>self, level)</span>
+<dt id="pyControl4.blind.C4Blind.set_level_target"><code class="name flex">
+<span>async def <span class="ident">set_level_target</span></span>(<span>self, level: int) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def setLevelTarget(self, level):
+<pre><code class="python">async def set_level_target(self, level: int) -&gt; None:
     &#34;&#34;&#34;Sets the desired level of a blind; it will start moving towards that level.
     Level 0 is fully closed and level 100 is fully open.
 
     Parameters:
         `level` - (int) 0-100
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;SET_LEVEL_TARGET&#34;,
         {&#34;LEVEL_TARGET&#34;: level},
     )</code></pre>
@@ -444,19 +456,19 @@ Level 0 is fully closed and level 100 is fully open.</p>
 <p><code>level</code> - (int) 0-100</p></div>
 </dd>
 <dt id="pyControl4.blind.C4Blind.stop"><code class="name flex">
-<span>async def <span class="ident">stop</span></span>(<span>self)</span>
+<span>async def <span class="ident">stop</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def stop(self):
+<pre><code class="python">async def stop(self) -&gt; None:
     &#34;&#34;&#34;Stops the blind if it is moving. Shortly after stopping, the target level
     will be set to the level the blind had actually reached when it stopped.
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;STOP&#34;,
         {},
     )</code></pre>
@@ -465,19 +477,19 @@ Level 0 is fully closed and level 100 is fully open.</p>
 will be set to the level the blind had actually reached when it stopped.</p></div>
 </dd>
 <dt id="pyControl4.blind.C4Blind.toggle"><code class="name flex">
-<span>async def <span class="ident">toggle</span></span>(<span>self)</span>
+<span>async def <span class="ident">toggle</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def toggle(self):
+<pre><code class="python">async def toggle(self) -&gt; None:
     &#34;&#34;&#34;Toggles the blind between open and closed. Has no effect if the blind is
     partially open.
     &#34;&#34;&#34;
-    await self.director.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(self.item_id),
+    await self.director.send_post_request(
+        f&#34;/api/v1/items/{self.item_id}/commands&#34;,
         &#34;TOGGLE&#34;,
         {},
     )</code></pre>
@@ -506,17 +518,17 @@ partially open.</p></div>
 <h4><code><a title="pyControl4.blind.C4Blind" href="#pyControl4.blind.C4Blind">C4Blind</a></code></h4>
 <ul class="two-column">
 <li><code><a title="pyControl4.blind.C4Blind.close" href="#pyControl4.blind.C4Blind.close">close</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getBatteryLevel" href="#pyControl4.blind.C4Blind.getBatteryLevel">getBatteryLevel</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getClosing" href="#pyControl4.blind.C4Blind.getClosing">getClosing</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getFullyClosed" href="#pyControl4.blind.C4Blind.getFullyClosed">getFullyClosed</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getFullyOpen" href="#pyControl4.blind.C4Blind.getFullyOpen">getFullyOpen</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getLevel" href="#pyControl4.blind.C4Blind.getLevel">getLevel</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getOpen" href="#pyControl4.blind.C4Blind.getOpen">getOpen</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getOpening" href="#pyControl4.blind.C4Blind.getOpening">getOpening</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getStopped" href="#pyControl4.blind.C4Blind.getStopped">getStopped</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.getTargetLevel" href="#pyControl4.blind.C4Blind.getTargetLevel">getTargetLevel</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_battery_level" href="#pyControl4.blind.C4Blind.get_battery_level">get_battery_level</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_closing" href="#pyControl4.blind.C4Blind.get_closing">get_closing</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_fully_closed" href="#pyControl4.blind.C4Blind.get_fully_closed">get_fully_closed</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_fully_open" href="#pyControl4.blind.C4Blind.get_fully_open">get_fully_open</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_level" href="#pyControl4.blind.C4Blind.get_level">get_level</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_open" href="#pyControl4.blind.C4Blind.get_open">get_open</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_opening" href="#pyControl4.blind.C4Blind.get_opening">get_opening</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_stopped" href="#pyControl4.blind.C4Blind.get_stopped">get_stopped</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.get_target_level" href="#pyControl4.blind.C4Blind.get_target_level">get_target_level</a></code></li>
 <li><code><a title="pyControl4.blind.C4Blind.open" href="#pyControl4.blind.C4Blind.open">open</a></code></li>
-<li><code><a title="pyControl4.blind.C4Blind.setLevelTarget" href="#pyControl4.blind.C4Blind.setLevelTarget">setLevelTarget</a></code></li>
+<li><code><a title="pyControl4.blind.C4Blind.set_level_target" href="#pyControl4.blind.C4Blind.set_level_target">set_level_target</a></code></li>
 <li><code><a title="pyControl4.blind.C4Blind.stop" href="#pyControl4.blind.C4Blind.stop">stop</a></code></li>
 <li><code><a title="pyControl4.blind.C4Blind.toggle" href="#pyControl4.blind.C4Blind.toggle">toggle</a></code></li>
 </ul>

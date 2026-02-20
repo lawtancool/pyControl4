@@ -51,7 +51,7 @@ getting details about items on the Director.</p>
 <dl>
 <dt id="pyControl4.director.C4Director"><code class="flex name class">
 <span>class <span class="ident">C4Director</span></span>
-<span>(</span><span>ip,<br>director_bearer_token,<br>session_no_verify_ssl: aiohttp.client.ClientSession = None)</span>
+<span>(</span><span>ip: str,<br>director_bearer_token: str,<br>session_no_verify_ssl: aiohttp.ClientSession | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -61,9 +61,9 @@ getting details about items on the Director.</p>
 <pre><code class="python">class C4Director:
     def __init__(
         self,
-        ip,
-        director_bearer_token,
-        session_no_verify_ssl: aiohttp.ClientSession = None,
+        ip: str,
+        director_bearer_token: str,
+        session_no_verify_ssl: aiohttp.ClientSession | None = None,
     ):
         &#34;&#34;&#34;Creates a Control4 Director object.
 
@@ -72,7 +72,7 @@ getting details about items on the Director.</p>
 
             `director_bearer_token` - The bearer token used to authenticate
                                       with the Director.
-                See `pyControl4.account.C4Account.getDirectorBearerToken`
+                See `pyControl4.account.C4Account.get_director_bearer_token`
                 for how to get this.
 
             `session` - (Optional) Allows the use of an
@@ -82,12 +82,27 @@ getting details about items on the Director.</p>
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
         &#34;&#34;&#34;
-        self.base_url = &#34;https://{}&#34;.format(ip)
-        self.headers = {&#34;Authorization&#34;: &#34;Bearer {}&#34;.format(director_bearer_token)}
+        self.base_url = f&#34;https://{ip}&#34;
+        self.headers = {&#34;Authorization&#34;: f&#34;Bearer {director_bearer_token}&#34;}
         self.director_bearer_token = director_bearer_token
         self.session = session_no_verify_ssl
 
-    async def sendGetRequest(self, uri):
+    @asynccontextmanager
+    async def _get_session(self) -&gt; AsyncGenerator[aiohttp.ClientSession, None]:
+        &#34;&#34;&#34;Returns the configured session or creates a temporary one.
+
+        If self.session is set, yields it without closing.
+        Otherwise, creates and closes a temporary session.
+        &#34;&#34;&#34;
+        if self.session is not None:
+            yield self.session
+        else:
+            async with aiohttp.ClientSession(
+                connector=aiohttp.TCPConnector(verify_ssl=False)
+            ) as session:
+                yield session
+
+    async def send_get_request(self, uri: str) -&gt; str:
         &#34;&#34;&#34;Sends a GET request to the specified API URI.
         Returns the Director&#39;s JSON response as a string.
 
@@ -95,25 +110,18 @@ getting details about items on the Director.</p>
             `uri` - The API URI to send the request to. Do not include the IP
                     address of the Director.
         &#34;&#34;&#34;
-        if self.session is None:
-            async with aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
-            ) as session:
-                async with asyncio.timeout(10):
-                    async with session.get(
-                        self.base_url + uri, headers=self.headers
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
-        else:
+        async with self._get_session() as session:
             async with asyncio.timeout(10):
-                async with self.session.get(
+                async with session.get(
                     self.base_url + uri, headers=self.headers
                 ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
+                    text = await resp.text()
+                    check_response_for_error(text)
+                    return text
 
-    async def sendPostRequest(self, uri, command, params, async_variable=True):
+    async def send_post_request(
+        self, uri: str, command: str, params: dict, is_async: bool = True
+    ) -&gt; str:
         &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
            to the Director.
         Returns the Director&#39;s JSON response as a string.
@@ -126,31 +134,22 @@ getting details about items on the Director.</p>
 
             `params` - The parameters of the command, provided as a dictionary.
         &#34;&#34;&#34;
-        dataDictionary = {
-            &#34;async&#34;: async_variable,
+        data_dict = {
+            &#34;async&#34;: is_async,
             &#34;command&#34;: command,
             &#34;tParams&#34;: params,
         }
-        if self.session is None:
-            async with aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
-            ) as session:
-                async with asyncio.timeout(10):
-                    async with session.post(
-                        self.base_url + uri, headers=self.headers, json=dataDictionary
-                    ) as resp:
-                        await checkResponseForError(await resp.text())
-                        return await resp.text()
-        else:
+        async with self._get_session() as session:
             async with asyncio.timeout(10):
-                async with self.session.post(
-                    self.base_url + uri, headers=self.headers, json=dataDictionary
+                async with session.post(
+                    self.base_url + uri, headers=self.headers, json=data_dict
                 ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
+                    text = await resp.text()
+                    check_response_for_error(text)
+                    return text
 
-    async def getAllItemsByCategory(self, category):
-        &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
+    async def get_all_items_by_category(self, category: str) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns a list of items related to a particular category.
 
         Parameters:
             `category` - Control4 Category Name: controllers, comfort, lights,
@@ -159,45 +158,52 @@ getting details about items on the Director.</p>
                          control4_remote_hub,
                          outlet_wireless_dimmer, voice-scene
         &#34;&#34;&#34;
-        return_list = await self.sendGetRequest(
-            &#34;/api/v1/categories/{}&#34;.format(category)
+        data = await self.send_get_request(f&#34;/api/v1/categories/{category}&#34;)
+        return json.loads(data)
+
+    async def get_all_item_info(self) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns a list of all the items on the Director.&#34;&#34;&#34;
+        data = await self.send_get_request(&#34;/api/v1/items&#34;)
+        return json.loads(data)
+
+    async def get_item_info(self, item_id: int) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns a list of the details of the specified item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        data = await self.send_get_request(f&#34;/api/v1/items/{item_id}&#34;)
+        return json.loads(data)
+
+    async def get_item_setup(self, item_id: int) -&gt; dict:
+        &#34;&#34;&#34;Returns the setup info of the specified item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        data = await self.send_post_request(
+            f&#34;/api/v1/items/{item_id}/commands&#34;, &#34;GET_SETUP&#34;, {}, False
         )
-        return return_list
+        return json.loads(data)
 
-    async def getAllItemInfo(self):
-        &#34;&#34;&#34;Returns a JSON list of all the items on the Director.&#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items&#34;)
-
-    async def getItemInfo(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the details of the specified item.
+    async def get_item_variables(self, item_id: int) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns a list of the variables available for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}&#34;.format(item_id))
+        data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/variables&#34;)
+        return json.loads(data)
 
-    async def getItemSetup(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the setup info of the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendPostRequest(
-            &#34;/api/v1/items/{}/commands&#34;.format(item_id), &#34;GET_SETUP&#34;, {}, False
-        )
-
-    async def getItemVariables(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the variables available for the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))
-
-    async def getItemVariableValue(self, item_id, var_name):
+    async def get_item_variable_value(
+        self, item_id: int, var_name: str | list[str] | tuple[str, ...] | set[str]
+    ) -&gt; Any | None:
         &#34;&#34;&#34;Returns the value of the specified variable for the
-        specified item as a string.
+        specified item.
 
+        The returned value is the JSON ``&#34;value&#34;`` field from the Director
+        response. If that field is the string ``&#34;Undefined&#34;``, this method
+        returns ``None``.
         Parameters:
             `item_id` - The Control4 item ID.
 
@@ -207,20 +213,28 @@ getting details about items on the Director.</p>
         if isinstance(var_name, (tuple, list, set)):
             var_name = &#34;,&#34;.join(var_name)
 
-        data = await self.sendGetRequest(
-            &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
+        data = await self.send_get_request(
+            f&#34;/api/v1/items/{item_id}/variables?varnames={var_name}&#34;
         )
         if data == &#34;[]&#34;:
-            raise ValueError(&#34;Empty response recieved from Director! The variable {} \
-                    doesn&#39;t seem to exist for item {}.&#34;.format(var_name, item_id))
-        jsonDictionary = json.loads(data)
-        value = jsonDictionary[0][&#34;value&#34;]
+            raise ValueError(
+                f&#34;Empty response received from Director! The variable {var_name} &#34;
+                f&#34;doesn&#39;t seem to exist for item {item_id}.&#34;
+            )
+        json_dict = json.loads(data)
+        if not isinstance(json_dict, list) or not json_dict:
+            raise ValueError(
+                f&#34;Invalid response format from Director for variable {var_name}: {data}&#34;
+            )
+        value = json_dict[0].get(&#34;value&#34;)
         if value == &#34;Undefined&#34;:
             return None
         return value
 
-    async def getAllItemVariableValue(self, var_name):
-        &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
+    async def get_all_item_variable_value(
+        self, var_name: str | list[str] | tuple[str, ...] | set[str]
+    ) -&gt; list[dict[str, Any]]:
+        &#34;&#34;&#34;Returns a list of dictionaries with the values of the specified variable
         for all items that have it.
 
         Parameters:
@@ -229,44 +243,49 @@ getting details about items on the Director.</p>
         if isinstance(var_name, (tuple, list, set)):
             var_name = &#34;,&#34;.join(var_name)
 
-        data = await self.sendGetRequest(
-            &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
+        data = await self.send_get_request(
+            f&#34;/api/v1/items/variables?varnames={var_name}&#34;
         )
         if data == &#34;[]&#34;:
-            raise ValueError(&#34;Empty response recieved from Director! The variable {} \
-                    doesn&#39;t seem to exist for any items.&#34;.format(var_name))
-        jsonDictionary = json.loads(data)
-        for item in jsonDictionary:
+            raise ValueError(
+                f&#34;Empty response received from Director! The variable {var_name} &#34;
+                f&#34;doesn&#39;t seem to exist for any items.&#34;
+            )
+        json_dict = json.loads(data)
+        for item in json_dict:
             if item.get(&#34;value&#34;) == &#34;Undefined&#34;:
                 item[&#34;value&#34;] = None
-        return jsonDictionary
+        return json_dict
 
-    async def getItemCommands(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the commands available for the specified item.
-
-        Parameters:
-            `item_id` - The Control4 item ID.
-        &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/commands&#34;.format(item_id))
-
-    async def getItemNetwork(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the network information for the specified item.
+    async def get_item_commands(self, item_id: int) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns the commands available for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/network&#34;.format(item_id))
+        data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/commands&#34;)
+        return json.loads(data)
 
-    async def getItemBindings(self, item_id):
-        &#34;&#34;&#34;Returns a JSON list of the bindings information for the specified item.
+    async def get_item_network(self, item_id: int) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns the network information for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         &#34;&#34;&#34;
-        return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))
+        data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/network&#34;)
+        return json.loads(data)
 
-    async def getUiConfiguration(self):
-        &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating
+    async def get_item_bindings(self, item_id: int) -&gt; list[dict]:
+        &#34;&#34;&#34;Returns the bindings information for the specified item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+        &#34;&#34;&#34;
+        data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/bindings&#34;)
+        return json.loads(data)
+
+    async def get_ui_configuration(self) -&gt; dict:
+        &#34;&#34;&#34;Returns a dictionary of the Control4 App UI Configuration enumerating
         rooms and capabilities
 
         Returns:
@@ -347,15 +366,15 @@ getting details about items on the Director.</p>
                 ...
             }
         &#34;&#34;&#34;
-
-        return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
+        data = await self.send_get_request(&#34;/api/v1/agents/ui_configuration&#34;)
+        return json.loads(data)</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 Director object.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
 <p><code>director_bearer_token</code> - The bearer token used to authenticate
 with the Director.
-See <code><a title="pyControl4.account.C4Account.getDirectorBearerToken" href="account.html#pyControl4.account.C4Account.getDirectorBearerToken">C4Account.getDirectorBearerToken()</a></code>
+See <code><a title="pyControl4.account.C4Account.get_director_bearer_token" href="account.html#pyControl4.account.C4Account.get_director_bearer_token">C4Account.get_director_bearer_token()</a></code>
 for how to get this.</p>
 <p><code>session</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
@@ -365,30 +384,33 @@ If not provided, the library will open and
 close its own <code>ClientSession</code>s as needed.</p></div>
 <h3>Methods</h3>
 <dl>
-<dt id="pyControl4.director.C4Director.getAllItemInfo"><code class="name flex">
-<span>async def <span class="ident">getAllItemInfo</span></span>(<span>self)</span>
+<dt id="pyControl4.director.C4Director.get_all_item_info"><code class="name flex">
+<span>async def <span class="ident">get_all_item_info</span></span>(<span>self) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAllItemInfo(self):
-    &#34;&#34;&#34;Returns a JSON list of all the items on the Director.&#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items&#34;)</code></pre>
+<pre><code class="python">async def get_all_item_info(self) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns a list of all the items on the Director.&#34;&#34;&#34;
+    data = await self.send_get_request(&#34;/api/v1/items&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of all the items on the Director.</p></div>
+<div class="desc"><p>Returns a list of all the items on the Director.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getAllItemVariableValue"><code class="name flex">
-<span>async def <span class="ident">getAllItemVariableValue</span></span>(<span>self, var_name)</span>
+<dt id="pyControl4.director.C4Director.get_all_item_variable_value"><code class="name flex">
+<span>async def <span class="ident">get_all_item_variable_value</span></span>(<span>self, var_name: str | list[str] | tuple[str, ...] | set[str]) ‑> list[dict[str, typing.Any]]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAllItemVariableValue(self, var_name):
-    &#34;&#34;&#34;Returns a dictionary with the values of the specified variable
+<pre><code class="python">async def get_all_item_variable_value(
+    self, var_name: str | list[str] | tuple[str, ...] | set[str]
+) -&gt; list[dict[str, Any]]:
+    &#34;&#34;&#34;Returns a list of dictionaries with the values of the specified variable
     for all items that have it.
 
     Parameters:
@@ -397,33 +419,35 @@ close its own <code>ClientSession</code>s as needed.</p></div>
     if isinstance(var_name, (tuple, list, set)):
         var_name = &#34;,&#34;.join(var_name)
 
-    data = await self.sendGetRequest(
-        &#34;/api/v1/items/variables?varnames={}&#34;.format(var_name)
+    data = await self.send_get_request(
+        f&#34;/api/v1/items/variables?varnames={var_name}&#34;
     )
     if data == &#34;[]&#34;:
-        raise ValueError(&#34;Empty response recieved from Director! The variable {} \
-                doesn&#39;t seem to exist for any items.&#34;.format(var_name))
-    jsonDictionary = json.loads(data)
-    for item in jsonDictionary:
+        raise ValueError(
+            f&#34;Empty response received from Director! The variable {var_name} &#34;
+            f&#34;doesn&#39;t seem to exist for any items.&#34;
+        )
+    json_dict = json.loads(data)
+    for item in json_dict:
         if item.get(&#34;value&#34;) == &#34;Undefined&#34;:
             item[&#34;value&#34;] = None
-    return jsonDictionary</code></pre>
+    return json_dict</code></pre>
 </details>
-<div class="desc"><p>Returns a dictionary with the values of the specified variable
+<div class="desc"><p>Returns a list of dictionaries with the values of the specified variable
 for all items that have it.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>var_name</code> - The Control4 variable name or names.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getAllItemsByCategory"><code class="name flex">
-<span>async def <span class="ident">getAllItemsByCategory</span></span>(<span>self, category)</span>
+<dt id="pyControl4.director.C4Director.get_all_items_by_category"><code class="name flex">
+<span>async def <span class="ident">get_all_items_by_category</span></span>(<span>self, category: str) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getAllItemsByCategory(self, category):
-    &#34;&#34;&#34;Returns a JSON list of items related to a particular category.
+<pre><code class="python">async def get_all_items_by_category(self, category: str) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns a list of items related to a particular category.
 
     Parameters:
         `category` - Control4 Category Name: controllers, comfort, lights,
@@ -432,12 +456,10 @@ for all items that have it.</p>
                      control4_remote_hub,
                      outlet_wireless_dimmer, voice-scene
     &#34;&#34;&#34;
-    return_list = await self.sendGetRequest(
-        &#34;/api/v1/categories/{}&#34;.format(category)
-    )
-    return return_list</code></pre>
+    data = await self.send_get_request(f&#34;/api/v1/categories/{category}&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of items related to a particular category.</p>
+<div class="desc"><p>Returns a list of items related to a particular category.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>category</code> - Control4 Category Name: controllers, comfort, lights,
 cameras, sensors, audio_video,
@@ -445,120 +467,130 @@ motorization, thermostats, motors,
 control4_remote_hub,
 outlet_wireless_dimmer, voice-scene</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemBindings"><code class="name flex">
-<span>async def <span class="ident">getItemBindings</span></span>(<span>self, item_id)</span>
+<dt id="pyControl4.director.C4Director.get_item_bindings"><code class="name flex">
+<span>async def <span class="ident">get_item_bindings</span></span>(<span>self, item_id: int) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemBindings(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the bindings information for the specified item.
+<pre><code class="python">async def get_item_bindings(self, item_id: int) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns the bindings information for the specified item.
 
     Parameters:
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/bindings&#34;.format(item_id))</code></pre>
+    data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/bindings&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of the bindings information for the specified item.</p>
+<div class="desc"><p>Returns the bindings information for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemCommands"><code class="name flex">
-<span>async def <span class="ident">getItemCommands</span></span>(<span>self, item_id)</span>
+<dt id="pyControl4.director.C4Director.get_item_commands"><code class="name flex">
+<span>async def <span class="ident">get_item_commands</span></span>(<span>self, item_id: int) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemCommands(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the commands available for the specified item.
+<pre><code class="python">async def get_item_commands(self, item_id: int) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns the commands available for the specified item.
 
     Parameters:
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/commands&#34;.format(item_id))</code></pre>
+    data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/commands&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of the commands available for the specified item.</p>
+<div class="desc"><p>Returns the commands available for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemInfo"><code class="name flex">
-<span>async def <span class="ident">getItemInfo</span></span>(<span>self, item_id)</span>
+<dt id="pyControl4.director.C4Director.get_item_info"><code class="name flex">
+<span>async def <span class="ident">get_item_info</span></span>(<span>self, item_id: int) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemInfo(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the details of the specified item.
+<pre><code class="python">async def get_item_info(self, item_id: int) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns a list of the details of the specified item.
 
     Parameters:
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}&#34;.format(item_id))</code></pre>
+    data = await self.send_get_request(f&#34;/api/v1/items/{item_id}&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of the details of the specified item.</p>
+<div class="desc"><p>Returns a list of the details of the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemNetwork"><code class="name flex">
-<span>async def <span class="ident">getItemNetwork</span></span>(<span>self, item_id)</span>
+<dt id="pyControl4.director.C4Director.get_item_network"><code class="name flex">
+<span>async def <span class="ident">get_item_network</span></span>(<span>self, item_id: int) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemNetwork(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the network information for the specified item.
+<pre><code class="python">async def get_item_network(self, item_id: int) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns the network information for the specified item.
 
     Parameters:
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/network&#34;.format(item_id))</code></pre>
+    data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/network&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of the network information for the specified item.</p>
+<div class="desc"><p>Returns the network information for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemSetup"><code class="name flex">
-<span>async def <span class="ident">getItemSetup</span></span>(<span>self, item_id)</span>
+<dt id="pyControl4.director.C4Director.get_item_setup"><code class="name flex">
+<span>async def <span class="ident">get_item_setup</span></span>(<span>self, item_id: int) ‑> dict</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemSetup(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the setup info of the specified item.
+<pre><code class="python">async def get_item_setup(self, item_id: int) -&gt; dict:
+    &#34;&#34;&#34;Returns the setup info of the specified item.
 
     Parameters:
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
-    return await self.sendPostRequest(
-        &#34;/api/v1/items/{}/commands&#34;.format(item_id), &#34;GET_SETUP&#34;, {}, False
-    )</code></pre>
+    data = await self.send_post_request(
+        f&#34;/api/v1/items/{item_id}/commands&#34;, &#34;GET_SETUP&#34;, {}, False
+    )
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of the setup info of the specified item.</p>
+<div class="desc"><p>Returns the setup info of the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemVariableValue"><code class="name flex">
-<span>async def <span class="ident">getItemVariableValue</span></span>(<span>self, item_id, var_name)</span>
+<dt id="pyControl4.director.C4Director.get_item_variable_value"><code class="name flex">
+<span>async def <span class="ident">get_item_variable_value</span></span>(<span>self, item_id: int, var_name: str | list[str] | tuple[str, ...] | set[str]) ‑> Any | None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemVariableValue(self, item_id, var_name):
+<pre><code class="python">async def get_item_variable_value(
+    self, item_id: int, var_name: str | list[str] | tuple[str, ...] | set[str]
+) -&gt; Any | None:
     &#34;&#34;&#34;Returns the value of the specified variable for the
-    specified item as a string.
+    specified item.
 
+    The returned value is the JSON ``&#34;value&#34;`` field from the Director
+    response. If that field is the string ``&#34;Undefined&#34;``, this method
+    returns ``None``.
     Parameters:
         `item_id` - The Control4 item ID.
 
@@ -568,54 +600,64 @@ outlet_wireless_dimmer, voice-scene</p></div>
     if isinstance(var_name, (tuple, list, set)):
         var_name = &#34;,&#34;.join(var_name)
 
-    data = await self.sendGetRequest(
-        &#34;/api/v1/items/{}/variables?varnames={}&#34;.format(item_id, var_name)
+    data = await self.send_get_request(
+        f&#34;/api/v1/items/{item_id}/variables?varnames={var_name}&#34;
     )
     if data == &#34;[]&#34;:
-        raise ValueError(&#34;Empty response recieved from Director! The variable {} \
-                doesn&#39;t seem to exist for item {}.&#34;.format(var_name, item_id))
-    jsonDictionary = json.loads(data)
-    value = jsonDictionary[0][&#34;value&#34;]
+        raise ValueError(
+            f&#34;Empty response received from Director! The variable {var_name} &#34;
+            f&#34;doesn&#39;t seem to exist for item {item_id}.&#34;
+        )
+    json_dict = json.loads(data)
+    if not isinstance(json_dict, list) or not json_dict:
+        raise ValueError(
+            f&#34;Invalid response format from Director for variable {var_name}: {data}&#34;
+        )
+    value = json_dict[0].get(&#34;value&#34;)
     if value == &#34;Undefined&#34;:
         return None
     return value</code></pre>
 </details>
 <div class="desc"><p>Returns the value of the specified variable for the
-specified item as a string.</p>
+specified item.</p>
+<p>The returned value is the JSON <code>"value"</code> field from the Director
+response. If that field is the string <code>"Undefined"</code>, this method
+returns <code>None</code>.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p>
 <p><code>var_name</code> - The Control4 variable name or names.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getItemVariables"><code class="name flex">
-<span>async def <span class="ident">getItemVariables</span></span>(<span>self, item_id)</span>
+<dt id="pyControl4.director.C4Director.get_item_variables"><code class="name flex">
+<span>async def <span class="ident">get_item_variables</span></span>(<span>self, item_id: int) ‑> list[dict]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getItemVariables(self, item_id):
-    &#34;&#34;&#34;Returns a JSON list of the variables available for the specified item.
+<pre><code class="python">async def get_item_variables(self, item_id: int) -&gt; list[dict]:
+    &#34;&#34;&#34;Returns a list of the variables available for the specified item.
 
     Parameters:
         `item_id` - The Control4 item ID.
     &#34;&#34;&#34;
-    return await self.sendGetRequest(&#34;/api/v1/items/{}/variables&#34;.format(item_id))</code></pre>
+    data = await self.send_get_request(f&#34;/api/v1/items/{item_id}/variables&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a JSON list of the variables available for the specified item.</p>
+<div class="desc"><p>Returns a list of the variables available for the specified item.</p>
 <h2 id="parameters">Parameters</h2>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.getUiConfiguration"><code class="name flex">
-<span>async def <span class="ident">getUiConfiguration</span></span>(<span>self)</span>
+<dt id="pyControl4.director.C4Director.get_ui_configuration"><code class="name flex">
+<span>async def <span class="ident">get_ui_configuration</span></span>(<span>self) ‑> dict</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def getUiConfiguration(self):
-    &#34;&#34;&#34;Returns a dictionary of the JSON Control4 App UI Configuration enumerating
+<pre><code class="python">async def get_ui_configuration(self) -&gt; dict:
+    &#34;&#34;&#34;Returns a dictionary of the Control4 App UI Configuration enumerating
     rooms and capabilities
 
     Returns:
@@ -696,10 +738,10 @@ specified item as a string.</p>
             ...
         }
     &#34;&#34;&#34;
-
-    return await self.sendGetRequest(&#34;/api/v1/agents/ui_configuration&#34;)</code></pre>
+    data = await self.send_get_request(&#34;/api/v1/agents/ui_configuration&#34;)
+    return json.loads(data)</code></pre>
 </details>
-<div class="desc"><p>Returns a dictionary of the JSON Control4 App UI Configuration enumerating
+<div class="desc"><p>Returns a dictionary of the Control4 App UI Configuration enumerating
 rooms and capabilities</p>
 <h2 id="returns">Returns</h2>
 <p>{
@@ -778,15 +820,15 @@ rooms and capabilities</p>
 &hellip;
 }</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.sendGetRequest"><code class="name flex">
-<span>async def <span class="ident">sendGetRequest</span></span>(<span>self, uri)</span>
+<dt id="pyControl4.director.C4Director.send_get_request"><code class="name flex">
+<span>async def <span class="ident">send_get_request</span></span>(<span>self, uri: str) ‑> str</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sendGetRequest(self, uri):
+<pre><code class="python">async def send_get_request(self, uri: str) -&gt; str:
     &#34;&#34;&#34;Sends a GET request to the specified API URI.
     Returns the Director&#39;s JSON response as a string.
 
@@ -794,23 +836,14 @@ rooms and capabilities</p>
         `uri` - The API URI to send the request to. Do not include the IP
                 address of the Director.
     &#34;&#34;&#34;
-    if self.session is None:
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
-            async with asyncio.timeout(10):
-                async with session.get(
-                    self.base_url + uri, headers=self.headers
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
-    else:
+    async with self._get_session() as session:
         async with asyncio.timeout(10):
-            async with self.session.get(
+            async with session.get(
                 self.base_url + uri, headers=self.headers
             ) as resp:
-                await checkResponseForError(await resp.text())
-                return await resp.text()</code></pre>
+                text = await resp.text()
+                check_response_for_error(text)
+                return text</code></pre>
 </details>
 <div class="desc"><p>Sends a GET request to the specified API URI.
 Returns the Director's JSON response as a string.</p>
@@ -818,15 +851,17 @@ Returns the Director's JSON response as a string.</p>
 <p><code>uri</code> - The API URI to send the request to. Do not include the IP
 address of the Director.</p></div>
 </dd>
-<dt id="pyControl4.director.C4Director.sendPostRequest"><code class="name flex">
-<span>async def <span class="ident">sendPostRequest</span></span>(<span>self, uri, command, params, async_variable=True)</span>
+<dt id="pyControl4.director.C4Director.send_post_request"><code class="name flex">
+<span>async def <span class="ident">send_post_request</span></span>(<span>self, uri: str, command: str, params: dict, is_async: bool = True) ‑> str</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def sendPostRequest(self, uri, command, params, async_variable=True):
+<pre><code class="python">async def send_post_request(
+    self, uri: str, command: str, params: dict, is_async: bool = True
+) -&gt; str:
     &#34;&#34;&#34;Sends a POST request to the specified API URI. Used to send commands
        to the Director.
     Returns the Director&#39;s JSON response as a string.
@@ -839,28 +874,19 @@ address of the Director.</p></div>
 
         `params` - The parameters of the command, provided as a dictionary.
     &#34;&#34;&#34;
-    dataDictionary = {
-        &#34;async&#34;: async_variable,
+    data_dict = {
+        &#34;async&#34;: is_async,
         &#34;command&#34;: command,
         &#34;tParams&#34;: params,
     }
-    if self.session is None:
-        async with aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False)
-        ) as session:
-            async with asyncio.timeout(10):
-                async with session.post(
-                    self.base_url + uri, headers=self.headers, json=dataDictionary
-                ) as resp:
-                    await checkResponseForError(await resp.text())
-                    return await resp.text()
-    else:
+    async with self._get_session() as session:
         async with asyncio.timeout(10):
-            async with self.session.post(
-                self.base_url + uri, headers=self.headers, json=dataDictionary
+            async with session.post(
+                self.base_url + uri, headers=self.headers, json=data_dict
             ) as resp:
-                await checkResponseForError(await resp.text())
-                return await resp.text()</code></pre>
+                text = await resp.text()
+                check_response_for_error(text)
+                return text</code></pre>
 </details>
 <div class="desc"><p>Sends a POST request to the specified API URI. Used to send commands
 to the Director.
@@ -891,19 +917,19 @@ address of the Director.</p>
 <li>
 <h4><code><a title="pyControl4.director.C4Director" href="#pyControl4.director.C4Director">C4Director</a></code></h4>
 <ul class="">
-<li><code><a title="pyControl4.director.C4Director.getAllItemInfo" href="#pyControl4.director.C4Director.getAllItemInfo">getAllItemInfo</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getAllItemVariableValue" href="#pyControl4.director.C4Director.getAllItemVariableValue">getAllItemVariableValue</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getAllItemsByCategory" href="#pyControl4.director.C4Director.getAllItemsByCategory">getAllItemsByCategory</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemBindings" href="#pyControl4.director.C4Director.getItemBindings">getItemBindings</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemCommands" href="#pyControl4.director.C4Director.getItemCommands">getItemCommands</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemInfo" href="#pyControl4.director.C4Director.getItemInfo">getItemInfo</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemNetwork" href="#pyControl4.director.C4Director.getItemNetwork">getItemNetwork</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemSetup" href="#pyControl4.director.C4Director.getItemSetup">getItemSetup</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemVariableValue" href="#pyControl4.director.C4Director.getItemVariableValue">getItemVariableValue</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getItemVariables" href="#pyControl4.director.C4Director.getItemVariables">getItemVariables</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.getUiConfiguration" href="#pyControl4.director.C4Director.getUiConfiguration">getUiConfiguration</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.sendGetRequest" href="#pyControl4.director.C4Director.sendGetRequest">sendGetRequest</a></code></li>
-<li><code><a title="pyControl4.director.C4Director.sendPostRequest" href="#pyControl4.director.C4Director.sendPostRequest">sendPostRequest</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_all_item_info" href="#pyControl4.director.C4Director.get_all_item_info">get_all_item_info</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_all_item_variable_value" href="#pyControl4.director.C4Director.get_all_item_variable_value">get_all_item_variable_value</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_all_items_by_category" href="#pyControl4.director.C4Director.get_all_items_by_category">get_all_items_by_category</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_bindings" href="#pyControl4.director.C4Director.get_item_bindings">get_item_bindings</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_commands" href="#pyControl4.director.C4Director.get_item_commands">get_item_commands</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_info" href="#pyControl4.director.C4Director.get_item_info">get_item_info</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_network" href="#pyControl4.director.C4Director.get_item_network">get_item_network</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_setup" href="#pyControl4.director.C4Director.get_item_setup">get_item_setup</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_variable_value" href="#pyControl4.director.C4Director.get_item_variable_value">get_item_variable_value</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_item_variables" href="#pyControl4.director.C4Director.get_item_variables">get_item_variables</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.get_ui_configuration" href="#pyControl4.director.C4Director.get_ui_configuration">get_ui_configuration</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.send_get_request" href="#pyControl4.director.C4Director.send_get_request">send_get_request</a></code></li>
+<li><code><a title="pyControl4.director.C4Director.send_post_request" href="#pyControl4.director.C4Director.send_post_request">send_post_request</a></code></li>
 </ul>
 </li>
 </ul>
