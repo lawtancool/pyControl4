@@ -2,6 +2,8 @@
 devices.
 """
 
+from __future__ import annotations
+
 from pyControl4 import C4Entity
 
 

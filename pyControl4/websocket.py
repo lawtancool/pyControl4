@@ -239,7 +239,7 @@ class C4Websocket:
 
         callbacks = self._item_callbacks.get(device_id, [])
         if not callbacks:
-            _LOGGER.debug("No Callback for device id {}".format(device_id))
+            _LOGGER.debug(f"No Callback for device id {device_id}")
             return
 
         for callback in callbacks[:]:
@@ -250,6 +250,4 @@ class C4Websocket:
                 else:
                     await callback(device_id, message)
             except Exception as exc:
-                _LOGGER.warning(
-                    "Captured exception during callback: {}".format(str(exc))
-                )
+                _LOGGER.warning(f"Captured exception during callback: {str(exc)}")

@@ -1,5 +1,7 @@
 """Handles errors received from the Control4 API."""
 
+from __future__ import annotations
+
 import json
 import xmltodict
 

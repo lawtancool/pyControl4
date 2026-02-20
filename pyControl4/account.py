@@ -2,6 +2,8 @@
 controller info, and retrieves a bearer token for connecting to a Control4 Director.
 """
 
+from __future__ import annotations
+
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
