@@ -26,31 +26,40 @@ class C4Climate(C4Entity):
         """Returns the currently active HVAC mode."""
         return await self.director.get_item_variable_value(self.item_id, "HVAC_MODE")
 
-    async def get_hvac_modes(self) -> str | None:
+    async def get_hvac_modes(self) -> list[str] | None:
         """Returns a list of supported HVAC modes."""
-        return await self.director.get_item_variable_value(
+        value = await self.director.get_item_variable_value(
             self.item_id, "HVAC_MODES_LIST"
         )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(",") if m.strip()]
 
     async def get_fan_mode(self) -> str | None:
         """Returns the currently active fan mode."""
         return await self.director.get_item_variable_value(self.item_id, "FAN_MODE")
 
-    async def get_fan_modes(self) -> str | None:
+    async def get_fan_modes(self) -> list[str] | None:
         """Returns a list of supported fan modes."""
-        return await self.director.get_item_variable_value(
+        value = await self.director.get_item_variable_value(
             self.item_id, "FAN_MODES_LIST"
         )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(",") if m.strip()]
 
     async def get_hold_mode(self) -> str | None:
         """Returns the currently active hold mode."""
         return await self.director.get_item_variable_value(self.item_id, "HOLD_MODE")
 
-    async def get_hold_modes(self) -> str | None:
+    async def get_hold_modes(self) -> list[str] | None:
         """Returns a list of supported hold modes."""
-        return await self.director.get_item_variable_value(
+        value = await self.director.get_item_variable_value(
             self.item_id, "HOLD_MODES_LIST"
         )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(",") if m.strip()]
 
     # ------------------------
     # Setpoint Getters
