@@ -151,10 +151,13 @@ class C4Director:
 
     async def get_item_variable_value(
         self, item_id: int, var_name: str | list | tuple | set
-    ) -> str | None:
+    ) -> Any | None:
         """Returns the value of the specified variable for the
-        specified item as a string.
+        specified item.
 
+        The returned value is the JSON ``"value"`` field from the Director
+        response. If that field is the string ``"Undefined"``, this method
+        returns ``None``.
         Parameters:
             `item_id` - The Control4 item ID.
 
@@ -185,7 +188,7 @@ class C4Director:
     async def get_all_item_variable_value(
         self, var_name: str | list | tuple | set
     ) -> list[dict[str, Any]]:
-        """Returns a dictionary with the values of the specified variable
+        """Returns a list of dictionaries with the values of the specified variable
         for all items that have it.
 
         Parameters:
@@ -199,7 +202,7 @@ class C4Director:
         )
         if data == "[]":
             raise ValueError(
-                f"Empty response recieved from Director! The variable {var_name} "
+                f"Empty response received from Director! The variable {var_name} "
                 f"doesn't seem to exist for any items."
             )
         json_dict = json.loads(data)
