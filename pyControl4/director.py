@@ -178,7 +178,7 @@ class C4Director:
                 f"doesn't seem to exist for item {item_id}."
             )
         json_dict = json.loads(data)
-        if not json_dict or not isinstance(json_dict, list) or len(json_dict) == 0:
+        if not isinstance(json_dict, list) or not json_dict:
             raise ValueError(
                 f"Invalid response format from Director for variable {var_name}: {data}"
             )
