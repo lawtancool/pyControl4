@@ -45,7 +45,7 @@ DIRECTOR_ERRORS = {"Unauthorized": Unauthorized, "Invalid category": InvalidCate
 DIRECTOR_ERROR_DETAILS = {"Expired or invalid token": BadToken}
 
 
-async def __checkResponseFormat(response_text: str):
+async def _check_response_format(response_text: str) -> str:
     """Known Control4 authentication API error message formats:
     ```json
     {
@@ -86,39 +86,75 @@ async def __checkResponseFormat(response_text: str):
     return "JSON"
 
 
-async def checkResponseForError(response_text: str):
+def _extract_error_info(dictionary: dict) -> dict | None:
+    """Extract error information from a parsed Control4 response.
+
+    Returns a dict with 'details', 'code', or 'error' key, or None if no error found.
+    """
+    # Check for C4ErrorResponse format
+    if "C4ErrorResponse" in dictionary:
+        error_resp = dictionary.get("C4ErrorResponse", {})
+        return {
+            "details": error_resp.get("details"),
+            "code": error_resp.get("code"),
+            "type": "C4ErrorResponse",
+        }
+
+    # Check for direct code format
+    if "code" in dictionary:
+        return {
+            "details": dictionary.get("details"),
+            "code": dictionary.get("code"),
+            "type": "code",
+        }
+
+    # Check for error format (director)
+    if "error" in dictionary:
+        return {
+            "details": dictionary.get("details"),
+            "error": dictionary.get("error"),
+            "type": "error",
+        }
+
+    return None
+
+
+def _raise_error(error_info: dict, response_text: str) -> None:
+    """Raise appropriate exception based on error info."""
+    details = error_info.get("details")
+    code = error_info.get("code")
+    error = error_info.get("error")
+
+    # Try to match by details first (most specific)
+    if details:
+        if details in ERROR_DETAILS:
+            raise ERROR_DETAILS[details](response_text)
+        if details in DIRECTOR_ERROR_DETAILS:
+            raise DIRECTOR_ERROR_DETAILS[details](response_text)
+
+    # Try to match by code/error (less specific)
+    if code is not None:
+        raise ERROR_CODES.get(str(code), C4Exception)(response_text)
+    if error is not None:
+        raise DIRECTOR_ERRORS.get(str(error), C4Exception)(response_text)
+
+    # If nothing matched, raise generic error
+    raise C4Exception(response_text)
+
+
+async def check_response_for_error(response_text: str) -> None:
     """Checks a string response from the Control4 API for error codes.
 
     Parameters:
         `response_text` - JSON or XML response from Control4, as a string.
     """
-    if await __checkResponseFormat(response_text) == "JSON":
+    response_format = await _check_response_format(response_text)
+
+    if response_format == "JSON":
         dictionary = json.loads(response_text)
-    elif await __checkResponseFormat(response_text) == "XML":
+    else:  # XML
         dictionary = xmltodict.parse(response_text)
-    if "C4ErrorResponse" in dictionary:
-        if (
-            "details" in dictionary["C4ErrorResponse"]
-            and dictionary["C4ErrorResponse"]["details"] in ERROR_DETAILS
-        ):
-            exception = ERROR_DETAILS.get(dictionary["C4ErrorResponse"]["details"])
-            raise exception(response_text)
-        else:
-            exception = ERROR_CODES.get(
-                str(dictionary["C4ErrorResponse"]["code"]), C4Exception
-            )
-            raise exception(response_text)
-    elif "code" in dictionary:
-        if "details" in dictionary and dictionary["details"] in ERROR_DETAILS:
-            exception = ERROR_DETAILS.get(dictionary["details"])
-            raise exception(response_text)
-        else:
-            exception = ERROR_CODES.get(str(dictionary["code"]), C4Exception)
-            raise exception(response_text)
-    elif "error" in dictionary:
-        if "details" in dictionary and dictionary["details"] in DIRECTOR_ERROR_DETAILS:
-            exception = DIRECTOR_ERROR_DETAILS.get(dictionary["details"])
-            raise exception(response_text)
-        else:
-            exception = DIRECTOR_ERRORS.get(str(dictionary["error"]), C4Exception)
-            raise exception(response_text)
+
+    error_info = _extract_error_info(dictionary)
+    if error_info:
+        _raise_error(error_info, response_text)

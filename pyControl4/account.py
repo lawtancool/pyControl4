@@ -7,7 +7,7 @@ import asyncio
 import json
 import logging
 
-from .error_handling import checkResponseForError
+from .error_handling import check_response_for_error
 
 AUTHENTICATION_ENDPOINT = "https://apis.control4.com/authentication/v1/rest"
 CONTROLLER_AUTHORIZATION_ENDPOINT = (
@@ -22,9 +22,9 @@ _LOGGER = logging.getLogger(__name__)
 class C4Account:
     def __init__(
         self,
-        username,
-        password,
-        session: aiohttp.ClientSession = None,
+        username: str,
+        password: str,
+        session: aiohttp.ClientSession | None = None,
     ):
         """Creates a Control4 account object.
 
@@ -42,11 +42,11 @@ class C4Account:
         self.password = password
         self.session = session
 
-    async def __sendAccountAuthRequest(self):
+    async def _send_account_auth_request(self) -> str:
         """Used internally to retrieve an account bearer token. Returns the entire
         JSON response from the Control4 auth API.
         """
-        dataDictionary = {
+        data_dict = {
             "clientInfo": {
                 "device": {
                     "deviceName": "pyControl4",
@@ -67,19 +67,19 @@ class C4Account:
             async with aiohttp.ClientSession() as session:
                 async with asyncio.timeout(10):
                     async with session.post(
-                        AUTHENTICATION_ENDPOINT, json=dataDictionary
+                        AUTHENTICATION_ENDPOINT, json=data_dict
                     ) as resp:
-                        await checkResponseForError(await resp.text())
+                        await check_response_for_error(await resp.text())
                         return await resp.text()
         else:
             async with asyncio.timeout(10):
                 async with self.session.post(
-                    AUTHENTICATION_ENDPOINT, json=dataDictionary
+                    AUTHENTICATION_ENDPOINT, json=data_dict
                 ) as resp:
-                    await checkResponseForError(await resp.text())
+                    await check_response_for_error(await resp.text())
                     return await resp.text()
 
-    async def __sendAccountGetRequest(self, uri):
+    async def _send_account_get_request(self, uri: str) -> str:
         """Used internally to send GET requests to the Control4 API,
         authenticated with the account bearer token. Returns the entire JSON
         response from the Control4 auth API.
@@ -88,7 +88,7 @@ class C4Account:
             `uri` - Full URI to send GET request to.
         """
         try:
-            headers = {"Authorization": "Bearer {}".format(self.account_bearer_token)}
+            headers = {"Authorization": f"Bearer {self.account_bearer_token}"}
         except AttributeError:
             msg = (
                 "The account bearer token is missing. "
@@ -100,24 +100,24 @@ class C4Account:
             async with aiohttp.ClientSession() as session:
                 async with asyncio.timeout(10):
                     async with session.get(uri, headers=headers) as resp:
-                        await checkResponseForError(await resp.text())
+                        await check_response_for_error(await resp.text())
                         return await resp.text()
         else:
             async with asyncio.timeout(10):
                 async with self.session.get(uri, headers=headers) as resp:
-                    await checkResponseForError(await resp.text())
+                    await check_response_for_error(await resp.text())
                     return await resp.text()
 
-    async def __sendControllerAuthRequest(self, controller_common_name):
+    async def _send_controller_auth_request(self, controller_common_name: str) -> str:
         """Used internally to retrieve an director bearer token. Returns the
         entire JSON response from the Control4 auth API.
 
         Parameters:
             `controller_common_name`: Common name of the controller.
-                See `getAccountControllers()` for details.
+                See `get_account_controllers()` for details.
         """
         try:
-            headers = {"Authorization": "Bearer {}".format(self.account_bearer_token)}
+            headers = {"Authorization": f"Bearer {self.account_bearer_token}"}
         except AttributeError:
             msg = (
                 "The account bearer token is missing. "
@@ -125,7 +125,7 @@ class C4Account:
             )
             _LOGGER.error(msg)
             raise
-        dataDictionary = {
+        data_dict = {
             "serviceInfo": {
                 "commonName": controller_common_name,
                 "services": "director",
@@ -137,26 +137,26 @@ class C4Account:
                     async with session.post(
                         CONTROLLER_AUTHORIZATION_ENDPOINT,
                         headers=headers,
-                        json=dataDictionary,
+                        json=data_dict,
                     ) as resp:
-                        await checkResponseForError(await resp.text())
+                        await check_response_for_error(await resp.text())
                         return await resp.text()
         else:
             async with asyncio.timeout(10):
                 async with self.session.post(
                     CONTROLLER_AUTHORIZATION_ENDPOINT,
                     headers=headers,
-                    json=dataDictionary,
+                    json=data_dict,
                 ) as resp:
-                    await checkResponseForError(await resp.text())
+                    await check_response_for_error(await resp.text())
                     return await resp.text()
 
-    async def getAccountBearerToken(self):
+    async def get_account_bearer_token(self) -> str:
         """Gets an account bearer token for making Control4 online API requests."""
-        data = await self.__sendAccountAuthRequest()
-        jsonDictionary = json.loads(data)
+        data = await self._send_account_auth_request()
+        json_dict = json.loads(data)
         try:
-            self.account_bearer_token = jsonDictionary["authToken"]["token"]
+            self.account_bearer_token = json_dict["authToken"]["token"]
             return self.account_bearer_token
         except KeyError:
             msg = (
@@ -166,7 +166,7 @@ class C4Account:
             _LOGGER.error(msg + data)
             raise
 
-    async def getAccountControllers(self):
+    async def get_account_controllers(self) -> dict:
         """Returns a dictionary of the information for all controllers registered
         to an account.
 
@@ -179,16 +179,21 @@ class C4Account:
             }
             ```
         """
-        data = await self.__sendAccountGetRequest(GET_CONTROLLERS_ENDPOINT)
-        jsonDictionary = json.loads(data)
-        return jsonDictionary["account"]
+        data = await self._send_account_get_request(GET_CONTROLLERS_ENDPOINT)
+        json_dict = json.loads(data)
+        try:
+            return json_dict["account"]
+        except KeyError:
+            msg = "Did not receive account information from the Control4 API."
+            _LOGGER.error(msg + " Response: " + data)
+            raise
 
-    async def getControllerInfo(self, controller_href):
+    async def get_controller_info(self, controller_href: str) -> dict:
         """Returns a dictionary of the information of a specific controller.
 
         Parameters:
             `controller_href` - The API `href` of the controller (get this from
-                the output of `getAccountControllers()`)
+                the output of `get_account_controllers()`)
 
         Returns:
             ```
@@ -225,32 +230,44 @@ class C4Account:
             }
             ```
         """
-        data = await self.__sendAccountGetRequest(controller_href)
-        jsonDictionary = json.loads(data)
-        return jsonDictionary
+        data = await self._send_account_get_request(controller_href)
+        json_dict = json.loads(data)
+        return json_dict
 
-    async def getControllerOSVersion(self, controller_href):
+    async def get_controller_os_version(self, controller_href: str) -> str:
         """Returns the OS version of a controller as a string.
 
         Parameters:
             `controller_href` - The API `href` of the controller (get this from
-                the output of `getAccountControllers()`)
+                the output of `get_account_controllers()`)
         """
-        data = await self.__sendAccountGetRequest(controller_href + "/controller")
-        jsonDictionary = json.loads(data)
-        return jsonDictionary["osVersion"]
+        data = await self._send_account_get_request(controller_href + "/controller")
+        json_dict = json.loads(data)
+        try:
+            return json_dict["osVersion"]
+        except KeyError:
+            msg = "Did not receive OS version from the Control4 API."
+            _LOGGER.error(msg + " Response: " + data)
+            raise
 
-    async def getDirectorBearerToken(self, controller_common_name):
+    async def get_director_bearer_token(self, controller_common_name: str) -> dict:
         """Returns a dictionary with a director bearer token for making Control4
         Director API requests, and its time valid in seconds (usually 86400 seconds)
 
         Parameters:
             `controller_common_name`: Common name of the controller.
-                See `getAccountControllers()` for details.
+                See `get_account_controllers()` for details.
         """
-        data = await self.__sendControllerAuthRequest(controller_common_name)
-        jsonDictionary = json.loads(data)
-        return {
-            "token": jsonDictionary["authToken"]["token"],
-            "validSeconds": jsonDictionary["authToken"]["validSeconds"],
-        }
+        data = await self._send_controller_auth_request(controller_common_name)
+        json_dict = json.loads(data)
+        try:
+            auth_token = json_dict.get("authToken", {})
+            token = auth_token.get("token")
+            valid_seconds = auth_token.get("validSeconds")
+            if token is None or valid_seconds is None:
+                raise KeyError("Missing token or validSeconds in authToken")
+            return {"token": token, "validSeconds": valid_seconds}
+        except KeyError:
+            msg = "Did not receive a director bearer token from the Control4 API."
+            _LOGGER.error(msg + " Response: " + data)
+            raise
