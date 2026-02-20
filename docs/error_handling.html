@@ -81,7 +81,7 @@ el.replaceWith(d);
 <dl>
 <dt id="pyControl4.error_handling.BadCredentials"><code class="flex name class">
 <span>class <span class="ident">BadCredentials</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>message: str)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -102,7 +102,7 @@ el.replaceWith(d);
 </dd>
 <dt id="pyControl4.error_handling.BadToken"><code class="flex name class">
 <span>class <span class="ident">BadToken</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>message: str)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -123,7 +123,7 @@ el.replaceWith(d);
 </dd>
 <dt id="pyControl4.error_handling.C4Exception"><code class="flex name class">
 <span>class <span class="ident">C4Exception</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>message: str)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -133,7 +133,7 @@ el.replaceWith(d);
 <pre><code class="python">class C4Exception(Exception):
     &#34;&#34;&#34;Base error for pyControl4.&#34;&#34;&#34;
 
-    def __init__(self, message):
+    def __init__(self, message: str) -&gt; None:
         self.message = message</code></pre>
 </details>
 <div class="desc"><p>Base error for pyControl4.</p></div>
@@ -151,7 +151,7 @@ el.replaceWith(d);
 </dd>
 <dt id="pyControl4.error_handling.InvalidCategory"><code class="flex name class">
 <span>class <span class="ident">InvalidCategory</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>message: str)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -173,7 +173,7 @@ el.replaceWith(d);
 </dd>
 <dt id="pyControl4.error_handling.NotFound"><code class="flex name class">
 <span>class <span class="ident">NotFound</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>message: str)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -195,7 +195,7 @@ Occurs when the requested controller, etc. could not be found.</p></div>
 </dd>
 <dt id="pyControl4.error_handling.Unauthorized"><code class="flex name class">
 <span>class <span class="ident">Unauthorized</span></span>
-<span>(</span><span>message)</span>
+<span>(</span><span>message: str)</span>
 </code></dt>
 <dd>
 <details class="source">

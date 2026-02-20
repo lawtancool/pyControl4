@@ -51,7 +51,7 @@ updates using callbacks.</p>
 <dl>
 <dt id="pyControl4.websocket.C4Websocket"><code class="flex name class">
 <span>class <span class="ident">C4Websocket</span></span>
-<span>(</span><span>ip: str,<br>session_no_verify_ssl: aiohttp.ClientSession | None = None,<br>connect_callback: Callable | None = None,<br>disconnect_callback: Callable | None = None)</span>
+<span>(</span><span>ip: str,<br>session_no_verify_ssl: aiohttp.ClientSession | None = None,<br>connect_callback: Callable[..., Any] | None = None,<br>disconnect_callback: Callable[..., Any] | None = None)</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -63,8 +63,8 @@ updates using callbacks.</p>
         self,
         ip: str,
         session_no_verify_ssl: aiohttp.ClientSession | None = None,
-        connect_callback: Callable | None = None,
-        disconnect_callback: Callable | None = None,
+        connect_callback: Callable[..., Any] | None = None,
+        disconnect_callback: Callable[..., Any] | None = None,
     ):
         &#34;&#34;&#34;Creates a Control4 Websocket object.
 
@@ -92,21 +92,21 @@ updates using callbacks.</p>
         self.base_url: str = f&#34;https://{ip}&#34;
         self.wss_url: str = f&#34;wss://{ip}&#34;
         self.session: aiohttp.ClientSession | None = session_no_verify_ssl
-        self.connect_callback: Callable | None = connect_callback
-        self.disconnect_callback: Callable | None = disconnect_callback
+        self.connect_callback: Callable[..., Any] | None = connect_callback
+        self.disconnect_callback: Callable[..., Any] | None = disconnect_callback
 
-        self._item_callbacks: dict[int, list[Callable]] = dict()
+        self._item_callbacks: dict[int, list[Callable[..., Any]]] = dict()
         self._sio: socketio.AsyncClient | None = None
 
     @property
-    def item_callbacks(self) -&gt; MappingProxyType[int, list[Callable]]:
+    def item_callbacks(self) -&gt; MappingProxyType[int, list[Callable[..., Any]]]:
         &#34;&#34;&#34;Returns a read-only view of registered item ids (key) and their
         callbacks (value). Use add_item_callback() or remove_item_callback()
         to modify callbacks.
         &#34;&#34;&#34;
         return MappingProxyType(self._item_callbacks)
 
-    def add_item_callback(self, item_id: int, callback: Callable) -&gt; None:
+    def add_item_callback(self, item_id: int, callback: Callable[..., Any]) -&gt; None:
         &#34;&#34;&#34;Register a callback to receive updates about an item.
         Parameters:
             `item_id` - The Control4 item ID.
@@ -123,7 +123,7 @@ updates using callbacks.</p>
             self._item_callbacks[item_id].append(callback)
 
     def remove_item_callback(
-        self, item_id: int, callback: Callable | None = None
+        self, item_id: int, callback: Callable[..., Any] | None = None
     ) -&gt; None:
         &#34;&#34;&#34;Unregister callback(s) for an item.
         Parameters:
@@ -252,14 +252,14 @@ error.</p>
 the Websocket connection is lost due to a network error.</p></div>
 <h3>Instance variables</h3>
 <dl>
-<dt id="pyControl4.websocket.C4Websocket.item_callbacks"><code class="name">prop <span class="ident">item_callbacks</span> : MappingProxyType[int, list[Callable]]</code></dt>
+<dt id="pyControl4.websocket.C4Websocket.item_callbacks"><code class="name">prop <span class="ident">item_callbacks</span> : MappingProxyType[int, list[Callable[..., Any]]]</code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">@property
-def item_callbacks(self) -&gt; MappingProxyType[int, list[Callable]]:
+def item_callbacks(self) -&gt; MappingProxyType[int, list[Callable[..., Any]]]:
     &#34;&#34;&#34;Returns a read-only view of registered item ids (key) and their
     callbacks (value). Use add_item_callback() or remove_item_callback()
     to modify callbacks.
@@ -274,14 +274,14 @@ to modify callbacks.</p></div>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.websocket.C4Websocket.add_item_callback"><code class="name flex">
-<span>def <span class="ident">add_item_callback</span></span>(<span>self, item_id: int, callback: Callable) ‑> None</span>
+<span>def <span class="ident">add_item_callback</span></span>(<span>self, item_id: int, callback: Callable[..., Any]) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def add_item_callback(self, item_id: int, callback: Callable) -&gt; None:
+<pre><code class="python">def add_item_callback(self, item_id: int, callback: Callable[..., Any]) -&gt; None:
     &#34;&#34;&#34;Register a callback to receive updates about an item.
     Parameters:
         `item_id` - The Control4 item ID.
@@ -304,7 +304,7 @@ to modify callbacks.</p></div>
 for the provided item id.</p></div>
 </dd>
 <dt id="pyControl4.websocket.C4Websocket.remove_item_callback"><code class="name flex">
-<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id: int, callback: Callable | None = None) ‑> None</span>
+<span>def <span class="ident">remove_item_callback</span></span>(<span>self, item_id: int, callback: Callable[..., Any] | None = None) ‑> None</span>
 </code></dt>
 <dd>
 <details class="source">
@@ -312,7 +312,7 @@ for the provided item id.</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def remove_item_callback(
-    self, item_id: int, callback: Callable | None = None
+    self, item_id: int, callback: Callable[..., Any] | None = None
 ) -&gt; None:
     &#34;&#34;&#34;Unregister callback(s) for an item.
     Parameters:

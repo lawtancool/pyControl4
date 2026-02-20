@@ -188,7 +188,7 @@ el.replaceWith(d);
             {},
         )
 
-    async def get_audio_devices(self) -&gt; dict:
+    async def get_audio_devices(self) -&gt; dict[str, Any]:
         &#34;&#34;&#34;
         Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
@@ -201,9 +201,10 @@ el.replaceWith(d);
         data = await self.director.send_get_request(
             f&#34;/api/v1/locations/rooms/{self.item_id}/audio_devices&#34;
         )
-        return json.loads(data)
+        result: dict[str, Any] = json.loads(data)
+        return result
 
-    async def get_video_devices(self) -&gt; dict:
+    async def get_video_devices(self) -&gt; dict[str, Any]:
         &#34;&#34;&#34;
         Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
@@ -216,7 +217,8 @@ el.replaceWith(d);
         data = await self.director.send_get_request(
             f&#34;/api/v1/locations/rooms/{self.item_id}/video_devices&#34;
         )
-        return json.loads(data)</code></pre>
+        result: dict[str, Any] = json.loads(data)
+        return result</code></pre>
 </details>
 <div class="desc"><p>A media-oriented view of a Control4 Room, supporting items of type="room"</p>
 <p>Creates a Control4 object.</p>
@@ -231,14 +233,14 @@ to the Control4 Director that the device is connected to.</p>
 <h3>Methods</h3>
 <dl>
 <dt id="pyControl4.room.C4Room.get_audio_devices"><code class="name flex">
-<span>async def <span class="ident">get_audio_devices</span></span>(<span>self) ‑> dict</span>
+<span>async def <span class="ident">get_audio_devices</span></span>(<span>self) ‑> dict[str, typing.Any]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_audio_devices(self) -&gt; dict:
+<pre><code class="python">async def get_audio_devices(self) -&gt; dict[str, Any]:
     &#34;&#34;&#34;
     Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
@@ -251,7 +253,8 @@ to the Control4 Director that the device is connected to.</p>
     data = await self.director.send_get_request(
         f&#34;/api/v1/locations/rooms/{self.item_id}/audio_devices&#34;
     )
-    return json.loads(data)</code></pre>
+    result: dict[str, Any] = json.loads(data)
+    return result</code></pre>
 </details>
 <div class="desc"><p>Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions</p>
 <p>Get the audio devices located in the room.
@@ -261,14 +264,14 @@ See <code><a title="pyControl4.director.C4Director.get_ui_configuration" href="d
 for a more accurate list</p></div>
 </dd>
 <dt id="pyControl4.room.C4Room.get_video_devices"><code class="name flex">
-<span>async def <span class="ident">get_video_devices</span></span>(<span>self) ‑> dict</span>
+<span>async def <span class="ident">get_video_devices</span></span>(<span>self) ‑> dict[str, typing.Any]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_video_devices(self) -&gt; dict:
+<pre><code class="python">async def get_video_devices(self) -&gt; dict[str, Any]:
     &#34;&#34;&#34;
     Note: As tested in OS 3.2.3 this doesn&#39;t work, but may work in previous versions
 
@@ -281,7 +284,8 @@ for a more accurate list</p></div>
     data = await self.director.send_get_request(
         f&#34;/api/v1/locations/rooms/{self.item_id}/video_devices&#34;
     )
-    return json.loads(data)</code></pre>
+    result: dict[str, Any] = json.loads(data)
+    return result</code></pre>
 </details>
 <div class="desc"><p>Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions</p>
 <p>Get the video devices located in the room.

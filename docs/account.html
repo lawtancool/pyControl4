@@ -187,8 +187,9 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         data = await self._send_account_auth_request()
         json_dict = json.loads(data)
         try:
-            self.account_bearer_token = json_dict[&#34;authToken&#34;][&#34;token&#34;]
-            return self.account_bearer_token
+            token: str = json_dict[&#34;authToken&#34;][&#34;token&#34;]
+            self.account_bearer_token = token
+            return token
         except KeyError:
             msg = (
                 &#34;Did not receive an account bearer token. &#34;
@@ -197,7 +198,7 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
             _LOGGER.error(msg + data)
             raise
 
-    async def get_account_controllers(self) -&gt; dict:
+    async def get_account_controllers(self) -&gt; dict[str, Any]:
         &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered
         to an account.
 
@@ -213,13 +214,14 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         data = await self._send_account_get_request(GET_CONTROLLERS_ENDPOINT)
         json_dict = json.loads(data)
         try:
-            return json_dict[&#34;account&#34;]
+            result: dict[str, Any] = json_dict[&#34;account&#34;]
+            return result
         except KeyError:
             msg = &#34;Did not receive account information from the Control4 API.&#34;
             _LOGGER.error(msg + &#34; Response: &#34; + data)
             raise
 
-    async def get_controller_info(self, controller_href: str) -&gt; dict:
+    async def get_controller_info(self, controller_href: str) -&gt; dict[str, Any]:
         &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
         Parameters:
@@ -262,7 +264,7 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
             ```
         &#34;&#34;&#34;
         data = await self._send_account_get_request(controller_href)
-        json_dict = json.loads(data)
+        json_dict: dict[str, Any] = json.loads(data)
         return json_dict
 
     async def get_controller_os_version(self, controller_href: str) -&gt; str:
@@ -275,13 +277,14 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
         data = await self._send_account_get_request(controller_href + &#34;/controller&#34;)
         json_dict = json.loads(data)
         try:
-            return json_dict[&#34;osVersion&#34;]
+            version: str = json_dict[&#34;osVersion&#34;]
+            return version
         except KeyError:
             msg = &#34;Did not receive OS version from the Control4 API.&#34;
             _LOGGER.error(msg + &#34; Response: &#34; + data)
             raise
 
-    async def get_director_bearer_token(self, controller_common_name: str) -&gt; dict:
+    async def get_director_bearer_token(self, controller_common_name: str) -&gt; dict[str, Any]:
         &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4
         Director API requests, and its time valid in seconds (usually 86400 seconds)
 
@@ -326,8 +329,9 @@ its own <code>ClientSession</code>s as needed.</p></div>
     data = await self._send_account_auth_request()
     json_dict = json.loads(data)
     try:
-        self.account_bearer_token = json_dict[&#34;authToken&#34;][&#34;token&#34;]
-        return self.account_bearer_token
+        token: str = json_dict[&#34;authToken&#34;][&#34;token&#34;]
+        self.account_bearer_token = token
+        return token
     except KeyError:
         msg = (
             &#34;Did not receive an account bearer token. &#34;
@@ -339,14 +343,14 @@ its own <code>ClientSession</code>s as needed.</p></div>
 <div class="desc"><p>Gets an account bearer token for making Control4 online API requests.</p></div>
 </dd>
 <dt id="pyControl4.account.C4Account.get_account_controllers"><code class="name flex">
-<span>async def <span class="ident">get_account_controllers</span></span>(<span>self) ‑> dict</span>
+<span>async def <span class="ident">get_account_controllers</span></span>(<span>self) ‑> dict[str, typing.Any]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_account_controllers(self) -&gt; dict:
+<pre><code class="python">async def get_account_controllers(self) -&gt; dict[str, Any]:
     &#34;&#34;&#34;Returns a dictionary of the information for all controllers registered
     to an account.
 
@@ -362,7 +366,8 @@ its own <code>ClientSession</code>s as needed.</p></div>
     data = await self._send_account_get_request(GET_CONTROLLERS_ENDPOINT)
     json_dict = json.loads(data)
     try:
-        return json_dict[&#34;account&#34;]
+        result: dict[str, Any] = json_dict[&#34;account&#34;]
+        return result
     except KeyError:
         msg = &#34;Did not receive account information from the Control4 API.&#34;
         _LOGGER.error(msg + &#34; Response: &#34; + data)
@@ -379,14 +384,14 @@ to an account.</p>
 </code></pre></div>
 </dd>
 <dt id="pyControl4.account.C4Account.get_controller_info"><code class="name flex">
-<span>async def <span class="ident">get_controller_info</span></span>(<span>self, controller_href: str) ‑> dict</span>
+<span>async def <span class="ident">get_controller_info</span></span>(<span>self, controller_href: str) ‑> dict[str, typing.Any]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_controller_info(self, controller_href: str) -&gt; dict:
+<pre><code class="python">async def get_controller_info(self, controller_href: str) -&gt; dict[str, Any]:
     &#34;&#34;&#34;Returns a dictionary of the information of a specific controller.
 
     Parameters:
@@ -429,7 +434,7 @@ to an account.</p>
         ```
     &#34;&#34;&#34;
     data = await self._send_account_get_request(controller_href)
-    json_dict = json.loads(data)
+    json_dict: dict[str, Any] = json.loads(data)
     return json_dict</code></pre>
 </details>
 <div class="desc"><p>Returns a dictionary of the information of a specific controller.</p>
@@ -488,7 +493,8 @@ the output of <code>get_account_controllers()</code>)</p>
     data = await self._send_account_get_request(controller_href + &#34;/controller&#34;)
     json_dict = json.loads(data)
     try:
-        return json_dict[&#34;osVersion&#34;]
+        version: str = json_dict[&#34;osVersion&#34;]
+        return version
     except KeyError:
         msg = &#34;Did not receive OS version from the Control4 API.&#34;
         _LOGGER.error(msg + &#34; Response: &#34; + data)
@@ -500,14 +506,14 @@ the output of <code>get_account_controllers()</code>)</p>
 the output of <code>get_account_controllers()</code>)</p></div>
 </dd>
 <dt id="pyControl4.account.C4Account.get_director_bearer_token"><code class="name flex">
-<span>async def <span class="ident">get_director_bearer_token</span></span>(<span>self, controller_common_name: str) ‑> dict</span>
+<span>async def <span class="ident">get_director_bearer_token</span></span>(<span>self, controller_common_name: str) ‑> dict[str, typing.Any]</span>
 </code></dt>
 <dd>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">async def get_director_bearer_token(self, controller_common_name: str) -&gt; dict:
+<pre><code class="python">async def get_director_bearer_token(self, controller_common_name: str) -&gt; dict[str, Any]:
     &#34;&#34;&#34;Returns a dictionary with a director bearer token for making Control4
     Director API requests, and its time valid in seconds (usually 86400 seconds)
 
