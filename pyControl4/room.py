@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from typing import Any
 
 from pyControl4 import C4Entity
 
@@ -139,7 +140,7 @@ class C4Room(C4Entity):
             {},
         )
 
-    async def get_audio_devices(self) -> dict:
+    async def get_audio_devices(self) -> dict[str, Any]:
         """
         Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions
 
@@ -152,9 +153,10 @@ class C4Room(C4Entity):
         data = await self.director.send_get_request(
             f"/api/v1/locations/rooms/{self.item_id}/audio_devices"
         )
-        return json.loads(data)
+        result: dict[str, Any] = json.loads(data)
+        return result
 
-    async def get_video_devices(self) -> dict:
+    async def get_video_devices(self) -> dict[str, Any]:
         """
         Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions
 
@@ -167,4 +169,5 @@ class C4Room(C4Entity):
         data = await self.director.send_get_request(
             f"/api/v1/locations/rooms/{self.item_id}/video_devices"
         )
-        return json.loads(data)
+        result: dict[str, Any] = json.loads(data)
+        return result

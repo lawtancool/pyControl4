@@ -76,7 +76,7 @@ class C4Director:
                     return text
 
     async def send_post_request(
-        self, uri: str, command: str, params: dict, is_async: bool = True
+        self, uri: str, command: str, params: dict[str, Any], is_async: bool = True
     ) -> str:
         """Sends a POST request to the specified API URI. Used to send commands
            to the Director.
@@ -104,7 +104,7 @@ class C4Director:
                     check_response_for_error(text)
                     return text
 
-    async def get_all_items_by_category(self, category: str) -> list[dict]:
+    async def get_all_items_by_category(self, category: str) -> list[dict[str, Any]]:
         """Returns a list of items related to a particular category.
 
         Parameters:
@@ -115,23 +115,26 @@ class C4Director:
                          outlet_wireless_dimmer, voice-scene
         """
         data = await self.send_get_request(f"/api/v1/categories/{category}")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
-    async def get_all_item_info(self) -> list[dict]:
+    async def get_all_item_info(self) -> list[dict[str, Any]]:
         """Returns a list of all the items on the Director."""
         data = await self.send_get_request("/api/v1/items")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
-    async def get_item_info(self, item_id: int) -> list[dict]:
+    async def get_item_info(self, item_id: int) -> list[dict[str, Any]]:
         """Returns a list of the details of the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         """
         data = await self.send_get_request(f"/api/v1/items/{item_id}")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
-    async def get_item_setup(self, item_id: int) -> dict:
+    async def get_item_setup(self, item_id: int) -> dict[str, Any]:
         """Returns the setup info of the specified item.
 
         Parameters:
@@ -140,16 +143,18 @@ class C4Director:
         data = await self.send_post_request(
             f"/api/v1/items/{item_id}/commands", "GET_SETUP", {}, False
         )
-        return json.loads(data)
+        result: dict[str, Any] = json.loads(data)
+        return result
 
-    async def get_item_variables(self, item_id: int) -> list[dict]:
+    async def get_item_variables(self, item_id: int) -> list[dict[str, Any]]:
         """Returns a list of the variables available for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         """
         data = await self.send_get_request(f"/api/v1/items/{item_id}/variables")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
     async def get_item_variable_value(
         self, item_id: int, var_name: str | list[str] | tuple[str, ...] | set[str]
@@ -207,40 +212,43 @@ class C4Director:
                 f"Empty response received from Director! The variable {var_name} "
                 f"doesn't seem to exist for any items."
             )
-        json_dict = json.loads(data)
+        json_dict: list[dict[str, Any]] = json.loads(data)
         for item in json_dict:
             if item.get("value") == "Undefined":
                 item["value"] = None
         return json_dict
 
-    async def get_item_commands(self, item_id: int) -> list[dict]:
+    async def get_item_commands(self, item_id: int) -> list[dict[str, Any]]:
         """Returns the commands available for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         """
         data = await self.send_get_request(f"/api/v1/items/{item_id}/commands")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
-    async def get_item_network(self, item_id: int) -> list[dict]:
+    async def get_item_network(self, item_id: int) -> list[dict[str, Any]]:
         """Returns the network information for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         """
         data = await self.send_get_request(f"/api/v1/items/{item_id}/network")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
-    async def get_item_bindings(self, item_id: int) -> list[dict]:
+    async def get_item_bindings(self, item_id: int) -> list[dict[str, Any]]:
         """Returns the bindings information for the specified item.
 
         Parameters:
             `item_id` - The Control4 item ID.
         """
         data = await self.send_get_request(f"/api/v1/items/{item_id}/bindings")
-        return json.loads(data)
+        result: list[dict[str, Any]] = json.loads(data)
+        return result
 
-    async def get_ui_configuration(self) -> dict:
+    async def get_ui_configuration(self) -> dict[str, Any]:
         """Returns a dictionary of the Control4 App UI Configuration enumerating
         rooms and capabilities
 
@@ -323,4 +331,5 @@ class C4Director:
             }
         """
         data = await self.send_get_request("/api/v1/agents/ui_configuration")
-        return json.loads(data)
+        result: dict[str, Any] = json.loads(data)
+        return result

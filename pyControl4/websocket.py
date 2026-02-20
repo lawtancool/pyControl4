@@ -9,7 +9,7 @@ from types import MappingProxyType
 
 import aiohttp
 import asyncio
-import socketio_v4 as socketio
+import socketio_v4 as socketio  # type: ignore[import-untyped]
 import logging
 
 from .error_handling import check_response_for_error
@@ -21,14 +21,14 @@ _PROBE_MESSAGE = "2probe"
 _STATUS_ACK_MESSAGE = "2"
 
 
-class _C4DirectorNamespace(socketio.AsyncClientNamespace):
+class _C4DirectorNamespace(socketio.AsyncClientNamespace):  # type: ignore[misc]
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         self.url: str = kwargs.pop("url")
         self.token: str = kwargs.pop("token")
-        self.callback: Callable = kwargs.pop("callback")
+        self.callback: Callable[..., Any] = kwargs.pop("callback")
         self.session: aiohttp.ClientSession | None = kwargs.pop("session")
-        self.connect_callback: Callable | None = kwargs.pop("connect_callback")
-        self.disconnect_callback: Callable | None = kwargs.pop("disconnect_callback")
+        self.connect_callback: Callable[..., Any] | None = kwargs.pop("connect_callback")
+        self.disconnect_callback: Callable[..., Any] | None = kwargs.pop("disconnect_callback")
         super().__init__(*args, **kwargs)
         self.uri = _NAMESPACE_URI
         self.subscription_id: str | None = None
@@ -99,8 +99,8 @@ class C4Websocket:
         self,
         ip: str,
         session_no_verify_ssl: aiohttp.ClientSession | None = None,
-        connect_callback: Callable | None = None,
-        disconnect_callback: Callable | None = None,
+        connect_callback: Callable[..., Any] | None = None,
+        disconnect_callback: Callable[..., Any] | None = None,
     ):
         """Creates a Control4 Websocket object.
 
@@ -128,21 +128,21 @@ class C4Websocket:
         self.base_url: str = f"https://{ip}"
         self.wss_url: str = f"wss://{ip}"
         self.session: aiohttp.ClientSession | None = session_no_verify_ssl
-        self.connect_callback: Callable | None = connect_callback
-        self.disconnect_callback: Callable | None = disconnect_callback
+        self.connect_callback: Callable[..., Any] | None = connect_callback
+        self.disconnect_callback: Callable[..., Any] | None = disconnect_callback
 
-        self._item_callbacks: dict[int, list[Callable]] = dict()
+        self._item_callbacks: dict[int, list[Callable[..., Any]]] = dict()
         self._sio: socketio.AsyncClient | None = None
 
     @property
-    def item_callbacks(self) -> MappingProxyType[int, list[Callable]]:
+    def item_callbacks(self) -> MappingProxyType[int, list[Callable[..., Any]]]:
         """Returns a read-only view of registered item ids (key) and their
         callbacks (value). Use add_item_callback() or remove_item_callback()
         to modify callbacks.
         """
         return MappingProxyType(self._item_callbacks)
 
-    def add_item_callback(self, item_id: int, callback: Callable) -> None:
+    def add_item_callback(self, item_id: int, callback: Callable[..., Any]) -> None:
         """Register a callback to receive updates about an item.
         Parameters:
             `item_id` - The Control4 item ID.
@@ -159,7 +159,7 @@ class C4Websocket:
             self._item_callbacks[item_id].append(callback)
 
     def remove_item_callback(
-        self, item_id: int, callback: Callable | None = None
+        self, item_id: int, callback: Callable[..., Any] | None = None
     ) -> None:
         """Unregister callback(s) for an item.
         Parameters:

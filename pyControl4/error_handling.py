@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import json
 import xmltodict
 
@@ -9,7 +11,7 @@ import xmltodict
 class C4Exception(Exception):
     """Base error for pyControl4."""
 
-    def __init__(self, message):
+    def __init__(self, message: str) -> None:
         self.message = message
 
 
@@ -88,7 +90,7 @@ def _check_response_format(response_text: str) -> str:
     return "JSON"
 
 
-def _extract_error_info(dictionary: dict) -> dict | None:
+def _extract_error_info(dictionary: dict[str, Any]) -> dict[str, Any] | None:
     """Extract error information from a parsed Control4 response.
 
     Returns a dict with 'details', 'code', or 'error' key, or None if no error found.
@@ -121,7 +123,7 @@ def _extract_error_info(dictionary: dict) -> dict | None:
     return None
 
 
-def _raise_error(error_info: dict, response_text: str) -> None:
+def _raise_error(error_info: dict[str, Any], response_text: str) -> None:
     """Raise appropriate exception based on error info."""
     details = error_info.get("details")
     code = error_info.get("code")

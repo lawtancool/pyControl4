@@ -5,7 +5,7 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
 from __future__ import annotations
 
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator
 
 import aiohttp
 import asyncio
@@ -153,8 +153,9 @@ class C4Account:
         data = await self._send_account_auth_request()
         json_dict = json.loads(data)
         try:
-            self.account_bearer_token = json_dict["authToken"]["token"]
-            return self.account_bearer_token
+            token: str = json_dict["authToken"]["token"]
+            self.account_bearer_token = token
+            return token
         except KeyError:
             msg = (
                 "Did not receive an account bearer token. "
@@ -163,7 +164,7 @@ class C4Account:
             _LOGGER.error(msg + data)
             raise
 
-    async def get_account_controllers(self) -> dict:
+    async def get_account_controllers(self) -> dict[str, Any]:
         """Returns a dictionary of the information for all controllers registered
         to an account.
 
@@ -179,13 +180,14 @@ class C4Account:
         data = await self._send_account_get_request(GET_CONTROLLERS_ENDPOINT)
         json_dict = json.loads(data)
         try:
-            return json_dict["account"]
+            result: dict[str, Any] = json_dict["account"]
+            return result
         except KeyError:
             msg = "Did not receive account information from the Control4 API."
             _LOGGER.error(msg + " Response: " + data)
             raise
 
-    async def get_controller_info(self, controller_href: str) -> dict:
+    async def get_controller_info(self, controller_href: str) -> dict[str, Any]:
         """Returns a dictionary of the information of a specific controller.
 
         Parameters:
@@ -228,7 +230,7 @@ class C4Account:
             ```
         """
         data = await self._send_account_get_request(controller_href)
-        json_dict = json.loads(data)
+        json_dict: dict[str, Any] = json.loads(data)
         return json_dict
 
     async def get_controller_os_version(self, controller_href: str) -> str:
@@ -241,13 +243,14 @@ class C4Account:
         data = await self._send_account_get_request(controller_href + "/controller")
         json_dict = json.loads(data)
         try:
-            return json_dict["osVersion"]
+            version: str = json_dict["osVersion"]
+            return version
         except KeyError:
             msg = "Did not receive OS version from the Control4 API."
             _LOGGER.error(msg + " Response: " + data)
             raise
 
-    async def get_director_bearer_token(self, controller_common_name: str) -> dict:
+    async def get_director_bearer_token(self, controller_common_name: str) -> dict[str, Any]:
         """Returns a dictionary with a director bearer token for making Control4
         Director API requests, and its time valid in seconds (usually 86400 seconds)
 

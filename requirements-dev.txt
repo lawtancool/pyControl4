@@ -4,3 +4,4 @@ python-socketio-v4
 websocket-client
 pdoc3
 pytest-asyncio
+types-xmltodict
