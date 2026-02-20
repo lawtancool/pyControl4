@@ -102,7 +102,7 @@ class C4Room(C4Entity):
         )
 
     async def set_increment_volume(self) -> None:
-        """Decrease volume by 1"""
+        """Increase volume by 1"""
         await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "PULSE_VOL_UP",

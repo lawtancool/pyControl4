@@ -17,8 +17,8 @@ from .error_handling import check_response_for_error
 class C4Director:
     def __init__(
         self,
-        ip,
-        director_bearer_token,
+        ip: str,
+        director_bearer_token: str,
         session_no_verify_ssl: aiohttp.ClientSession | None = None,
     ):
         """Creates a Control4 Director object.
@@ -152,7 +152,7 @@ class C4Director:
         return json.loads(data)
 
     async def get_item_variable_value(
-        self, item_id: int, var_name: str | list | tuple | set
+        self, item_id: int, var_name: str | list[str] | tuple[str, ...] | set[str]
     ) -> Any | None:
         """Returns the value of the specified variable for the
         specified item.
@@ -188,7 +188,7 @@ class C4Director:
         return value
 
     async def get_all_item_variable_value(
-        self, var_name: str | list | tuple | set
+        self, var_name: str | list[str] | tuple[str, ...] | set[str]
     ) -> list[dict[str, Any]]:
         """Returns a list of dictionaries with the values of the specified variable
         for all items that have it.
