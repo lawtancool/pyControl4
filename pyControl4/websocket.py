@@ -4,7 +4,6 @@ updates using callbacks.
 
 import aiohttp
 import asyncio
-import ssl
 import socketio_v4 as socketio
 import logging
 
@@ -96,19 +95,22 @@ class C4Websocket:
         session_no_verify_ssl: aiohttp.ClientSession = None,
         connect_callback=None,
         disconnect_callback=None,
-        ssl_context: ssl.SSLContext = None,
     ):
         """Creates a Control4 Websocket object.
 
         Parameters:
             `ip` - The IP address of the Control4 Director/Controller.
 
-            `session` - (Optional) Allows the use of an
+            `session_no_verify_ssl` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
                         If not provided, the library will open and
                         close its own `ClientSession`s as needed.
+                        This session is also passed to the underlying
+                        socketio/engineio client to avoid blocking
+                        `ssl.create_default_context()` calls inside
+                        the event loop.
 
             `connect_callback` - (Optional) A callback to be called when the
                 Websocket connection is opened or reconnected after a network
@@ -116,19 +118,12 @@ class C4Websocket:
 
             `disconnect_callback` - (Optional) A callback to be called when
                 the Websocket connection is lost due to a network error.
-
-            `ssl_context` - (Optional) A pre-created `ssl.SSLContext` object
-                to use for the WebSocket connection. Use this to avoid
-                blocking calls to `ssl.create_default_context()` inside
-                the event loop. If not provided, the library will create
-                its own SSL context internally.
         """
         self.base_url = "https://{}".format(ip)
         self.wss_url = "wss://{}".format(ip)
         self.session = session_no_verify_ssl
         self.connect_callback = connect_callback
         self.disconnect_callback = disconnect_callback
-        self.ssl_context = ssl_context
 
         self._item_callbacks = dict()
         # Initialize self._sio to None
@@ -202,13 +197,9 @@ class C4Websocket:
         # Disconnect previous sio object
         await self.sio_disconnect()
 
-        if self.ssl_context is not None:
-            connector = aiohttp.TCPConnector(ssl=self.ssl_context)
-            http_session = aiohttp.ClientSession(connector=connector)
-            # http_session ownership is transferred to the engineio client,
-            # which closes it in its _reset() method during disconnect.
+        if self.session is not None:
             self._sio = socketio.AsyncClient(
-                ssl_verify=False, http_session=http_session
+                ssl_verify=False, http_session=self.session
             )
         else:
             self._sio = socketio.AsyncClient(ssl_verify=False)
