@@ -1,2 +1,0 @@
-pyControl4
-tests

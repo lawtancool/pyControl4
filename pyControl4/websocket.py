@@ -205,6 +205,8 @@ class C4Websocket:
         if self.ssl_context is not None:
             connector = aiohttp.TCPConnector(ssl=self.ssl_context)
             http_session = aiohttp.ClientSession(connector=connector)
+            # http_session ownership is transferred to the engineio client,
+            # which closes it in its _reset() method during disconnect.
             self._sio = socketio.AsyncClient(
                 ssl_verify=True, http_session=http_session
             )
