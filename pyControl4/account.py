@@ -155,7 +155,7 @@ class C4Account:
             return self.account_bearer_token
         except KeyError:
             msg = (
-                "Did not recieve an account bearer token. "
+                "Did not receive an account bearer token. "
                 "Is your username/password correct?"
             )
             _LOGGER.error(msg + data)

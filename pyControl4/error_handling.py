@@ -1,4 +1,4 @@
-"""Handles errors recieved from the Control4 API."""
+"""Handles errors received from the Control4 API."""
 
 import json
 import xmltodict
@@ -12,7 +12,7 @@ class C4Exception(Exception):
 
 
 class NotFound(C4Exception):
-    """Raised when a 404 response is recieved from the Control4 API.
+    """Raised when a 404 response is received from the Control4 API.
     Occurs when the requested controller, etc. could not be found."""
 
 
