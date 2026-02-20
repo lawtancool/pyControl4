@@ -16,7 +16,6 @@ from pyControl4.account import C4Account
 from pyControl4.director import C4Director
 from pyControl4.light import C4Light
 import asyncio
-import json
 
 username = ""
 password = ""
@@ -25,31 +24,31 @@ ip = "192.168.1.25"
 
 """Authenticate with Control4 account"""
 account = C4Account(username, password)
-asyncio.run(account.getAccountBearerToken())
+asyncio.run(account.get_account_bearer_token())
 
 """Get and print controller name"""
-accountControllers = asyncio.run(account.getAccountControllers())
-print(accountControllers["controllerCommonName"])
+account_controllers = asyncio.run(account.get_account_controllers())
+print(account_controllers["controllerCommonName"])
 
 """Get bearer token to communicate with controller locally"""
 director_bearer_token = asyncio.run(
-    account.getDirectorBearerToken(accountControllers["controllerCommonName"])
+    account.get_director_bearer_token(account_controllers["controllerCommonName"])
 )["token"]
 
 """Create new C4Director instance"""
 director = C4Director(ip, director_bearer_token)
 
 """Print all devices on the controller"""
-print(asyncio.run(director.getAllItemInfo()))
+print(asyncio.run(director.get_all_item_info()))
 
 """Create new C4Light instance"""
 light = C4Light(director, 253)
 
 """Ramp light level to 10% over 10000ms"""
-asyncio.run(light.rampToLevel(10, 10000))
+asyncio.run(light.ramp_to_level(10, 10000))
 
 """Print state of light"""
-print(asyncio.run(light.getState()))
+print(asyncio.run(light.get_state()))
 ```
 
 ## Contributing

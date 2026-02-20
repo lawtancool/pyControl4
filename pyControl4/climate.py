@@ -1,5 +1,7 @@
 """Controls Control4 Climate Control devices."""
 
+from __future__ import annotations
+
 from pyControl4 import C4Entity
 
 
@@ -8,141 +10,189 @@ class C4Climate(C4Entity):
     # HVAC and Fan States
     # ------------------------
 
-    async def getHVACState(self):
+    async def get_hvac_state(self) -> str | None:
         """Returns the current HVAC state (e.g., on/off or active mode)."""
-        return await self.director.getItemVariableValue(self.item_id, "HVAC_STATE")
+        return await self.director.get_item_variable_value(self.item_id, "HVAC_STATE")
 
-    async def getFANState(self):
-        """Returns the current power state of the fan (True=on, False=off)."""
-        return await self.director.getItemVariableValue(self.item_id, "FAN_STATE")
+    async def get_fan_state(self) -> str | None:
+        """Returns the current power state of the fan (on, off)."""
+        return await self.director.get_item_variable_value(self.item_id, "FAN_STATE")
 
     # ------------------------
     # Mode Getters
     # ------------------------
 
-    async def getHVACMode(self):
+    async def get_hvac_mode(self) -> str | None:
         """Returns the currently active HVAC mode."""
-        return await self.director.getItemVariableValue(self.item_id, "HVAC_MODE")
+        return await self.director.get_item_variable_value(self.item_id, "HVAC_MODE")
 
-    async def getHVACModes(self):
+    async def get_hvac_modes(self) -> list[str] | None:
         """Returns a list of supported HVAC modes."""
-        return await self.director.getItemVariableValue(self.item_id, "HVAC_MODES_LIST")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "HVAC_MODES_LIST"
+        )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(",") if m.strip()]
 
-    async def getFANMode(self):
+    async def get_fan_mode(self) -> str | None:
         """Returns the currently active fan mode."""
-        return await self.director.getItemVariableValue(self.item_id, "FAN_MODE")
+        return await self.director.get_item_variable_value(self.item_id, "FAN_MODE")
 
-    async def getFANModes(self):
+    async def get_fan_modes(self) -> list[str] | None:
         """Returns a list of supported fan modes."""
-        return await self.director.getItemVariableValue(self.item_id, "FAN_MODES_LIST")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "FAN_MODES_LIST"
+        )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(",") if m.strip()]
 
-    async def getHoldMode(self):
+    async def get_hold_mode(self) -> str | None:
         """Returns the currently active hold mode."""
-        return await self.director.getItemVariableValue(self.item_id, "HOLD_MODE")
+        return await self.director.get_item_variable_value(self.item_id, "HOLD_MODE")
 
-    async def getHoldModes(self):
+    async def get_hold_modes(self) -> list[str] | None:
         """Returns a list of supported hold modes."""
-        return await self.director.getItemVariableValue(self.item_id, "HOLD_MODES_LIST")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "HOLD_MODES_LIST"
+        )
+        if value is None:
+            return None
+        return [m.strip() for m in value.split(",") if m.strip()]
 
     # ------------------------
     # Setpoint Getters
     # ------------------------
 
-    async def getCoolSetpointF(self):
+    async def get_cool_setpoint_f(self) -> float | None:
         """Returns the cooling setpoint temperature in Fahrenheit."""
-        return await self.director.getItemVariableValue(self.item_id, "COOL_SETPOINT_F")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "COOL_SETPOINT_F"
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getCoolSetpointC(self):
+    async def get_cool_setpoint_c(self) -> float | None:
         """Returns the cooling setpoint temperature in Celsius."""
-        return await self.director.getItemVariableValue(self.item_id, "COOL_SETPOINT_C")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "COOL_SETPOINT_C"
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getHeatSetpointF(self):
+    async def get_heat_setpoint_f(self) -> float | None:
         """Returns the heating setpoint temperature in Fahrenheit."""
-        return await self.director.getItemVariableValue(self.item_id, "HEAT_SETPOINT_F")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "HEAT_SETPOINT_F"
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getHeatSetpointC(self):
+    async def get_heat_setpoint_c(self) -> float | None:
         """Returns the heating setpoint temperature in Celsius."""
-        return await self.director.getItemVariableValue(self.item_id, "HEAT_SETPOINT_C")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "HEAT_SETPOINT_C"
+        )
+        if value is None:
+            return None
+        return float(value)
 
     # ------------------------
     # Sensor Readings
     # ------------------------
 
-    async def getHumidity(self):
+    async def get_humidity(self) -> float | None:
         """Returns the current humidity percentage."""
-        return await self.director.getItemVariableValue(self.item_id, "HUMIDITY")
+        value = await self.director.get_item_variable_value(self.item_id, "HUMIDITY")
+        if value is None:
+            return None
+        return float(value)
 
-    async def getCurrentTemperatureF(self):
+    async def get_current_temperature_f(self) -> float | None:
         """Returns the current ambient temperature in Fahrenheit."""
-        return await self.director.getItemVariableValue(self.item_id, "TEMPERATURE_F")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "TEMPERATURE_F"
+        )
+        if value is None:
+            return None
+        return float(value)
 
-    async def getCurrentTemperatureC(self):
+    async def get_current_temperature_c(self) -> float | None:
         """Returns the current ambient temperature in Celsius."""
-        return await self.director.getItemVariableValue(self.item_id, "TEMPERATURE_C")
+        value = await self.director.get_item_variable_value(
+            self.item_id, "TEMPERATURE_C"
+        )
+        if value is None:
+            return None
+        return float(value)
 
     # ------------------------
     # Setters / Commands
     # ------------------------
 
-    async def setCoolSetpointF(self, temp):
+    async def set_cool_setpoint_f(self, temp: float) -> None:
         """Sets the cooling setpoint temperature in Fahrenheit."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_SETPOINT_COOL",
             {"FAHRENHEIT": temp},
         )
 
-    async def setCoolSetpointC(self, temp):
+    async def set_cool_setpoint_c(self, temp: float) -> None:
         """Sets the cooling setpoint temperature in Celsius."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_SETPOINT_COOL",
             {"CELSIUS": temp},
         )
 
-    async def setHeatSetpointF(self, temp):
+    async def set_heat_setpoint_f(self, temp: float) -> None:
         """Sets the heating setpoint temperature in Fahrenheit."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_SETPOINT_HEAT",
             {"FAHRENHEIT": temp},
         )
 
-    async def setHeatSetpointC(self, temp):
+    async def set_heat_setpoint_c(self, temp: float) -> None:
         """Sets the heating setpoint temperature in Celsius."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_SETPOINT_HEAT",
             {"CELSIUS": temp},
         )
 
-    async def setHvacMode(self, mode):
+    async def set_hvac_mode(self, mode: str) -> None:
         """Sets the HVAC operating mode (e.g., heat, cool, auto)."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_MODE_HVAC",
             {"MODE": mode},
         )
 
-    async def setFanMode(self, mode):
+    async def set_fan_mode(self, mode: str) -> None:
         """Sets the fan operating mode (e.g., auto, on, circulate)."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_MODE_FAN",
             {"MODE": mode},
         )
 
-    async def setPreset(self, preset):
+    async def set_preset(self, preset: str) -> None:
         """Applies a predefined climate preset by name."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_PRESET",
             {"NAME": preset},
         )
 
-    async def setHoldMode(self, mode):
+    async def set_hold_mode(self, mode: str) -> None:
         """Sets the hold mode."""
-        await self.director.sendPostRequest(
+        await self.director.send_post_request(
             f"/api/v1/items/{self.item_id}/commands",
             "SET_MODE_HOLD",
             {"MODE": mode},
