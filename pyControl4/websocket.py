@@ -91,9 +91,7 @@ class _C4DirectorNamespace(socketio.AsyncClientNamespace):
                     await session.close()
 
     async def on_subscribe(self, message: Any) -> None:
-        # type ignored because socketio.AsyncClientNamespace
-        # has message() but it's not in stubs
-        self.message(message)  # type: ignore[attr-defined]
+        pass
 
 
 class C4Websocket:

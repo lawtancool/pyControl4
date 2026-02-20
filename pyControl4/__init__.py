@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyControl4.director import C4Director
 
 
