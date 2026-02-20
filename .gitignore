@@ -3,3 +3,4 @@
 __pycache__/
 login_info.py
 allitems.json
+*.egg-info/
