@@ -250,7 +250,9 @@ class C4Account:
             _LOGGER.error(msg + " Response: " + data)
             raise
 
-    async def get_director_bearer_token(self, controller_common_name: str) -> dict[str, Any]:
+    async def get_director_bearer_token(
+        self, controller_common_name: str
+    ) -> dict[str, Any]:
         """Returns a dictionary with a director bearer token for making Control4
         Director API requests, and its time valid in seconds (usually 86400 seconds)
 

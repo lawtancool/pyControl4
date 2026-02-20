@@ -27,8 +27,12 @@ class _C4DirectorNamespace(socketio.AsyncClientNamespace):  # type: ignore[misc]
         self.token: str = kwargs.pop("token")
         self.callback: Callable[..., Any] = kwargs.pop("callback")
         self.session: aiohttp.ClientSession | None = kwargs.pop("session")
-        self.connect_callback: Callable[..., Any] | None = kwargs.pop("connect_callback")
-        self.disconnect_callback: Callable[..., Any] | None = kwargs.pop("disconnect_callback")
+        self.connect_callback: Callable[..., Any] | None = kwargs.pop(
+            "connect_callback"
+        )
+        self.disconnect_callback: Callable[..., Any] | None = kwargs.pop(
+            "disconnect_callback"
+        )
         super().__init__(*args, **kwargs)
         self.uri = _NAMESPACE_URI
         self.subscription_id: str | None = None
