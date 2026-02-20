@@ -191,7 +191,7 @@ class C4SecurityPanel(C4Entity):
         """Triggers an emergency of the specified type.
 
         Parameters:
-            `emergency_type` - Type of emergency: 
+            `emergency_type` - Type of emergency:
             "Fire", "Medical", "Panic", or "Police"
         """
         await self.director.send_post_request(
