@@ -208,7 +208,7 @@ class C4Websocket:
             # http_session ownership is transferred to the engineio client,
             # which closes it in its _reset() method during disconnect.
             self._sio = socketio.AsyncClient(
-                ssl_verify=True, http_session=http_session
+                ssl_verify=False, http_session=http_session
             )
         else:
             self._sio = socketio.AsyncClient(ssl_verify=False)
