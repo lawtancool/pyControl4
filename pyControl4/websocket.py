@@ -198,8 +198,14 @@ class C4Websocket:
         await self.sio_disconnect()
 
         if self.session is not None:
+            # Create a new session using the caller's connector so engineio
+            # can safely close it in _reset() without affecting the caller's
+            # session.
+            http_session = aiohttp.ClientSession(
+                connector=self.session.connector, connector_owner=False
+            )
             self._sio = socketio.AsyncClient(
-                ssl_verify=False, http_session=self.session
+                ssl_verify=False, http_session=http_session
             )
         else:
             self._sio = socketio.AsyncClient(ssl_verify=False)

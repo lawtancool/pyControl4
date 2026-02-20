@@ -2,6 +2,7 @@
 
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import aiohttp
 import socketio_v4
 import pytest
 
@@ -26,8 +27,12 @@ async def test_sio_connect_without_session():
 
 @pytest.mark.asyncio
 async def test_sio_connect_with_session():
-    """Test that sio_connect passes the caller's session as http_session."""
+    """Test that sio_connect creates a new session sharing the caller's
+    connector and passes it as http_session, so engineio can safely close
+    it without affecting the caller's session."""
+    mock_connector = MagicMock()
     mock_session = MagicMock()
+    mock_session.connector = mock_connector
     ws = C4Websocket("192.168.1.1", session_no_verify_ssl=mock_session)
     with patch.object(
         socketio_v4.AsyncClient, "__init__", return_value=None
@@ -35,6 +40,15 @@ async def test_sio_connect_with_session():
         socketio_v4.AsyncClient, "register_namespace"
     ), patch.object(
         socketio_v4.AsyncClient, "connect", new_callable=AsyncMock
-    ):
+    ), patch.object(
+        aiohttp, "ClientSession"
+    ) as mock_session_cls:
+        mock_http_session = MagicMock()
+        mock_session_cls.return_value = mock_http_session
         await ws.sio_connect("test-token")
-        mock_init.assert_called_once_with(ssl_verify=False, http_session=mock_session)
+        mock_session_cls.assert_called_once_with(
+            connector=mock_connector, connector_owner=False
+        )
+        mock_init.assert_called_once_with(
+            ssl_verify=False, http_session=mock_http_session
+        )
