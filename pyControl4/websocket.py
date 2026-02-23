@@ -72,7 +72,7 @@ class _C4DirectorNamespace(socketio.AsyncClientNamespace):  # type: ignore[misc]
         if not self.connected and not self.subscription_id:
             _LOGGER.debug("Fetching subscriptionID from Control4")
             session = self.session or aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
+                connector=aiohttp.TCPConnector(ssl=False)
             )
             try:
                 async with asyncio.timeout(10):
