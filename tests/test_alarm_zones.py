@@ -11,36 +11,38 @@ from pyControl4.alarm import C4SecurityPanel, C4ZoneType
 @pytest.mark.asyncio
 async def test_get_zones_returns_zone_list(director):
     """Test that get_zones returns a list of zones."""
-    zones_response = json.dumps({
-        "zones": {
-            "zone": [
-                {
-                    "id": 1,
-                    "name": "Front Door",
-                    "room_id": 100,
-                    "room_name": "Living Room",
-                    "type_id": 2,
-                    "is_open": False,
-                    "is_bypassed": False,
-                    "is_chimeable": True,
-                    "can_bypass": True,
-                    "can_control": True,
-                },
-                {
-                    "id": 2,
-                    "name": "Back Window",
-                    "room_id": 101,
-                    "room_name": "Kitchen",
-                    "type_id": 3,
-                    "is_open": True,
-                    "is_bypassed": False,
-                    "is_chimeable": False,
-                    "can_bypass": True,
-                    "can_control": False,
-                },
-            ]
+    zones_response = json.dumps(
+        {
+            "zones": {
+                "zone": [
+                    {
+                        "id": 1,
+                        "name": "Front Door",
+                        "room_id": 100,
+                        "room_name": "Living Room",
+                        "type_id": 2,
+                        "is_open": False,
+                        "is_bypassed": False,
+                        "is_chimeable": True,
+                        "can_bypass": True,
+                        "can_control": True,
+                    },
+                    {
+                        "id": 2,
+                        "name": "Back Window",
+                        "room_id": 101,
+                        "room_name": "Kitchen",
+                        "type_id": 3,
+                        "is_open": True,
+                        "is_bypassed": False,
+                        "is_chimeable": False,
+                        "can_bypass": True,
+                        "can_control": False,
+                    },
+                ]
+            }
         }
-    })
+    )
 
     with patch.object(
         director, "send_post_request", new=AsyncMock(return_value=zones_response)
@@ -60,16 +62,18 @@ async def test_get_zones_returns_zone_list(director):
 @pytest.mark.asyncio
 async def test_get_zones_single_zone(director):
     """Test that get_zones handles a single zone response (returned as dict not list)."""
-    zones_response = json.dumps({
-        "zones": {
-            "zone": {
-                "id": 1,
-                "name": "Front Door",
-                "type_id": 2,
-                "is_open": False,
+    zones_response = json.dumps(
+        {
+            "zones": {
+                "zone": {
+                    "id": 1,
+                    "name": "Front Door",
+                    "type_id": 2,
+                    "is_open": False,
+                }
             }
         }
-    })
+    )
 
     with patch.object(
         director, "send_post_request", new=AsyncMock(return_value=zones_response)
@@ -145,13 +149,15 @@ async def test_get_zones_sends_correct_command(director):
 @pytest.mark.asyncio
 async def test_get_open_zones(director):
     """Test that get_open_zones returns only open zones."""
-    zones_response = json.dumps({
-        "zones": {
-            "zone": [
-                {"id": 2, "name": "Back Window", "is_open": True},
-            ]
+    zones_response = json.dumps(
+        {
+            "zones": {
+                "zone": [
+                    {"id": 2, "name": "Back Window", "is_open": True},
+                ]
+            }
         }
-    })
+    )
 
     with patch.object(
         director, "send_post_request", new=AsyncMock(return_value=zones_response)
