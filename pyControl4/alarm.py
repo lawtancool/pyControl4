@@ -1,11 +1,63 @@
-"""Controls Control4 security panel and contact sensor (door, window, motion)
-devices.
+"""Controls Control4 security panel, security zones, and contact sensor
+(door, window, motion) devices.
 """
 
 from __future__ import annotations
 
+import json
+from enum import IntEnum
+
 from pyControl4 import C4Entity
 from pyControl4.director import C4Director
+
+
+class C4ZoneType(IntEnum):
+    """Control4 security zone types.
+
+    These correspond to the type_id values returned by GET_ZONE_LIST.
+    """
+
+    UNKNOWN = 0
+    CONTACT_SENSOR = 1
+    EXTERIOR_DOOR = 2
+    EXTERIOR_WINDOW = 3
+    INTERIOR_DOOR = 4
+    MOTION_SENSOR = 5
+    FIRE = 6
+    GAS = 7
+    CO = 8
+    HEAT = 9
+    WATER = 10
+    SMOKE = 11
+    PRESSURE = 12
+    GLASS_BREAK = 13
+    GATE = 14
+    GARAGE = 15
+    COLD = 16
+
+    @classmethod
+    def get_name(cls, type_id: int) -> str:
+        """Get human-readable name for a zone type ID."""
+        names = {
+            cls.UNKNOWN: "Unknown",
+            cls.CONTACT_SENSOR: "Contact Sensor",
+            cls.EXTERIOR_DOOR: "Exterior Door",
+            cls.EXTERIOR_WINDOW: "Exterior Window",
+            cls.INTERIOR_DOOR: "Interior Door",
+            cls.MOTION_SENSOR: "Motion Sensor",
+            cls.FIRE: "Fire Sensor",
+            cls.GAS: "Gas Detector",
+            cls.CO: "CO Detector",
+            cls.HEAT: "Heat Detector",
+            cls.WATER: "Water Sensor",
+            cls.SMOKE: "Smoke Detector",
+            cls.PRESSURE: "Pressure Sensor",
+            cls.GLASS_BREAK: "Glass Break Sensor",
+            cls.GATE: "Gate Sensor",
+            cls.GARAGE: "Garage Door Sensor",
+            cls.COLD: "Cold Sensor",
+        }
+        return names.get(type_id, "Security Zone")
 
 
 class C4SecurityPanel(C4Entity):
@@ -213,6 +265,64 @@ class C4SecurityPanel(C4Entity):
             "KEY_PRESS",
             {"KeyName": key},
         )
+
+    async def get_zones(self) -> list[dict] | None:
+        """Returns a list of all security zones for this partition.
+
+        Each zone is a dictionary with the following keys:
+            - `id` (int): Zone ID
+            - `name` (str): Zone name
+            - `room_id` (int): Room ID where the zone is located
+            - `room_name` (str): Room name where the zone is located
+            - `type_id` (int): Zone type ID (see C4ZoneType enum)
+            - `is_open` (bool): True if zone is open/triggered
+            - `is_bypassed` (bool): True if zone is bypassed
+            - `is_chimeable` (bool): True if zone can chime
+            - `can_bypass` (bool): True if zone can be bypassed
+            - `can_control` (bool): True if zone can be controlled
+        """
+        result = await self.director.send_post_request(
+            f"/api/v1/items/{self.item_id}/commands",
+            "GET_ZONE_LIST",
+            {},
+            is_async=False,
+        )
+        if result:
+            try:
+                data = json.loads(result)
+                zones = data.get("zones", {})
+                # Handle both list and single zone response
+                zone_list = zones.get("zone", [])
+                if isinstance(zone_list, dict):
+                    zone_list = [zone_list]
+                return zone_list
+            except (json.JSONDecodeError, AttributeError):
+                return None
+        return None
+
+    async def get_open_zones(self) -> list[dict] | None:
+        """Returns a list of only open (unsecured) zones for this partition.
+
+        Returns the same zone structure as `get_zones()`, but filtered to only
+        include zones that are currently open/triggered.
+        """
+        result = await self.director.send_post_request(
+            f"/api/v1/items/{self.item_id}/commands",
+            "GET_OPEN_ZONE_LIST",
+            {},
+            is_async=False,
+        )
+        if result:
+            try:
+                data = json.loads(result)
+                zones = data.get("zones", {})
+                zone_list = zones.get("zone", [])
+                if isinstance(zone_list, dict):
+                    zone_list = [zone_list]
+                return zone_list
+            except (json.JSONDecodeError, AttributeError):
+                return None
+        return None
 
 
 class C4ContactSensor:
