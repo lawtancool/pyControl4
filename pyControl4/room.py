@@ -140,6 +140,20 @@ class C4Room(C4Entity):
             {},
         )
 
+    async def set_next(self) -> None:
+        await self.director.send_post_request(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SKIP_FWD",
+            {},
+        )
+
+    async def set_previous(self) -> None:
+        await self.director.send_post_request(
+            f"/api/v1/items/{self.item_id}/commands",
+            "SKIP_REV",
+            {},
+        )
+
     async def get_audio_devices(self) -> dict[str, Any]:
         """
         Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions
