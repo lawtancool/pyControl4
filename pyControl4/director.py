@@ -228,6 +228,24 @@ class C4Director:
         result: list[dict[str, Any]] = json.loads(data)
         return result
 
+    async def send_command(
+        self, item_id: int, command: str, params: dict[str, Any] | None = None
+    ) -> str:
+        """Sends a command to the specified item.
+
+        Parameters:
+            `item_id` - The Control4 item ID.
+
+            `command` - The Control4 command to send.
+
+            `params` - The parameters of the command, provided as a dictionary.
+        """
+        if params is None:
+            params = {}
+        return await self.send_post_request(
+            f"/api/v1/items/{item_id}/commands", command, params
+        )
+
     async def get_item_network(self, item_id: int) -> list[dict[str, Any]]:
         """Returns the network information for the specified item.
 
