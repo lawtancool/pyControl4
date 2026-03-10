@@ -140,6 +140,36 @@ class C4Room(C4Entity):
             {},
         )
 
+    async def get_commands(self) -> list[dict[str, Any]]:
+        """Returns the commands available for this room."""
+        return await self.director.get_item_commands(self.item_id)
+
+    async def get_browse_items(self, path: str) -> list[dict[str, Any]]:
+        """Returns browseable media items for the specified room browse path.
+
+        Parameters:
+            `path` - The Control4 API path from a command parameter's value source.
+        """
+        return await self.director.get_browse_items(path)
+
+    async def play_browse_item(
+        self,
+        command: str,
+        params: dict[str, Any],
+    ) -> str:
+        """Sends a browse selection command to this room.
+
+        Parameters:
+            `command` - The Control4 command to send.
+
+            `params` - The command parameters, typically including the selected media ID.
+        """
+        return await self.director.send_post_request(
+            f"/api/v1/items/{self.item_id}/commands",
+            command,
+            params,
+        )
+
     async def get_audio_devices(self) -> dict[str, Any]:
         """
         Note: As tested in OS 3.2.3 this doesn't work, but may work in previous versions

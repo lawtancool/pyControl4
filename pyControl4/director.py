@@ -228,6 +228,22 @@ class C4Director:
         result: list[dict[str, Any]] = json.loads(data)
         return result
 
+    async def get_browse_items(self, path: str) -> list[dict[str, Any]]:
+        """Returns browseable media items for the specified Control4 browse path.
+
+        Parameters:
+            `path` - The browse API path from a command's value source.
+        """
+        data = await self.send_get_request(path)
+        payload: Any = json.loads(data)
+        if isinstance(payload, list):
+            return [item for item in payload if isinstance(item, dict)]
+        if isinstance(payload, dict):
+            visible = payload.get("visible")
+            if isinstance(visible, list):
+                return [item for item in visible if isinstance(item, dict)]
+        return []
+
     async def get_item_network(self, item_id: int) -> list[dict[str, Any]]:
         """Returns the network information for the specified item.
 
