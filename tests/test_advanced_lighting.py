@@ -7,7 +7,6 @@ import pytest
 
 from pyControl4.advanced_lighting import C4AdvancedLighting
 
-
 SCENE_LIST = [
     {
         "scene_id": 1,
