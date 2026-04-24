@@ -47,10 +47,10 @@ async def test_create_fetches_agent_device_id(director):
 @pytest.mark.asyncio
 async def test_create_raises_on_empty_commands(director):
     """create() raises ValueError when the Advanced Lighting agent is absent."""
-    with patch.object(
-        director, "send_get_request", new=AsyncMock(return_value="[]")
-    ):
-        with pytest.raises(ValueError, match="Advanced Lighting agent returned no commands"):
+    with patch.object(director, "send_get_request", new=AsyncMock(return_value="[]")):
+        with pytest.raises(
+            ValueError, match="Advanced Lighting agent returned no commands"
+        ):
             await C4AdvancedLighting.create(director)
 
 
