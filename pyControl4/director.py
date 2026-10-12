@@ -165,6 +165,10 @@ class C4Director:
         The returned value is the JSON ``"value"`` field from the Director
         response. If that field is the string ``"Undefined"``, this method
         returns ``None``.
+
+        If several variable names are given, only the value of the first
+        variable in the Director's response is returned.
+
         Parameters:
             `item_id` - The Control4 item ID.
 
