@@ -1,12 +1,14 @@
 """Tests for error_handling.py — all branches of check_response_for_error."""
 
 import json
+from xml.parsers.expat import ExpatError
 
 import pytest
 
 from pyControl4.error_handling import (
     BadCredentials,
     BadToken,
+    C4CorruptResponse,
     C4Exception,
     InvalidCategory,
     NotFound,
@@ -189,3 +191,26 @@ def test_raised_exception_preserves_response_text():
     with pytest.raises(InvalidCategory) as exc_info:
         check_response_for_error(payload)
     assert exc_info.value.message == payload
+
+
+# --- Malformed responses ---
+
+
+@pytest.mark.parametrize(
+    ("payload", "cause"),
+    [
+        pytest.param('{"result": "ok"', json.JSONDecodeError, id="json"),
+        pytest.param("", json.JSONDecodeError, id="empty"),
+        pytest.param("<a><b></a>", ExpatError, id="xml"),
+    ],
+)
+def test_malformed_response(payload, cause):
+    """Unparseable response raises C4CorruptResponse carrying the parser error
+    and the full response text, and can be caught as C4Exception."""
+    with pytest.raises(C4Exception) as exc_info:
+        check_response_for_error(payload)
+    exc = exc_info.value
+    assert isinstance(exc, C4CorruptResponse)
+    assert isinstance(exc.__cause__, cause)
+    assert str(exc.__cause__) in exc.message
+    assert exc.message.endswith(f": {payload}")
