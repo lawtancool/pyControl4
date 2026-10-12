@@ -31,7 +31,7 @@ class C4Director:
                 See `pyControl4.account.C4Account.get_director_bearer_token`
                 for how to get this.
 
-            `session` - (Optional) Allows the use of an
+            `session_no_verify_ssl` - (Optional) Allows the use of an
                         `aiohttp.ClientSession` object
                         for all network requests. This
                         session will not be closed by the library.
