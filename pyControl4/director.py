@@ -196,7 +196,7 @@ class C4Director:
         self, var_name: str | list[str] | tuple[str, ...] | set[str]
     ) -> list[dict[str, Any]]:
         """Returns a list of dictionaries with the values of the specified variable
-        for all items that have it.
+        for all items that have it. The list is empty if no item has it.
 
         Parameters:
             `var_name` - The Control4 variable name or names.
@@ -207,11 +207,6 @@ class C4Director:
         data = await self.send_get_request(
             f"/api/v1/items/variables?varnames={var_name}"
         )
-        if data == "[]":
-            raise ValueError(
-                f"Empty response received from Director! The variable {var_name} "
-                f"doesn't seem to exist for any items."
-            )
         json_dict: list[dict[str, Any]] = json.loads(data)
         for item in json_dict:
             if item.get("value") == "Undefined":
