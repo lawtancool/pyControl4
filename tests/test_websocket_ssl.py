@@ -50,5 +50,5 @@ async def test_sio_connect_with_session():
             connector=mock_connector, connector_owner=False
         )
         mock_init.assert_called_once_with(
-            ssl_verify=False, http_session=mock_http_session
+            ssl_verify=True, http_session=mock_http_session
         )

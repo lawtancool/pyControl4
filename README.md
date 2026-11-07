@@ -15,6 +15,7 @@ For those who are looking for a pre-built solution for controlling their devices
 from pyControl4.account import C4Account
 from pyControl4.director import C4Director
 from pyControl4.light import C4Light
+from pyControl4.scene import C4AdvancedLighting
 import asyncio
 
 username = ""
@@ -49,6 +50,16 @@ asyncio.run(light.ramp_to_level(10, 10000))
 
 """Print state of light"""
 print(asyncio.run(light.get_state()))
+
+"""Create new C4AdvancedLighting instance"""
+advanced_lighting = C4AdvancedLighting(director)
+
+"""Print the id and name of every lighting scene"""
+for scene in asyncio.run(advanced_lighting.get_scenes()):
+    print(scene["scene_id"], scene["name"])
+
+"""Toggle a lighting scene between activated and deactivated"""
+asyncio.run(advanced_lighting.toggle_scene(18))
 ```
 
 ## Contributing
