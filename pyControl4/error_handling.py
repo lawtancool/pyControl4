@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 import json
+from xml.parsers.expat import ExpatError
+
 import xmltodict
 
 
@@ -36,6 +38,11 @@ class BadToken(Unauthorized):
 class InvalidCategory(C4Exception):
     """Raised when an invalid category is provided when calling
     `pyControl4.director.C4Director.get_all_items_by_category`."""
+
+
+class C4CorruptResponse(C4Exception):
+    """Raised when a response from the Control4 API cannot be parsed
+    as JSON or XML."""
 
 
 ERROR_CODES = {"401": Unauthorized, "404": NotFound}
@@ -154,10 +161,15 @@ def check_response_for_error(response_text: str) -> None:
     """
     response_format = _check_response_format(response_text)
 
-    if response_format == "JSON":
-        dictionary = json.loads(response_text)
-    else:  # XML
-        dictionary = xmltodict.parse(response_text)
+    try:
+        if response_format == "JSON":
+            dictionary = json.loads(response_text)
+        else:  # XML
+            dictionary = xmltodict.parse(response_text)
+    except (json.JSONDecodeError, ExpatError) as err:
+        raise C4CorruptResponse(
+            f"Could not parse {response_format} response ({err}): {response_text}"
+        ) from err
 
     error_info = _extract_error_info(dictionary)
     if error_info:
