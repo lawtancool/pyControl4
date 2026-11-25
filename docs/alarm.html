@@ -83,8 +83,9 @@ devices.</p>
         return bool(contact_state)</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 Contact Sensor object.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p>Parameters
+-----=
+<code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the contact sensor is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID of the contact sensor.</p></div>
 <h3>Methods</h3>
@@ -329,8 +330,9 @@ detected), otherwise returns <code>False</code>.</p></div>
         )</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 object.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
+<p>Parameters
+-----=
+<code>director</code> - A <code><a title="pyControl4.director.C4Director" href="director.html#pyControl4.director.C4Director">C4Director</a></code> object that corresponds
 to the Control4 Director that the device is connected to.</p>
 <p><code>item_id</code> - The Control4 item ID.</p></div>
 <h3>Ancestors</h3>
@@ -660,8 +662,9 @@ currently running.</p></div>
 </details>
 <div class="desc"><p>Sends a single keypress to the security panel's virtual keypad (if
 supported).</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>key</code> - Keypress to send. Only one key at a time.</p></div>
+<p>Parameters
+-----=
+<code>key</code> - Keypress to send. Only one key at a time.</p></div>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.set_arm"><code class="name flex">
 <span>async def <span class="ident">set_arm</span></span>(<span>self, usercode: str, mode: str) ‑> None</span>
@@ -688,8 +691,9 @@ supported).</p>
     )</code></pre>
 </details>
 <div class="desc"><p>Arms the security panel with the specified mode.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>usercode</code> - PIN/code for arming the system.</p>
+<p>Parameters
+-----=
+<code>usercode</code> - PIN/code for arming the system.</p>
 <p><code>mode</code> - Arm mode to use. This depends on what is supported by the
 security panel itself.</p></div>
 </dd>
@@ -715,8 +719,9 @@ security panel itself.</p></div>
     )</code></pre>
 </details>
 <div class="desc"><p>Disarms the security panel.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>usercode</code> - PIN/code for disarming the system.</p></div>
+<p>Parameters
+-----=
+<code>usercode</code> - PIN/code for disarming the system.</p></div>
 </dd>
 <dt id="pyControl4.alarm.C4SecurityPanel.trigger_emergency"><code class="name flex">
 <span>async def <span class="ident">trigger_emergency</span></span>(<span>self, emergency_type: str) ‑> None</span>
@@ -740,8 +745,9 @@ security panel itself.</p></div>
     )</code></pre>
 </details>
 <div class="desc"><p>Triggers an emergency of the specified type.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>emergency_type</code> - Type of emergency:
+<p>Parameters
+-----=
+<code>emergency_type</code> - Type of emergency:
 "Fire", "Medical", "Panic", or "Police"</p></div>
 </dd>
 </dl>
