@@ -309,8 +309,9 @@ controller info, and retrieves a bearer token for connecting to a Control4 Direc
             raise</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 account object.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>username</code> - Control4 account username/email.</p>
+<p>Parameters
+-----=
+<code>username</code> - Control4 account username/email.</p>
 <p><code>password</code> - Control4 account password.</p>
 <p><code>session</code> - (Optional) Allows the use of an <code>aiohttp.ClientSession</code>
 object for all network requests. This session will not be closed
@@ -377,7 +378,8 @@ its own <code>ClientSession</code>s as needed.</p></div>
 </details>
 <div class="desc"><p>Returns a dictionary of the information for all controllers registered
 to an account.</p>
-<h2 id="returns">Returns</h2>
+<p>Returns
+-----=</p>
 <pre><code>{
     &quot;controllerCommonName&quot;: &quot;control4_MODEL_MACADDRESS&quot;,
     &quot;href&quot;: &quot;https://apis.control4.com/account/v3/rest/accounts/000000&quot;,
@@ -440,10 +442,12 @@ to an account.</p>
     return json_dict</code></pre>
 </details>
 <div class="desc"><p>Returns a dictionary of the information of a specific controller.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from
+<p>Parameters
+-----=
+<code>controller_href</code> - The API <code>href</code> of the controller (get this from
 the output of <code>get_account_controllers()</code>)</p>
-<h2 id="returns">Returns</h2>
+<p>Returns
+-----=</p>
 <pre><code>{
     'allowsPatching': True,
     'allowsSupport': False,
@@ -503,8 +507,9 @@ the output of <code>get_account_controllers()</code>)</p>
         raise</code></pre>
 </details>
 <div class="desc"><p>Returns the OS version of a controller as a string.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>controller_href</code> - The API <code>href</code> of the controller (get this from
+<p>Parameters
+-----=
+<code>controller_href</code> - The API <code>href</code> of the controller (get this from
 the output of <code>get_account_controllers()</code>)</p></div>
 </dd>
 <dt id="pyControl4.account.C4Account.get_director_bearer_token"><code class="name flex">
@@ -541,8 +546,9 @@ the output of <code>get_account_controllers()</code>)</p></div>
 </details>
 <div class="desc"><p>Returns a dictionary with a director bearer token for making Control4
 Director API requests, and its time valid in seconds (usually 86400 seconds)</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>controller_common_name</code>: Common name of the controller.
+<p>Parameters
+-----=
+<code>controller_common_name</code>: Common name of the controller.
 See <code>get_account_controllers()</code> for details.</p></div>
 </dd>
 </dl>
