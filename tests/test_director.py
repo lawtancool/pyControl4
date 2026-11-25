@@ -127,10 +127,10 @@ async def test_get_all_item_variable_value_mixed(director):
 
 @pytest.mark.asyncio
 async def test_get_all_item_variable_value_empty(director):
-    """Empty list response raises ValueError."""
+    """Empty list response returns an empty list."""
     with patch.object(director, "send_get_request", new=AsyncMock(return_value="[]")):
-        with pytest.raises(ValueError):
-            await director.get_all_item_variable_value("NONEXISTENT")
+        result = await director.get_all_item_variable_value("NONEXISTENT")
+    assert result == []
 
 
 @pytest.mark.asyncio
