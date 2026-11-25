@@ -233,8 +233,9 @@ updates using callbacks.</p>
                 _LOGGER.warning(f&#34;Captured exception during callback: {str(exc)}&#34;)</code></pre>
 </details>
 <div class="desc"><p>Creates a Control4 Websocket object.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>ip</code> - The IP address of the Control4 Director/Controller.</p>
+<p>Parameters
+-----=
+<code>ip</code> - The IP address of the Control4 Director/Controller.</p>
 <p><code>session_no_verify_ssl</code> - (Optional) Allows the use of an
 <code>aiohttp.ClientSession</code> object
 for all network requests. This
@@ -298,8 +299,9 @@ to modify callbacks.</p></div>
         self._item_callbacks[item_id].append(callback)</code></pre>
 </details>
 <div class="desc"><p>Register a callback to receive updates about an item.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.
+<p>Parameters
+-----=
+<code>item_id</code> - The Control4 item ID.
 <code>callback</code> - The callback to be called when an update is received
 for the provided item id.</p></div>
 </dd>
@@ -337,8 +339,9 @@ for the provided item id.</p></div>
             pass</code></pre>
 </details>
 <div class="desc"><p>Unregister callback(s) for an item.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>item_id</code> - The Control4 item ID.
+<p>Parameters
+-----=
+<code>item_id</code> - The Control4 item ID.
 <code>callback</code> - (Optional) Specific callback to remove. If None,
 removes all callbacks for this item_id.</p></div>
 </dd>
@@ -404,8 +407,9 @@ will be created.</p>
 <p>This function should be called using a new token every 86400 seconds (the
 expiry time of the director tokens), otherwise the Control4 Director will
 stop sending WebSocket messages.</p>
-<h2 id="parameters">Parameters</h2>
-<p><code>director_bearer_token</code> - The bearer token used to authenticate
+<p>Parameters
+-----=
+<code>director_bearer_token</code> - The bearer token used to authenticate
 with the Director. See
 <code><a title="pyControl4.account.C4Account.get_director_bearer_token" href="account.html#pyControl4.account.C4Account.get_director_bearer_token">C4Account.get_director_bearer_token()</a></code>
 for how to get this.</p></div>

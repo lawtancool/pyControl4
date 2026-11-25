@@ -54,7 +54,7 @@ class C4Director:
             yield self.session
         else:
             async with aiohttp.ClientSession(
-                connector=aiohttp.TCPConnector(verify_ssl=False)
+                connector=aiohttp.TCPConnector(ssl=False)
             ) as session:
                 yield session
 
