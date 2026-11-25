@@ -264,10 +264,6 @@ class C4Websocket:
 
         for callback in callbacks[:]:
             try:
-                if isinstance(message, list):
-                    for m in message:
-                        await callback(device_id, m)
-                else:
-                    await callback(device_id, message)
+                await callback(device_id, message)
             except Exception as exc:
                 _LOGGER.warning(f"Captured exception during callback: {str(exc)}")
